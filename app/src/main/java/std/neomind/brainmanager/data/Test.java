@@ -78,7 +78,7 @@ public class Test {
         return Objects.hash(id, cid, kid, name, description, testedDate, passed, answerTime, type);
     }
 
-    public class Builder {
+    public static class Builder {
         private int id;             // db id
         private int cid;            // category id
         private int kid;            // keyword id

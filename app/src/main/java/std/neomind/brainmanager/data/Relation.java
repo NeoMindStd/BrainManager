@@ -45,7 +45,7 @@ public class Relation {
         return Objects.hash(id, kid1, kid2);
     }
 
-    public class Builder{
+    public static class Builder{
         private int id;      // db id
         private int kid1;    // keyword id(smaller)
         private int kid2;    // keyword id(larger)

@@ -65,7 +65,7 @@ public class Keyword {
         return Objects.hash(id, cid, text, imagePath, currentLevels, reviewTimes, registrationDate);
     }
 
-    public class Builder {
+    public static class Builder {
         private int id;                  // db id
         private int cid;                 // category id
         private String text;             // contents

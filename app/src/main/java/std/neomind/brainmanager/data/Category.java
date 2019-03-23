@@ -45,7 +45,7 @@ public class Category {
         return Objects.hash(id, name, description);
     }
 
-    public class Builder {
+    public static class Builder {
         private int id;
         private String name;
         private String description;
