@@ -13,36 +13,36 @@ import androidx.annotation.Nullable;
 
 public class BrainDBHandler extends SQLiteOpenHelper {
 
-    public static final String NO_MATCHING_DATA = "NoMatchingData";
-
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "BrainManager.db";
     public static final String TABLE_CATEGORIES = "categories";
     public static final String TABLE_KEYWORDS = "keywords";
+    public static final String TABLE_KEYWORD_DESCRIPTIONS = "keyword_descriptions";
     public static final String TABLE_RELATIONS = "relations";
     public static final String TABLE_TESTS = "tests";
 
+    // '_' means super key
     public static final String FIELD_CATEGORIES_ID = "_id";
     public static final String FIELD_CATEGORIES_NAME = "name";
-    public static final String FIELD_CATEGORIES_DESCRIPTION = "description";
 
     public static final String FIELD_KEYWORDS_ID = "_id";
     public static final String FIELD_KEYWORDS_CID = "cid";
-    public static final String FIELD_KEYWORDS_TEXT = "text";
+    public static final String FIELD_KEYWORDS_NAME = "name";
     public static final String FIELD_KEYWORDS_IMAGE_PATH = "image_path";
     public static final String FIELD_KEYWORDS_CURRENT_LEVELS = "current_levels";
     public static final String FIELD_KEYWORDS_REVIEW_TIMES = "review_times";
     public static final String FIELD_KEYWORDS_REGISTRATION_DATE = "registration_date";
 
-    public static final String FIELD_RELATIONS_ID = "_id";
+    public static final String FIELD_KEYWORD_DESCRIPTIONS_ID = "_id";
+    public static final String FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION = "description";
+    public static final String FIELD_KEYWORD_DESCRIPTIONS_KID = "kid";
+
     public static final String FIELD_RELATIONS_KID1 = "kid1";
     public static final String FIELD_RELATIONS_KID2 = "kid2";
 
     public static final String FIELD_TESTS_ID = "_id";
     public static final String FIELD_TESTS_CID = "cid";
     public static final String FIELD_TESTS_KID = "kid";
-    public static final String FIELD_TESTS_NAME = "name";
-    public static final String FIELD_TESTS_DESCRIPTION = "description";
     public static final String FIELD_TESTS_TESTED_DATE = "tested_date";
     public static final String FIELD_TESTS_PASSED = "passed";
     public static final String FIELD_TESTS_ANSWER_TIME = "answer_time";
@@ -66,30 +66,39 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_FOLDER_TABLE = "CREATE TABLE " +
                 TABLE_CATEGORIES + "(" +
-                FIELD_CATEGORIES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                FIELD_CATEGORIES_NAME + " TEXT, " +
-                FIELD_CATEGORIES_DESCRIPTION + " TEXT" + ")";
+                FIELD_CATEGORIES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                FIELD_CATEGORIES_NAME + " TEXT" + ")";
+
         final String CREATE_KEYWORDS_TABLE = "CREATE TABLE " +
                 TABLE_KEYWORDS + "(" +
-                FIELD_KEYWORDS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                FIELD_KEYWORDS_CID + " INTEGER," + FIELD_KEYWORDS_TEXT + " TEXT, " +
-                FIELD_KEYWORDS_IMAGE_PATH + " TEXT, " + FIELD_KEYWORDS_CURRENT_LEVELS + " INTEGER, " +
-                FIELD_KEYWORDS_REVIEW_TIMES + " INTEGER, " + FIELD_KEYWORDS_REGISTRATION_DATE + " TEXT" + ")";
+                FIELD_KEYWORDS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                FIELD_KEYWORDS_CID + " INTEGER NOT NULL REFERENCES " + TABLE_CATEGORIES + "(" + FIELD_CATEGORIES_ID + "), " +
+                FIELD_KEYWORDS_NAME + " TEXT, " + FIELD_KEYWORDS_IMAGE_PATH + " TEXT, " +
+                FIELD_KEYWORDS_CURRENT_LEVELS + " INTEGER, " + FIELD_KEYWORDS_REVIEW_TIMES + " INTEGER, " +
+                FIELD_KEYWORDS_REGISTRATION_DATE + " INTEGER" + ")";
+
+        final String CREATE_KEYWORD_DESCRIPTIONS_TABLE = "CREATE TABLE " +
+                TABLE_KEYWORD_DESCRIPTIONS + "(" +
+                FIELD_KEYWORD_DESCRIPTIONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION + " TEXT, " +
+                FIELD_KEYWORD_DESCRIPTIONS_KID + " INTEGER NOT NULL REFERENCES " + TABLE_KEYWORDS + "(" + FIELD_KEYWORDS_ID + ") ON DELETE CASCADE" + ")";
+
         final String CREATE_RELATIONS_TABLE = "CREATE TABLE " +
                 TABLE_RELATIONS + "(" +
-                FIELD_RELATIONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                FIELD_RELATIONS_KID1 + " INTEGER, " +
-                FIELD_RELATIONS_KID2 + " INTEGER" + ")";
+                FIELD_RELATIONS_KID1 + " INTEGER NOT NULL, " + FIELD_RELATIONS_KID2 + " INTEGER NOT NULL, " +
+                "PRIMARY KEY (" + FIELD_RELATIONS_KID1 + ", " + FIELD_RELATIONS_KID2 + "))";
+
         final String CREATE_TESTS_TABLE = "CREATE TABLE " +
                 TABLE_TESTS + "(" +
-                FIELD_TESTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                FIELD_TESTS_CID + " INTEGER, " + FIELD_TESTS_KID + " INTEGER, " +
-                FIELD_TESTS_NAME + " TEXT, " + FIELD_TESTS_DESCRIPTION + " TEXT, " +
-                FIELD_TESTS_TESTED_DATE + " TEXT, " + FIELD_TESTS_PASSED + " BOOLEAN," +
+                FIELD_TESTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                FIELD_TESTS_CID + " INTEGER NOT NULL REFERENCES " + TABLE_CATEGORIES + "(" + FIELD_CATEGORIES_ID + "), " +
+                FIELD_TESTS_KID + " INTEGER NOT NULL REFERENCES " + TABLE_KEYWORDS + "(" + FIELD_KEYWORDS_ID + "), " +
+                FIELD_TESTS_TESTED_DATE + " INTEGER, " + FIELD_TESTS_PASSED + " BOOLEAN," +
                 FIELD_TESTS_ANSWER_TIME + " INTEGER," + FIELD_TESTS_TYPE + " INTEGER" + ")";
 
         db.execSQL(CREATE_FOLDER_TABLE);
         db.execSQL(CREATE_KEYWORDS_TABLE);
+        db.execSQL(CREATE_KEYWORD_DESCRIPTIONS_TABLE);
         db.execSQL(CREATE_RELATIONS_TABLE);
         db.execSQL(CREATE_TESTS_TABLE);
     }
@@ -104,7 +113,6 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public void addCategory(Category category) {
         ContentValues values = new ContentValues();
         values.put(FIELD_CATEGORIES_NAME, category.name);
-        values.put(FIELD_CATEGORIES_DESCRIPTION, category.description);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -115,11 +123,11 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public void addKeyword(Keyword keyword) {
         ContentValues values = new ContentValues();
         values.put(FIELD_KEYWORDS_CID, keyword.cid);
-        values.put(FIELD_KEYWORDS_TEXT, keyword.text);
+        values.put(FIELD_KEYWORDS_NAME, keyword.name);
         values.put(FIELD_KEYWORDS_IMAGE_PATH, keyword.imagePath);
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
-        values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.getRegistrationDate());
+        values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -127,24 +135,37 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addRelation(Relation relation) {
+    public void addDescription(Description description, int kid) {
         ContentValues values = new ContentValues();
-        values.put(FIELD_RELATIONS_KID1, relation.kid1);
-        values.put(FIELD_RELATIONS_KID2, relation.kid2);
+        values.put(FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION, description.description);
+        values.put(FIELD_KEYWORD_DESCRIPTIONS_KID, kid);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.insert(TABLE_RELATIONS, null, values);
+        db.insert(TABLE_CATEGORIES, null, values);
         db.close();
+    }
+
+    public void addRelation(int kid1, int kid2) throws DataDuplicationException {
+        if (kid1 == kid2) throw new DataDuplicationException();
+        else {
+            ContentValues values = new ContentValues();
+
+            values.put(FIELD_RELATIONS_KID1, Math.min(kid1, kid2));
+            values.put(FIELD_RELATIONS_KID2, Math.max(kid1, kid2));
+
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            db.insert(TABLE_RELATIONS, null, values);
+            db.close();
+        }
     }
 
     public void addTest(Test test) {
         ContentValues values = new ContentValues();
         values.put(FIELD_TESTS_CID, test.cid);
         values.put(FIELD_TESTS_KID, test.kid);
-        values.put(FIELD_TESTS_NAME, test.name);
-        values.put(FIELD_TESTS_DESCRIPTION, test.description);
-        values.put(FIELD_TESTS_TESTED_DATE, test.getTestedDate());
+        values.put(FIELD_TESTS_TESTED_DATE, test.testedDate);
         values.put(FIELD_TESTS_PASSED, test.isPassed());
         values.put(FIELD_TESTS_ANSWER_TIME, test.answerTime);
         values.put(FIELD_TESTS_TYPE, test.type);
@@ -190,11 +211,15 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                 Keyword keyword = new Keyword.Builder()
                         .setId(cursor.getInt(0))
                         .setCid(cursor.getInt(1))
-                        .setText(cursor.getString(2))
+                        .setName(cursor.getString(2))
+                        .setDescriptions(
+                                getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
                         .setImagePath(cursor.getString(3))
                         .setCurrentLevels(cursor.getInt(4))
                         .setReviewTimes(cursor.getInt(5))
-                        .setRegistrationDate(cursor.getString(6))
+                        .setRegistrationDate(cursor.getLong(6))
+                        .setRelationIds(
+                                getAllRelationsOfTheKeyword(cursor.getInt(0)))
                         .build();
                 keywords.add(keyword);
                 cursor.moveToNext();
@@ -206,26 +231,48 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         return keywords;
     }
 
-    public ArrayList<Relation> getAllRelations() {
-        ArrayList<Relation> relations = new ArrayList<>();
+    public ArrayList<Description> getAllDescriptionsOfTheKeyword(int kid) {
+        ArrayList<Description> descriptions = new ArrayList<>();
 
+        String query = "SELECT * FROM " + TABLE_KEYWORD_DESCRIPTIONS + " WHERE " +
+                FIELD_KEYWORD_DESCRIPTIONS_KID + " = " + kid;
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RELATIONS, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                Relation relation = new Relation.Builder()
-                        .setId(cursor.getInt(0))
-                        .setKid1(cursor.getInt(1))
-                        .setKid2(cursor.getInt(2))
-                        .build();
-                relations.add(relation);
+                Description description = new Description();
+                description.id = cursor.getInt(0);
+                description.description = cursor.getString(1);
+                descriptions.add(description);
                 cursor.moveToNext();
             }
         }
         cursor.close();
         db.close();
-        return relations;
+        return descriptions;
+    }
+
+    public ArrayList<Integer> getAllRelationsOfTheKeyword(int kid) {
+        ArrayList<Integer> relationKids = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
+                FIELD_RELATIONS_KID1 + " = " + kid +" OR " +
+                FIELD_RELATIONS_KID2 + " = " + kid;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                int relationKid = cursor.getInt(0);
+                if(relationKid == kid) cursor.getInt(1);
+                relationKids.add(relationKid);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+        return relationKids;
     }
 
     public ArrayList<Test> getAllTests() {
@@ -240,12 +287,10 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                         .setId(cursor.getInt(0))
                         .setCid(cursor.getInt(1))
                         .setKid(cursor.getInt(2))
-                        .setName(cursor.getString(3))
-                        .setDescription(cursor.getString(4))
-                        .setTestedDate(cursor.getString(5))
-                        .setPassed(cursor.getInt(6) > 0)
-                        .setAnswerTime(cursor.getInt(7))
-                        .setType(cursor.getInt(8))
+                        .setTestedDate(cursor.getLong(2))
+                        .setPassed(cursor.getInt(3) > 0)
+                        .setAnswerTime(cursor.getInt(4))
+                        .setType(cursor.getInt(5))
                         .build();
                 tests.add(test);
                 cursor.moveToNext();
@@ -259,7 +304,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     /**
      * DB 탐색
      */
-    private Category findCategory(String query) throws Exception {
+    private Category findCategory(String query) throws NoMatchingDataException {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -269,27 +314,26 @@ public class BrainDBHandler extends SQLiteOpenHelper {
             category = new Category.Builder()
                     .setId(cursor.getInt(0))
                     .setName(cursor.getString(1))
-                    .setDescription(cursor.getString(2))
                     .build();
             cursor.close();
-        } else { throw new Exception(NO_MATCHING_DATA); }
+        } else { throw new NoMatchingDataException(); }
         db.close();
         return category;
     }
 
-    public Category findCategory(String field, int value) throws Exception {
+    public Category findCategory(String field, int value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " +
                 field + " = " + value;
         return findCategory(query);
     }
 
-    public Category findCategory(String field, String value) throws Exception {
+    public Category findCategory(String field, String value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " +
                 field + " = \"" + value + "\"";
         return findCategory(query);
     }
 
-    private Keyword findKeyword(String query) throws Exception {
+    private Keyword findKeyword(String query) throws NoMatchingDataException {
     SQLiteDatabase db = this.getWritableDatabase();
     Cursor cursor = db.rawQuery(query, null);
 
@@ -299,61 +343,58 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         keyword = new Keyword.Builder()
                 .setId(cursor.getInt(0))
                 .setCid(cursor.getInt(1))
-                .setText(cursor.getString(2))
+                .setName(cursor.getString(2))
                 .setImagePath(cursor.getString(3))
                 .setCurrentLevels(cursor.getInt(4))
                 .setReviewTimes(cursor.getInt(5))
-                .setRegistrationDate(cursor.getString(6))
+                .setRegistrationDate(cursor.getLong(6))
                 .build();
         cursor.close();
-    } else { throw new Exception(NO_MATCHING_DATA); }
+    } else { throw new NoMatchingDataException(); }
     db.close();
     return keyword;
 }
 
-    public Keyword findKeyword(String field, int value) throws Exception {
+    public Keyword findKeyword(String field, int value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
                 field + " = " + value;
         return findKeyword(query);
     }
 
-    public Keyword findKeyword(String field, String value) throws Exception {
+    public Keyword findKeyword(String field, String value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
                 field + " = \"" + value + "\"";
         return findKeyword(query);
     }
 
-    private Relation findRelation(String query) throws Exception {
+    private Description findDescription(String query) throws NoMatchingDataException {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Relation relation;
+        Description description;
         if (cursor.moveToFirst()) {
-            cursor.moveToFirst();
-            relation = new Relation.Builder()
-                    .setId(cursor.getInt(0))
-                    .setKid1(cursor.getInt(1))
-                    .setKid2(cursor.getInt(2))
-                    .build();
+            description = new Description();
+            description.id = cursor.getInt(0);
+            description.description = cursor.getString(1);
             cursor.close();
-        } else { throw new Exception(NO_MATCHING_DATA); }
+        } else { throw new NoMatchingDataException(); }
         db.close();
-        return relation;
+        return description;
     }
 
-    public Relation findRelation(String field, int value) throws Exception {
-        String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
+    public Description findDescription(String field, int value) throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_KEYWORD_DESCRIPTIONS + " WHERE " +
                 field + " = " + value;
-        return findRelation(query);
+        return findDescription(query);
     }
 
-    public Relation findRelation(String field, String value) throws Exception {
-        String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
+    public Description findDescription(String field, String value) throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_KEYWORD_DESCRIPTIONS + " WHERE " +
                 field + " = \"" + value + "\"";
-        return findRelation(query);
+        return findDescription(query);
     }
 
-    private Test findTest(String query) throws Exception {
+    private Test findTest(String query) throws NoMatchingDataException {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -364,32 +405,24 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                     .setId(cursor.getInt(0))
                     .setCid(cursor.getInt(1))
                     .setKid(cursor.getInt(2))
-                    .setName(cursor.getString(3))
-                    .setDescription(cursor.getString(4))
-                    .setTestedDate(cursor.getString(5))
-                    .setPassed(cursor.getInt(6) > 0)
-                    .setAnswerTime(cursor.getInt(7))
-                    .setType(cursor.getInt(8))
+                    .setTestedDate(cursor.getLong(2))
+                    .setPassed(cursor.getInt(3) > 0)
+                    .setAnswerTime(cursor.getInt(4))
+                    .setType(cursor.getInt(5))
                     .build();
             cursor.close();
-        } else { throw new Exception(NO_MATCHING_DATA); }
+        } else { throw new NoMatchingDataException(); }
         db.close();
         return test;
     }
 
-    public Test findTest(String field, int value) throws Exception {
+    public Test findTest(String field, int value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_TESTS + " WHERE " +
                 field + " = " + value;
         return findTest(query);
     }
 
-    public Test findTest(String field, String value) throws Exception {
-        String query = "SELECT * FROM " + TABLE_TESTS + " WHERE " +
-                field + " = \"" + value + "\"";
-        return findTest(query);
-    }
-
-    public Test findTest(String field, boolean value) throws Exception {
+    public Test findTest(String field, boolean value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_TESTS + " WHERE " +
                 field + " = " + (value ? 1 : 0);
         return findTest(query);
@@ -415,7 +448,6 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public void updateCategory(Category category) {
         ContentValues values = new ContentValues();
         values.put(FIELD_CATEGORIES_NAME, category.name);
-        values.put(FIELD_CATEGORIES_DESCRIPTION, category.description);
         updateObject(TABLE_CATEGORIES, values,
                 FIELD_CATEGORIES_ID + "=" + category.id, null);
     }
@@ -423,30 +455,30 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public void updateKeyword(Keyword keyword) {
         ContentValues values = new ContentValues();
         values.put(FIELD_KEYWORDS_CID, keyword.cid);
-        values.put(FIELD_KEYWORDS_TEXT, keyword.text);
+        values.put(FIELD_KEYWORDS_NAME, keyword.name);
         values.put(FIELD_KEYWORDS_IMAGE_PATH, keyword.imagePath);
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
-        values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.getRegistrationDate());
+        values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
         updateObject(TABLE_KEYWORDS, values,
                 FIELD_KEYWORDS_ID + "=" + keyword.id, null);
     }
 
-    public void updateRelation(Relation relation) {
+    public void updateDescription(Description description, int kid) {
         ContentValues values = new ContentValues();
-        values.put(FIELD_RELATIONS_KID1, relation.kid1);
-        values.put(FIELD_RELATIONS_KID2, relation.kid2);
+        values.put(FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION, description.description);
+        values.put(FIELD_KEYWORD_DESCRIPTIONS_KID, kid);
         updateObject(TABLE_RELATIONS, values,
-                FIELD_RELATIONS_ID + "=" + relation.id, null);
+                FIELD_KEYWORD_DESCRIPTIONS_ID + " = " + description.id, null);
     }
+
+    // Relations 테이블은 레코드를 갱신하지 않음.
 
     public void updateTest(Test test) {
         ContentValues values = new ContentValues();
         values.put(FIELD_TESTS_CID, test.cid);
         values.put(FIELD_TESTS_KID, test.kid);
-        values.put(FIELD_TESTS_NAME, test.name);
-        values.put(FIELD_TESTS_DESCRIPTION, test.description);
-        values.put(FIELD_TESTS_TESTED_DATE, test.getTestedDate());
+        values.put(FIELD_TESTS_TESTED_DATE, test.testedDate);
         values.put(FIELD_TESTS_PASSED, test.isPassed());
         values.put(FIELD_TESTS_ANSWER_TIME, test.answerTime);
         values.put(FIELD_TESTS_TYPE, test.type);
@@ -456,8 +488,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
 
     /**
      * DB 데이터 삭제 메소드
-     * @param id
-     * @return
+     * @param id 삭제할 레코드 id
+     * @return result = 성공여부
      */
     public boolean removeCategory(int id) {
         boolean result = false;
@@ -497,18 +529,40 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean removeRelation(int id) {
+    public boolean removeDescription(int id) {
         boolean result = false;
 
-        String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
-                FIELD_RELATIONS_ID + " = " + id;
+        String query = "SELECT * FROM " + TABLE_KEYWORD_DESCRIPTIONS + " WHERE " +
+                FIELD_KEYWORD_DESCRIPTIONS_ID + " = " + id;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
-            db.delete(TABLE_RELATIONS, FIELD_RELATIONS_ID + " = ?",
+            db.delete(TABLE_KEYWORD_DESCRIPTIONS,
+                    FIELD_KEYWORD_DESCRIPTIONS_ID + " = ?",
                     new String[]{String.valueOf(id)});
+            cursor.close();
+            result = true;
+        }
+        db.close();
+        return result;
+    }
+
+    public boolean removeRelation(int kid1, int kid2) {
+        boolean result = false;
+
+        String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
+                FIELD_RELATIONS_KID1 + " = " + kid1 +" AND " +
+                FIELD_RELATIONS_KID2 + " = " + kid2;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            db.delete(TABLE_RELATIONS,
+                    FIELD_RELATIONS_KID1 + " = ? AND " + FIELD_RELATIONS_KID2 + " = ?",
+                    new String[]{String.valueOf(kid1), String.valueOf(kid2)});
             cursor.close();
             result = true;
         }
@@ -534,4 +588,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    public class NoMatchingDataException extends Exception { }
+    public class DataDuplicationException extends Exception { }
 }
