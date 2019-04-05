@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".RelationActivity"
+    tools:showIn="@layout/activity_relation">
+
+
+
+    <TextView
+        style="@style/keywordTheme"
+        android:id="@+id/keyword_relation_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded"
+        android:gravity="center"
+        app:layout_constraintVertical_weight="0.3"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/keyword_recyclerview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+            <!--<GridView-->
+                <!--android:id="@+id/grid_relation_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:numColumns="3"-->
+                <!--android:horizontalSpacing="1dp"-->
+                <!--android:verticalSpacing="1dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:paddingBottom="10dp">-->
+            <!--</GridView>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/keyword_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyword_relation_view"
+        app:layout_constraintVertical_weight="0.7"
+        app:layout_constraintWidth_percent="0.8" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
