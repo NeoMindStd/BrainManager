@@ -1,0 +1,22 @@
+<resources>
+    <!-- ANDROID, APP -->
+    <string name="app_name">브레인 매니저</string>
+    <string name="navigation_drawer_open">네비게이션 드로어 열림</string>
+    <string name="navigation_drawer_close">네비게이션 드로어 닫힘</string>
+    <string name="nav_header_title">안드로이드 스튜디오</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">네비게이션 헤더</string>
+    <string name="action_settings">설정</string>
+
+    <string name="global_all">모두</string>
+    <string name="global_confirm">확인</string>
+    <string name="global_neutral">취소</string>
+
+    <string name="MainActivity_search">검색</string>
+    <string name="MainActivity_addCategory">카테고리 추가</string>
+    <string name="MainActivity_addKeyword">키워드 추가</string>
+    <string name="MainActivity_review">복습하기</string>
+    <string name="MainActivity_statistics">통계</string>
+    <string name="MainActivity_setRelations">관계성 설정</string>
+    <string name="MainActivity_settings">환경 설정</string>
+</resources>
