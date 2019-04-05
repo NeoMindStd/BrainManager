@@ -4,7 +4,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.widget.GridView;
 import android.widget.TextView;
 
 
@@ -13,13 +12,15 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import std.neomind.brainmanager.data.Keyword;
 
 public class RelationActivity extends AppCompatActivity {
 
     private TextView keywordText;
     private ArrayList<Keyword> mKeywords;
-    private GridView gridView;
+    private RecyclerView gridView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +43,7 @@ public class RelationActivity extends AppCompatActivity {
 //        }
 
         ////////////테스트
-        //int id, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
+        //int item, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
         keywordText = findViewById(R.id.keyword_relation_view);
         keywordText.setText("Keyword");
         Keyword.Builder b = new Keyword.Builder();
@@ -62,8 +63,11 @@ public class RelationActivity extends AppCompatActivity {
             mKeywords.add(b.build());
         }
 
-        gridView = (GridView)findViewById(R.id.grid_relation_view);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+
+        gridView = (RecyclerView) findViewById(R.id.keyword_recyclerview);
         RelationGridAdapter relationGridAdapter = new RelationGridAdapter(this, mKeywords);
+        gridView.setLayoutManager(mLayoutManager);
         //키워드가 부족할 경우 회색 박스들 생성
         gridView.setAdapter(relationGridAdapter);
     }

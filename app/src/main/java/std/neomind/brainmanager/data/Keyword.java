@@ -6,8 +6,8 @@ import java.util.Objects;
 public class Keyword {
     public static final int NOT_REGISTERED = -1;
 
-    public int id;                  // db id
-    public int cid;                 // category id
+    public int id;                  // db item
+    public int cid;                 // category item
     public String text;             // contents
     public String imagePath;        // absolute path of contents image
     public int currentLevels;       // automatically review levels
@@ -31,7 +31,7 @@ public class Keyword {
     @Override
     public String toString() {
         return "Keyword{" +
-                "id=" + id +
+                "item=" + id +
                 ", cid=" + cid +
                 ", text='" + text + '\'' +
                 ", imagePath='" + imagePath + '\'' +
@@ -66,8 +66,8 @@ public class Keyword {
     }
 
     public static class Builder {
-        private int id;                  // db id
-        private int cid;                 // category id
+        private int id;                  // db item
+        private int cid;                 // category item
         private String text;             // contents
         private String imagePath;        // absolute path of contents image
         private int currentLevels;       // automatically review levels
@@ -75,13 +75,13 @@ public class Keyword {
         private String registrationDate; // yy-mm-dd
 
         public Builder() {
-            int id = NOT_REGISTERED;
-            int cid = NOT_REGISTERED;
-            String text = "";
-            String imagePath = "";
-            int currentLevels = NOT_REGISTERED;
-            int reviewTimes = NOT_REGISTERED;
-            String registrationDate = "";
+            id = NOT_REGISTERED;
+            cid = NOT_REGISTERED;
+            text = "";
+            imagePath = "";
+            currentLevels = NOT_REGISTERED;
+            reviewTimes = NOT_REGISTERED;
+            registrationDate = "";
         }
 
         public Builder setId(int id) {

@@ -65,7 +65,7 @@ public class ReviewActivity extends AppCompatActivity {
 //        }
 
         ////////////테스트
-        //int id, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
+        //int item, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
         Keyword.Builder b = new Keyword.Builder();
         b.setText("와!");
         Keyword tempKey = b.build();

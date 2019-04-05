@@ -118,7 +118,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="150dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/keword_layout"
                 app:layout_constraintWidth_percent="0.8"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -255,7 +255,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--<androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--&lt;!&ndash;android:id="@+id/text_exam"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:item="@+item/text_exam"&ndash;&gt;-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="200dp"-->
             <!--android:layout_marginStart="18dp"-->
@@ -267,7 +267,7 @@
             <!--app:layout_constraintEnd_toEndOf="parent"-->
             <!--app:layout_constraintHorizontal_bias="1.0"-->
             <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@id/keword_layout"-->
+            <!--app:layout_constraintTop_toBottomOf="@item/keword_layout"-->
             <!--app:layout_constraintVertical_bias="1.0">-->
 
         <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
@@ -281,7 +281,7 @@
 
             android:contextClickable="true"
             android:gravity="center"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/keword_layout"

@@ -19,7 +19,7 @@ public class Category {
     @Override
     public String toString() {
         return "Category{" +
-                "id=" + id +
+                "item=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';

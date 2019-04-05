@@ -8,9 +8,9 @@ public class Test {
 
     public static final int TYPE_UNDEFINED = -1;
 
-    public int id;              // db id
-    public int cid;             // category id
-    public int kid;             // keyword id
+    public int id;              // db item
+    public int cid;             // category item
+    public int kid;             // keyword item
     public String name;         // test name
     public String description;  // test description
     private String testedDate;  // yy-mm-dd
@@ -40,7 +40,7 @@ public class Test {
     @Override
     public String toString() {
         return "Test{" +
-                "id=" + id +
+                "item=" + id +
                 ", cid=" + cid +
                 ", kid=" + kid +
                 ", name='" + name + '\'' +
@@ -79,9 +79,9 @@ public class Test {
     }
 
     public static class Builder {
-        private int id;             // db id
-        private int cid;            // category id
-        private int kid;            // keyword id
+        private int id;             // db item
+        private int cid;            // category item
+        private int kid;            // keyword item
         private String name;        // test name
         private String description; // test description
         private String testedDate;  // yy-mm-dd

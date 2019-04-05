@@ -6,9 +6,9 @@ import java.util.Objects;
 public class Relation {
     public static final int NOT_REGISTERED = -1;
 
-    public int id;      // db id
-    public int kid1;    // keyword id(smaller)
-    public int kid2;    // keyword id(larger)
+    public int id;      // db item
+    public int kid1;    // keyword item(smaller)
+    public int kid2;    // keyword item(larger)
 
     private Relation(int id, int kid1, int kid2) {
         this.id = id;
@@ -19,7 +19,7 @@ public class Relation {
     @Override
     public String toString() {
         return "Relation{" +
-                "id=" + id +
+                "item=" + id +
                 ", kid1=" + kid1 +
                 ", kid2=" + kid2 +
                 '}';
@@ -46,9 +46,9 @@ public class Relation {
     }
 
     public static class Builder{
-        private int id;      // db id
-        private int kid1;    // keyword id(smaller)
-        private int kid2;    // keyword id(larger)
+        private int id;      // db item
+        private int kid1;    // keyword item(smaller)
+        private int kid2;    // keyword item(larger)
 
         public Builder() {
             this.id = NOT_REGISTERED;
