@@ -1,7 +1,6 @@
-package std.neomind.brainmanager;
+package std.neomind.brainmanager.data;
 
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import std.neomind.brainmanager.data.Keyword;
+import std.neomind.brainmanager.R;
 
 public class RelationGridAdapter extends RecyclerView.Adapter<RelationGridAdapter.RelationGridHolder> {
     Context context = null;
@@ -38,7 +37,7 @@ public class RelationGridAdapter extends RecyclerView.Adapter<RelationGridAdapte
         this.allKey = mKey;
     }
 
-//    public RelationGridAdapter(Context context) {
+    //    public RelationGridAdapter(Context context) {
 //        this.context = context;
 //        this.allKey = null;
 //    }
@@ -54,9 +53,9 @@ public class RelationGridAdapter extends RecyclerView.Adapter<RelationGridAdapte
     //아이템을 생성할 때 발생하는 메소드
     @Override
     public void onBindViewHolder(@NonNull RelationGridHolder viewholder, int position) {
-        if(allKey.get(position).text != "") {
+        if(allKey.get(position).name != "") {
             viewholder.item.setGravity(Gravity.CENTER);
-            viewholder.item.setText(allKey.get(position).text);
+            viewholder.item.setText(allKey.get(position).name);
             KeyGridClickListener keyGridClickListener = new KeyGridClickListener(context, allKey.get(position), viewholder.item);
             viewholder.item.setOnClickListener(keyGridClickListener);
         }
@@ -110,4 +109,33 @@ public class RelationGridAdapter extends RecyclerView.Adapter<RelationGridAdapte
 //        }
 //        return textView;
 //    }
+
+    public class KeyGridClickListener implements View.OnClickListener {
+        Context context;
+        Keyword key;
+        TextView textView;
+        private Boolean click;
+
+        public KeyGridClickListener(Context context, Keyword keyword, TextView textView) {
+            this.context = context;
+            this.key = keyword;
+            this.textView = textView;
+            this.click = false;
+        }
+
+        public void onClick(View v) {
+            //---------------------------------------------------------
+            // 클릭된 키워드들을 저장함.
+            //
+            if (click) {
+                click = false;
+                textView.setBackground(ContextCompat.getDrawable(context, R.drawable.edge));
+            } else {
+                click = true;
+                textView.setBackground(ContextCompat.getDrawable(context, R.drawable.blue_edge));
+            }
+
+
+        }
+    }
 }

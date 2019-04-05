@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.widget.EditText;
-import androidx.gridlayout.widget.GridLayout;
 
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -27,7 +26,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Random;
 
-import std.neomind.brainmanager.R;
+import androidx.gridlayout.widget.GridLayout;
+import std.neomind.brainmanager.data.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
 public class ReviewActivity extends AppCompatActivity {
@@ -56,14 +56,15 @@ public class ReviewActivity extends AppCompatActivity {
 
         mContext = this;
 ////실구현
-//        BrainDBHandler brainDBHandler = new BrainDBHandler(mContext);
-//        try {
-//            mKeywords = brainDBHandler.getAllKeywords();
-//            brainDBHandler.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        BrainDBHandler brainDBHandler = new BrainDBHandler(mContext);
+        try {
+            mKeywords = brainDBHandler.getAllKeywords();
+            brainDBHandler.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        /* TODO 변경
         ////////////테스트
         //int item, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
         Keyword.Builder b = new Keyword.Builder();
@@ -75,6 +76,7 @@ public class ReviewActivity extends AppCompatActivity {
         mKeywords.add(tempKey);
         mKeywords.add(tempKey2);
         ///////////////
+        */
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,7 +113,7 @@ public class ReviewActivity extends AppCompatActivity {
         //ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) keywordLayout.getLayoutParams();
         //param.setMargins(0, tMargin, 0, bMargin);
 
-//        if(key.text.isEmpty() && ){
+//        if(key.name.isEmpty() && ){
 //            keywordText.setText("키워드를 만들어주세요");
 //            return 0;
 //        }
@@ -123,9 +125,9 @@ public class ReviewActivity extends AppCompatActivity {
         keywordLayout = findViewById(R.id.keword_layout);
         ((TextView) keywordLayout.getChildAt(0)).setText("Keyword");
 
-        //keysize = key.text.size()
+        //keysize = key.name.size()
         //text인지 image인지 확인. db list 구현 아직 안됨
-        if(key.text.isEmpty() && key.imagePath.isEmpty())
+        if(key.name.isEmpty() && key.imagePath.isEmpty())
             return 0;
         while(true) {
             if (r == 1) {
@@ -143,8 +145,8 @@ public class ReviewActivity extends AppCompatActivity {
                 //객관식 문제를 제출하기 위해 설명들의 갯수를 셈. 관련성도 여기에 구현되어야함.
                 int count = 0;
                 for (Keyword tKey : mKeywords) {
-                    //count += tKey.text.size(); //설명의 총 갯수를 구합니다.
-                    if (!tKey.text.isEmpty()) count++;
+                    //count += tkey.name.size(); //설명의 총 갯수를 구합니다.
+                    if (!tKey.name.isEmpty()) count++;
                     if (!tKey.imagePath.isEmpty()) count++;
                     if (count > 3) {
                         count = 4;
@@ -177,7 +179,7 @@ public class ReviewActivity extends AppCompatActivity {
                         r = randomGenerator.nextInt(2);
                         if (r == 1) r++;
                         if (key.imagePath.isEmpty()) {
-                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.text);
+                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
                         } else
                             ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                         break;
@@ -190,7 +192,7 @@ public class ReviewActivity extends AppCompatActivity {
                         }
                         r = randomGenerator.nextInt(3);
                         if (key.imagePath.isEmpty()) {
-                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.text);
+                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
                         } else
                             ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                         break;
@@ -203,7 +205,7 @@ public class ReviewActivity extends AppCompatActivity {
                         }
                         r = randomGenerator.nextInt(4);
                         if (key.imagePath.isEmpty()) {
-                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.text);
+                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
                         } else
                             ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                         break;
