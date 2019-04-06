@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import std.neomind.brainmanager.data.BrainDBHandler;
+import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.data.KeywordAdapter;
+import std.neomind.brainmanager.utils.KeywordAdapter;
 
 import android.util.Log;
 import android.view.Menu;

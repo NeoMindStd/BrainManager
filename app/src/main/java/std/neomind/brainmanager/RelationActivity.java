@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import std.neomind.brainmanager.data.BrainDBHandler;
+import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.data.RelationGridAdapter;
+import std.neomind.brainmanager.utils.RelationGridAdapter;
 
 public class RelationActivity extends AppCompatActivity {
 

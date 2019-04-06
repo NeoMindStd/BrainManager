@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import androidx.gridlayout.widget.GridLayout;
-import std.neomind.brainmanager.data.BrainDBHandler;
+import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
 public class ReviewActivity extends AppCompatActivity {

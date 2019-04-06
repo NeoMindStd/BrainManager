@@ -1,11 +1,9 @@
-package std.neomind.brainmanager.data;
+package std.neomind.brainmanager.utils;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,13 +12,13 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
+import std.neomind.brainmanager.data.Keyword;
 
 public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.KeywordViewHolder> {
 

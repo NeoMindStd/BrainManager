@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.data;
+package std.neomind.brainmanager.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
+import std.neomind.brainmanager.data.Category;
+import std.neomind.brainmanager.data.Description;
+import std.neomind.brainmanager.data.Keyword;
+import std.neomind.brainmanager.data.Test;
 
 public class BrainDBHandler extends SQLiteOpenHelper {
 

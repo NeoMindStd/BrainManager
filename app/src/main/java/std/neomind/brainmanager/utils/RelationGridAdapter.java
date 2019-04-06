@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.data;
+package std.neomind.brainmanager.utils;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import std.neomind.brainmanager.R;
+import std.neomind.brainmanager.data.Keyword;
 
 public class RelationGridAdapter extends RecyclerView.Adapter<RelationGridAdapter.RelationGridHolder> {
     Context context = null;
