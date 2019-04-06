@@ -12,12 +12,12 @@ import androidx.core.app.ActivityCompat;
 
 public final class PermissionManager {
 
-    private Activity activity;
+    private Activity mActivity;
 
     private boolean granted;
 
     public PermissionManager(Activity activity) {
-        this.activity = activity;
+        mActivity = activity;
         granted = false;
     }
 
@@ -42,18 +42,18 @@ public final class PermissionManager {
 
     private boolean getPermission(final String permission, String permissionText) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int permissionResult = activity.checkSelfPermission(permission);
+            int permissionResult = mActivity.checkSelfPermission(permission);
             if (permissionResult == PackageManager.PERMISSION_DENIED) {
                 /*
                  * 해당 권한이 거부된 적이 있는지 유무 판별 해야함.
                  * 거부된 적이 있으면 true, 거부된 적이 없으면 false 리턴
                  */
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
+                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permission)) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
                     dialog.setTitle(getText(R.string.PermissionManager_acquirePermissionDialogTitle))
                             .setMessage(String.format(getText(R.string.PermissionManager_acquirePermissionDialogMsg), permissionText))
                             .setPositiveButton(getText(R.string.AlertDialog_button_yes), (dialog12, which) -> requestPermission(permission))
-                            .setNegativeButton(getText(R.string.AlertDialog_button_no), (dialog1, which) -> activity.finish()).create().show();
+                            .setNegativeButton(getText(R.string.AlertDialog_button_no), (dialog1, which) -> mActivity.finish()).create().show();
                 } else {
                     requestPermission(permission);
                 }
@@ -69,12 +69,12 @@ public final class PermissionManager {
 
     private void requestPermissions(String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.requestPermissions(permissions, activity.getResources().getInteger(
+            mActivity.requestPermissions(permissions, mActivity.getResources().getInteger(
                     R.integer.PERMISSIONS_REQUEST_CODE));
         }
     }
 
     private String getText(int id) {
-        return activity.getResources().getString(id);
+        return mActivity.getResources().getString(id);
     }
 }

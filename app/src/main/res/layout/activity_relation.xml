@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RelationActivity"
+    tools:mContext=".RelationActivity"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -21,13 +21,15 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_relation"
+        android:id="@+id/relation_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add" />
+
     <include layout="@layout/content_relation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

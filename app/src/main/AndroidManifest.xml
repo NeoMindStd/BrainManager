@@ -28,27 +28,27 @@
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="설정"
+            android:name=".ReviewActivity"
+            android:label="@string/Label_review"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".StatisticsActivity"
-            android:label="통계"
+            android:label="@string/Label_statistics"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ReviewActivity"
-            android:label="@string/app_name"
+            android:name=".RelationActivity"
+            android:label="@string/Label_relation"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".RelationActivity"
-            android:label="@string/app_name"
+            android:name=".SettingsActivity"
+            android:label="@string/Label_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

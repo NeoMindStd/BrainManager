@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
+
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Keyword;
@@ -57,12 +58,12 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     }
 
     public BrainDBHandler(@Nullable Context context,
-                           @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+                          @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DB_NAME, factory, version);
     }
 
     public BrainDBHandler(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory,
-                           int version, @Nullable DatabaseErrorHandler errorHandler) {
+                          int version, @Nullable DatabaseErrorHandler errorHandler) {
         super(context, DB_NAME, factory, version, errorHandler);
     }
 
@@ -338,26 +339,26 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     }
 
     private Keyword findKeyword(String query) throws NoMatchingDataException {
-    SQLiteDatabase db = this.getWritableDatabase();
-    Cursor cursor = db.rawQuery(query, null);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
 
-    Keyword keyword;
-    if (cursor.moveToFirst()) {
-        cursor.moveToFirst();
-        keyword = new Keyword.Builder()
-                .setId(cursor.getInt(0))
-                .setCid(cursor.getInt(1))
-                .setName(cursor.getString(2))
-                .setImagePath(cursor.getString(3))
-                .setCurrentLevels(cursor.getInt(4))
-                .setReviewTimes(cursor.getInt(5))
-                .setRegistrationDate(cursor.getLong(6))
-                .build();
-        cursor.close();
-    } else { throw new NoMatchingDataException(); }
-    db.close();
-    return keyword;
-}
+        Keyword keyword;
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            keyword = new Keyword.Builder()
+                    .setId(cursor.getInt(0))
+                    .setCid(cursor.getInt(1))
+                    .setName(cursor.getString(2))
+                    .setImagePath(cursor.getString(3))
+                    .setCurrentLevels(cursor.getInt(4))
+                    .setReviewTimes(cursor.getInt(5))
+                    .setRegistrationDate(cursor.getLong(6))
+                    .build();
+            cursor.close();
+        } else { throw new NoMatchingDataException(); }
+        db.close();
+        return keyword;
+    }
 
     public Keyword findKeyword(String field, int value) throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +

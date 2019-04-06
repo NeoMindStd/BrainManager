@@ -15,19 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.RecyclerView;
+
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
+
 import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.data.Keyword;
 
-public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.KeywordViewHolder> {
+public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "KeywordAdapter";
+    private static final String TAG = "KeywordRecyclerAdapter";
 
     private MainActivity mActivity;
     private ArrayList<Keyword> mKeywords;
 
-    public KeywordAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
+    public KeywordRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
         mActivity = activity;
         mKeywords = keywords;
     }
@@ -36,7 +38,7 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.KeywordV
     @Override
     public KeywordViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.keyword_item, viewGroup, false);
+                .inflate(R.layout.main_keyword_item, viewGroup, false);
         KeywordViewHolder keywordViewHolder = new KeywordViewHolder(view);
         return keywordViewHolder;
     }
@@ -60,13 +62,13 @@ public class KeywordAdapter extends RecyclerView.Adapter<KeywordAdapter.KeywordV
          * @param itemView is convertView
          */
 
-        public CircularImageView imageView;
-        public TextView textView;
+        CircularImageView imageView;
+        TextView textView;
 
-        public KeywordViewHolder(@NonNull View itemView) {
+        KeywordViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.keyword_circle_image);
-            textView = itemView.findViewById(R.id.keyword_text_view);
+            imageView = itemView.findViewById(R.id.main_item_circularImage_keyword);
+            textView = itemView.findViewById(R.id.main_item_textView_keyword);
         }
 
         public void build(int i) {

@@ -66,7 +66,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         /* TODO 변경
         ////////////테스트
-        //int item, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
+        //int textView, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
         Keyword.Builder b = new Keyword.Builder();
         b.setText("와!");
         Keyword tempKey = b.build();
@@ -78,7 +78,7 @@ public class ReviewActivity extends AppCompatActivity {
         ///////////////
         */
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         crrentType = generate_view(mKeywords.get(0));
     }
@@ -122,7 +122,7 @@ public class ReviewActivity extends AppCompatActivity {
 //
         //ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) keywordLayout.getLayoutParams();
         //param.setMargins(0, tMargin, 0, bMargin);
-        keywordLayout = findViewById(R.id.keword_layout);
+        keywordLayout = findViewById(R.id.review_layout_keyword);
         ((TextView) keywordLayout.getChildAt(0)).setText("Keyword");
 
         //keysize = key.name.size()
@@ -131,14 +131,14 @@ public class ReviewActivity extends AppCompatActivity {
             return 0;
         while(true) {
             if (r == 1) {
-                descriptionLayout = findViewById(R.id.description_layout);
+                descriptionLayout = findViewById(R.id.review_layout_description);
                 descriptionLayout.setVisibility(View.VISIBLE);
                 descriptionLayout.getChildAt(0).setVisibility(View.VISIBLE);
                 descriptionLayout.getChildAt(1).setVisibility(View.VISIBLE);
-                ((TextView)descriptionLayout.getChildAt(0)).setText("정답을 생각해보세요");
+                ((TextView)descriptionLayout.getChildAt(0)).setText(getString(R.string.ReviewActivity_thinkAnswer));
                 if (!key.imagePath.isEmpty()) {
                     ((ImageView) descriptionLayout.getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
-                    //descriptionIamge 객체 내용지정(이미지파일)
+                    //descriptionImage 객체 내용지정(이미지파일)
                 }
                 return 1;
             } else if (r == 2 && mKeywords.size() > 1) {
@@ -159,7 +159,7 @@ public class ReviewActivity extends AppCompatActivity {
                     continue;
                 }
                 //객관식 문제 초기화
-                examAllLayout = findViewById(R.id.exam_all_layout);
+                examAllLayout = findViewById(R.id.review_layout_examAll);
                 final int examLayoutCount = examAllLayout.getChildCount();
                 examLayoutArray = new ConstraintLayout[examLayoutCount];
                 for (int i = 0; i < examLayoutCount; i++) {
@@ -221,12 +221,12 @@ public class ReviewActivity extends AppCompatActivity {
                 continue;
             }
             else {
-                textExamScroll = findViewById(R.id.text_exam_scroll);
+                textExamScroll = findViewById(R.id.review_scroll_exam);
                 textExamScroll.setVisibility(View.VISIBLE);
-                textExamLayout = findViewById(R.id.text_exam);
+                textExamLayout = findViewById(R.id.review_gridLayout_exam);
                 textExamLayout.setVisibility(View.VISIBLE);
 
-                examTest = findViewById(R.id.test);
+                examTest = findViewById(R.id.review_editText_test);
                 examTest.setOnKeyListener(on_KeyEvent);
                 return 3;
             }

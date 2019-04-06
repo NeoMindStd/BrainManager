@@ -23,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        mChart = (LineChart) findViewById(R.id.chart);
+        mChart = findViewById(R.id.settings_chart);
 
        /* mChart.setOnChartGestureListener(StatisticsActivity.this);
         mChart.setOnChartValueSelectedListener(StatisticsActivity.this);*/
@@ -46,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
         yValues.add(new Entry(3, 5f));
         yValues.add(new Entry(4, 25f));
         yValues.add(new Entry(5, 30f));
-        LineDataSet set1 = new LineDataSet(yValues, "망각곡선");
+        LineDataSet set1 = new LineDataSet(yValues, getString(R.string.Statistics_forgettingCurve));
 
         set1.setFillAlpha(110);
 

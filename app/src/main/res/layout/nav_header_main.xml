@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/side_nav_bar"
+    android:background="@drawable/main_side_nav_bar"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="메뉴"
+        android:text="@string/Global_menu"
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:textSize="32dp"

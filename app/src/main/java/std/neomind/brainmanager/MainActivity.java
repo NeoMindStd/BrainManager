@@ -24,7 +24,7 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.utils.KeywordAdapter;
+import std.neomind.brainmanager.utils.KeywordRecyclerAdapter;
 import std.neomind.brainmanager.utils.PermissionManager;
 
 import android.util.Log;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initActivity() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
@@ -73,17 +73,17 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(fabClickListener);
         fab.setOnLongClickListener(fabLongClickListener);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        DrawerLayout drawerLayout = findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.main_navView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mSpinner = findViewById(R.id.spinner);
-        mRecyclerView = findViewById(R.id.keyword_recycler_view);
+        mSpinner = findViewById(R.id.main_spinner);
+        mRecyclerView = findViewById(R.id.main_recyclerView_keyword);
 
         mBrainDBHandler = new BrainDBHandler(this);
     }
@@ -117,13 +117,13 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "loadDB(): mKeywords(" + i + ") - " + mKeywords.get(i).toStringAbsolutely());
 
             mSpinner.setAdapter(new ArrayAdapter<>(
-                    this, R.layout.spinner_item, mCategories));
+                    this, R.layout.category_spinner_item, mCategories));
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             mKeywordAdapter = new ScaleInAnimationAdapter(
                     new AlphaInAnimationAdapter(
-                            new KeywordAdapter(this, mKeywords)));
+                            new KeywordRecyclerAdapter(this, mKeywords)));
             mRecyclerView.setAdapter(mKeywordAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -148,9 +148,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main, menu);
+        menuInflater.inflate(R.menu.main_app_bar, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setMaxWidth(Integer.MAX_VALUE);
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar textView clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation view textView clicks here.
         Intent intent = null;
         switch (item.getItemId()) {
             case R.id.nav_review :
@@ -197,14 +197,14 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } catch (Exception e) { e.printStackTrace(); }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Log.d(TAG, "onMenuItemClick: item :" + item);
+        Log.d(TAG, "onMenuItemClick: textView :" + item);
         return false;
     }
 

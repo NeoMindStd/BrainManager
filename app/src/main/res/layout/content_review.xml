@@ -5,37 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ReviewActivity"
+    tools:mContext=".ReviewActivity"
     tools:showIn="@layout/activity_review">
 
-        <Button
-            android:id="@+id/show_answer"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/edge"
-            android:freezesText="false"
-            android:text="@string/ReviewActivity_showAnswerButton"
-            android:textColor="#707070"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/next_exam"
-            app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/review_button_showAnswer"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/review_relation_edge"
+        android:freezesText="false"
+        android:text="@string/ReviewActivity_showAnswerButton"
+        android:textColor="@color/textColor_gray"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/review_button_nextExam"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/next_exam"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="80sp"
-            android:background="@drawable/edge"
-            android:text="@string/ReviewActivity_nextButton"
-            android:textColor="#707070"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/show_answer"
-            app:layout_constraintVertical_bias="1.0" />
-
+    <Button
+        android:id="@+id/review_button_nextExam"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="80sp"
+        android:background="@drawable/review_relation_edge"
+        android:text="@string/ReviewActivity_nextButton"
+        android:textColor="@color/textColor_gray"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/review_button_showAnswer"
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/review_layout"
@@ -50,10 +49,10 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/keword_layout"
+            android:id="@+id/review_layout_keyword"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/review_relation_rounded"
             android:gravity="center"
             android:visibility="visible"
             app:layout_constraintVertical_bias="0.05"
@@ -62,85 +61,86 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
+
             <TextView
                 style="@style/keywordTheme"
-                android:id="@+id/keword_view"
+                android:id="@+id/review_textView_keword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="visible">
-            </TextView>
+                android:visibility="visible"/>
 
             <ImageView
-                android:id="@+id/keword_image_view"
+                android:id="@+id/review_imageView_keyword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:contentDescription="TODO" />
+                android:contentDescription="@string/ReviewActivity_imageViewKeywordDescription" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/description_layout"
+            android:id="@+id/review_layout_description"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="150dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/review_relation_rounded"
             android:gravity="center"
             android:visibility="gone"
             app:layout_constraintWidth_percent="0.8"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/keword_layout"
+            app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
             app:layout_constraintVertical_bias="1.0">
+
             <TextView
                 style="@style/keywordTheme"
-                android:id="@+id/description_text"
+                android:id="@+id/review_textView_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="gone">
-            </TextView>
+                android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/description_iamge"
+                android:id="@+id/review_imageView_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="gone"
-            />
+                android:visibility="gone"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exam_all_layout"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="150dp"
-                android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@id/keword_layout"
-                app:layout_constraintWidth_percent="0.8"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-            >
+            android:id="@+id/review_layout_examAll"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="150dp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exam_layout1"
+                android:id="@+id/review_layout_exam1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/rounded"
+                android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/exam_layout3"
+                app:layout_constraintBottom_toTopOf="@id/review_layout_exam3"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/exam_layout2"
+                app:layout_constraintRight_toLeftOf="@id/review_layout_exam2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_weight="1">
 
                 <TextView
-                    android:id="@+id/exam_text1"
-                    style="@style/ExamTheme"
+                    android:id="@+id/review_textView_exam1"
+                    style="@style/examTheme"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -149,151 +149,156 @@
                     app:layout_constraintHorizontal_chainStyle="spread" />
 
                 <ImageView
-                    android:id="@+id/exam_image1"
+                    android:id="@+id/review_image_exam1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:gravity="center"
                     android:visibility="visible" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exam_layout2"
+                android:id="@+id/review_layout_exam2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/rounded"
+                android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintVertical_weight="1"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/exam_layout3"
-                app:layout_constraintLeft_toRightOf="@id/exam_layout1"
-                app:layout_constraintRight_toRightOf="parent"
-                >
+                app:layout_constraintBottom_toTopOf="@id/review_layout_exam3"
+                app:layout_constraintLeft_toRightOf="@id/review_layout_exam1"
+                app:layout_constraintRight_toRightOf="parent">
+
                 <TextView
-                    style="@style/ExamTheme"
+                    style="@style/examTheme"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/exam_text2"
+                    android:id="@+id/review_textView_exam2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintHorizontal_weight="1"
                     android:text=""
                     android:visibility="visible"
-                    android:gravity="center"
-                />
+                    android:gravity="center"/>
+
                 <ImageView
-                    android:id="@+id/exam_image2"
+                    android:id="@+id/review_imageView_exam2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
-                    android:gravity="center"
-                />
+                    android:gravity="center"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exam_layout3"
+                android:id="@+id/review_layout_exam3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/rounded"
+                android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintVertical_weight="1"
-                app:layout_constraintTop_toBottomOf="@id/exam_layout1"
+                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/exam_layout4"
-                >
+                app:layout_constraintRight_toLeftOf="@id/review_layout_exam4">
+
                 <TextView
-                    style="@style/ExamTheme"
+                    style="@style/examTheme"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/exam_text3"
+                    android:id="@+id/review_textView_exam3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintHorizontal_weight="1"
                     android:text=""
                     android:visibility="visible"
                     android:gravity="center"/>
+
                 <ImageView
-                    android:id="@+id/exam_image3"
+                    android:id="@+id/review_imageView_exam3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
-                    android:gravity="center"
-                />
+                    android:gravity="center"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exam_layout4"
+                android:id="@+id/review_layout_exam4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/rounded"
+                android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintVertical_weight="1"
-                app:layout_constraintTop_toBottomOf="@id/exam_layout1"
+                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/exam_layout3"
-                app:layout_constraintRight_toRightOf="parent"
-                >
+                app:layout_constraintLeft_toRightOf="@id/review_layout_exam3"
+                app:layout_constraintRight_toRightOf="parent">
+
                 <TextView
-                    style="@style/ExamTheme"
+                    style="@style/examTheme"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/exam_text4"
+                    android:id="@+id/review_textView_exam4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintHorizontal_weight="1"
                     android:text=""
                     android:visibility="visible"
                     android:gravity="center"/>
+
                 <ImageView
-                    android:id="@+id/exam_image4"
+                    android:id="@+id/review_imageView_exam4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
                     android:gravity="center" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--<androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--&lt;!&ndash;android:item="@+item/text_exam"&ndash;&gt;-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="200dp"-->
-            <!--android:layout_marginStart="18dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_marginEnd="18dp"-->
-            <!--android:layout_marginBottom="150dp"-->
-            <!--android:gravity="center"-->
-            <!--android:visibility="visible"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintHorizontal_bias="1.0"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@item/keword_layout"-->
-            <!--app:layout_constraintVertical_bias="1.0">-->
+        <!--&lt;!&ndash;android:textView="@+textView/text_exam"&ndash;&gt;-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_marginStart="18dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="18dp"-->
+        <!--android:layout_marginBottom="150dp"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="visible"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="1.0"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@textView/keword_layout"-->
+        <!--app:layout_constraintVertical_bias="1.0">-->
 
         <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
 
-
         <ScrollView
-            android:id="@+id/text_exam_scroll"
+            android:id="@+id/review_scroll_exam"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
-
             android:contextClickable="true"
             android:gravity="center"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/keword_layout"
-            app:layout_constraintWidth_percent="0.8"
-            >
+            app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
+            app:layout_constraintWidth_percent="0.8">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <androidx.gridlayout.widget.GridLayout
-                    android:id="@+id/text_exam"
+                    android:id="@+id/review_gridLayout_exam"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contextClickable="true"
@@ -304,29 +309,31 @@
                     android:visibility="visible"
                     app:columnCount="4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/keword_layout">
+                    app:layout_constraintTop_toBottomOf="@id/review_layout_keyword">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="A."
+                        android:text="@string/ReviewActivity_answer"
                         style="@style/textExamTheme"/>
 
                     <EditText
-                        android:id="@+id/test"
+                        android:id="@+id/review_editText_test"
                         android:text=""
                         style="@style/textExamTheme"
                         android:singleLine = "true"
                         android:lines = "1"/>
 
-                    <TextView android:text="입니다"
+                    <TextView
+                        android:text="@string/ReviewActivity_is"
                         style="@style/textExamTheme"/>
-                </androidx.gridlayout.widget.GridLayout>
 
+                </androidx.gridlayout.widget.GridLayout>
 
             </HorizontalScrollView>
 
         </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

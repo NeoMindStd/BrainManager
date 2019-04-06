@@ -16,7 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
-    private static final String TAG="StatisticsActivity";
+
+    private static final String TAG = "StatisticsActivity";
 
     private LineChart mChart;
     private LineChart mChart2;
@@ -27,7 +28,7 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        mChart = (LineChart) findViewById(R.id.chart);
+        mChart = findViewById(R.id.statistics_chart1);
 
        /* mChart.setOnChartGestureListener(StatisticsActivity.this);
         mChart.setOnChartValueSelectedListener(StatisticsActivity.this);*/
@@ -72,7 +73,7 @@ public class StatisticsActivity extends AppCompatActivity {
         mChart.setData(data);
 
 
-        mChart2 = (LineChart) findViewById(R.id.chart2);
+        mChart2 = (LineChart) findViewById(R.id.statistics_chart2);
 
         mChart2.setDragEnabled(true);
         mChart2.setScaleEnabled(false);
@@ -115,9 +116,4 @@ public class StatisticsActivity extends AppCompatActivity {
         mChart2.setData(data2);
 
     }
-
-
-
-
 }
-

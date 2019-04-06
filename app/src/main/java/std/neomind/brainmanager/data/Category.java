@@ -21,7 +21,7 @@ public class Category {
 
     public String toStringAbsolutely() {
         return "Category{" +
-                "item=" + id +
+                "textView=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

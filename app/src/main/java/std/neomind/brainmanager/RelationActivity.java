@@ -13,26 +13,30 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.utils.RelationGridAdapter;
+import std.neomind.brainmanager.utils.RelationRecyclerAdapter;
 
 public class RelationActivity extends AppCompatActivity {
 
     public static final String INTENT_KEYWORD_ID = "intentKeywordID";
 
-    private TextView keywordText;
+    private static final int SPAN_COUNT = 3;
+
+    private TextView mKeywordText;
     private ArrayList<Keyword> mKeywords;
-    private RecyclerView gridView;
+    private RecyclerView mKeywordRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relation);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         ///플로팅 액션 버튼
-        FloatingActionButton fab = findViewById(R.id.fab_relation);
+        FloatingActionButton fab = findViewById(R.id.relation_fab);
         fab.setOnClickListener(view ->
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show());
@@ -47,9 +51,9 @@ public class RelationActivity extends AppCompatActivity {
 
         /* TODO 변경
         ////////////테스트
-        //int item, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
-        keywordText = findViewById(R.id.keyword_relation_view);
-        keywordText.setText("Keyword");
+        //int textView, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
+        mKeywordText = findViewById(R.id.keyword_relation_view);
+        mKeywordText.setText("Keyword");
         Keyword.Builder b = new Keyword.Builder();
         b.setText("와!");
         Keyword tempKey = b.build();
@@ -68,13 +72,13 @@ public class RelationActivity extends AppCompatActivity {
         }
         */
 
-        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, SPAN_COUNT);
 
-        gridView = (RecyclerView) findViewById(R.id.keyword_recyclerview);
-        RelationGridAdapter relationGridAdapter = new RelationGridAdapter(this, mKeywords);
-        gridView.setLayoutManager(mLayoutManager);
+        mKeywordRecyclerView = findViewById(R.id.relation_recyclerView_keyword);
+        RelationRecyclerAdapter relationRecyclerAdapter = new RelationRecyclerAdapter(this, mKeywords);
+        mKeywordRecyclerView.setLayoutManager(mLayoutManager);
         //키워드가 부족할 경우 회색 박스들 생성
-        gridView.setAdapter(relationGridAdapter);
+        mKeywordRecyclerView.setAdapter(relationRecyclerAdapter);
     }
 
     /**
@@ -86,7 +90,7 @@ public class RelationActivity extends AppCompatActivity {
     private Keyword loadKeyword() {
         Bundle intentBundle = getIntent().getExtras();
         assert intentBundle != null;
-        int id = intentBundle.getInt(INTENT_KEYWORD_ID, -1);
+        int id = intentBundle.getInt(INTENT_KEYWORD_ID, Keyword.NOT_REGISTERED);
         BrainDBHandler brainDBHandler = new BrainDBHandler(this);
         Keyword loadedKeyword = null;
         try {

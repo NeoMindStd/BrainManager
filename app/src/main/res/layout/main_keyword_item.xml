@@ -10,7 +10,7 @@
         android:layout_height="72dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/keyword_circle_image"
+            android:id="@+id/main_item_circularImage_keyword"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -22,10 +22,10 @@
             app:civ_border_width="1dp"/>
 
         <TextView
-            android:id="@+id/keyword_text_view"
+            android:id="@+id/main_item_textView_keyword"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:layout_constraintLeft_toRightOf="@id/keyword_circle_image"
+            app:layout_constraintLeft_toRightOf="@id/main_item_circularImage_keyword"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.5"

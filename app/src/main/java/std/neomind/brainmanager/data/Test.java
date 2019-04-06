@@ -30,7 +30,7 @@ public class Test {
     @Override
     public String toString() {
         return "Test{" +
-                "item=" + id +
+                "textView=" + id +
                 ", cid=" + cid +
                 ", kid=" + kid +
                 ", testedDate='" + testedDate + '\'' +
