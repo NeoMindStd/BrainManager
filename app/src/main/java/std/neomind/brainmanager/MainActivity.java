@@ -25,6 +25,7 @@ import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.KeywordAdapter;
+import std.neomind.brainmanager.utils.PermissionManager;
 
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
 
+    private PermissionManager mPermissionManager;
     private BrainDBHandler mBrainDBHandler;
 
     private ArrayList<Category> mCategories;
@@ -57,6 +59,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPermissionManager = new PermissionManager(this);
+        mPermissionManager.request();
+        initActivity();
+    }
+
+    private void initActivity() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -96,7 +104,7 @@ public class MainActivity extends AppCompatActivity
         try {
             mCategories = mBrainDBHandler.getAllCategories();
             mCategories.add(Category.CATEGORY_ALL,
-                    new Category.Builder().setName(getString(R.string.global_all)).build());
+                    new Category.Builder().setName(getString(R.string.Category_all)).build());
 
             mKeywords = mBrainDBHandler.getAllKeywords();
             for(int i = 0; i < mKeywords.size(); i++)
@@ -258,7 +266,7 @@ public class MainActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.MainActivity_addKeyword))
                 .setView(editText)
-                .setPositiveButton(getString(R.string.global_confirm),
+                .setPositiveButton(getString(R.string.AlertDialog_confirm),
                         (dialog, which) -> {
                             BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
                             Keyword resultKeyword = new Keyword.Builder()
@@ -267,7 +275,7 @@ public class MainActivity extends AppCompatActivity
                             dbHandler.addKeyword(resultKeyword);
                             mKeywords.add(resultKeyword);
                         })
-                .setNeutralButton(getString(R.string.global_neutral), null)
+                .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
                 .show();
     };
 
@@ -276,7 +284,7 @@ public class MainActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.MainActivity_addCategory))
                 .setView(editText)
-                .setPositiveButton(getString(R.string.global_confirm),
+                .setPositiveButton(getString(R.string.AlertDialog_confirm),
                         (dialog, which) -> {
                             BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
                             Category resultCategory = new Category.Builder().
@@ -285,7 +293,7 @@ public class MainActivity extends AppCompatActivity
                             dbHandler.addCategory(resultCategory);
                             mCategories.add(resultCategory);
                         })
-                .setNeutralButton(getString(R.string.global_neutral), null)
+                .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
                 .show();
         return true;
     };

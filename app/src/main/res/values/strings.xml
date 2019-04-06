@@ -8,9 +8,13 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="global_all">All</string>
-    <string name="global_confirm">Confirm</string>
-    <string name="global_neutral">Cancel</string>
+    <string name="Category_all">All</string>
+
+    <string name="AlertDialog_confirm">Confirm</string>
+    <string name="AlertDialog_neutral">Cancel</string>
+
+    <string name="AlertDialog_button_yes">Yes</string>
+    <string name="AlertDialog_button_no">No</string>
 
     <string name="MainActivity_search">Search</string>
     <string name="MainActivity_addCategory">New Category</string>
@@ -22,4 +26,12 @@
 
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>
+
+    <string name="PermissionManager_permissionText_readExternalStorage">Read external storage</string>
+    <string name="PermissionManager_permissionText_writeExternalStorage">Write external storage</string>
+    <string name="PermissionManager_permissionText_receiveBootCompleted">Receive boot completed</string>
+    <string name="PermissionManager_permissionText_camera">Camera</string>
+    <string name="PermissionManager_permissionText_wakeLock">Wake up device</string>
+    <string name="PermissionManager_acquirePermissionDialogTitle">Permissions are required.</string>
+    <string name="PermissionManager_acquirePermissionDialogMsg">To use this feature, you need %s permission on your device. Would you like to continue?</string>
 </resources>

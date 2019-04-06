@@ -8,9 +8,13 @@
     <string name="nav_header_desc">네비게이션 헤더</string>
     <string name="action_settings">설정</string>
 
-    <string name="global_all">모두</string>
-    <string name="global_confirm">확인</string>
-    <string name="global_neutral">취소</string>
+    <string name="Category_all">모두</string>
+
+    <string name="AlertDialog_confirm">확인</string>
+    <string name="AlertDialog_neutral">취소</string>
+
+    <string name="AlertDialog_button_yes">네</string>
+    <string name="AlertDialog_button_no">아니오</string>
 
     <string name="MainActivity_search">검색</string>
     <string name="MainActivity_addCategory">카테고리 추가</string>
@@ -22,4 +26,12 @@
 
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>
+
+    <string name="PermissionManager_permissionText_readExternalStorage">저장소 읽기</string>
+    <string name="PermissionManager_permissionText_writeExternalStorage">저장소 쓰기</string>
+    <string name="PermissionManager_permissionText_receiveBootCompleted">부팅 완료 파악</string>
+    <string name="PermissionManager_permissionText_camera">카메라</string>
+    <string name="PermissionManager_permissionText_wakeLock">디바이스 깨우기</string>
+    <string name="PermissionManager_acquirePermissionDialogTitle">권한이 필요합니다.</string>
+    <string name="PermissionManager_acquirePermissionDialogMsg">이 기능을 사용하기 위해서는 단말기의 \"%s\" 권한이 필요합니다. 계속 하시겠습니까?</string>
 </resources>
