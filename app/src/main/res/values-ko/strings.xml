@@ -39,6 +39,9 @@
     <string name="MainActivity_setRelations">관계성 설정</string>
     <string name="MainActivity_settings">환경 설정</string>
 
+    <string name="MainActivity_FabItem_addCategories">카테고리 추가</string>
+    <string name="MainActivity_FabItem_addKeywords">키워드 추가</string>
+
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>
     <string name="ReviewActivity_thinkAnswer">정답을 생각해보세요.</string>
