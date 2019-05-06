@@ -37,6 +37,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public static final String FIELD_KEYWORDS_CURRENT_LEVELS = "current_levels";
     public static final String FIELD_KEYWORDS_REVIEW_TIMES = "review_times";
     public static final String FIELD_KEYWORDS_REGISTRATION_DATE = "registration_date";
+    public static final String FIELD_KEYWORDS_EF = "ef";
+    public static final String FIELD_KEYWORDS_INTERVAL = "interval";
 
     public static final String FIELD_KEYWORD_DESCRIPTIONS_ID = "_id";
     public static final String FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION = "description";
@@ -80,7 +82,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                 FIELD_KEYWORDS_CID + " INTEGER NOT NULL REFERENCES " + TABLE_CATEGORIES + "(" + FIELD_CATEGORIES_ID + "), " +
                 FIELD_KEYWORDS_NAME + " TEXT, " + FIELD_KEYWORDS_IMAGE_PATH + " TEXT, " +
                 FIELD_KEYWORDS_CURRENT_LEVELS + " INTEGER, " + FIELD_KEYWORDS_REVIEW_TIMES + " INTEGER, " +
-                FIELD_KEYWORDS_REGISTRATION_DATE + " INTEGER" + ")";
+                FIELD_KEYWORDS_REGISTRATION_DATE + " INTEGER, " + FIELD_KEYWORDS_EF + " REAL, " +
+                FIELD_KEYWORDS_INTERVAL + " INTEGER" + ")";
 
         final String CREATE_KEYWORD_DESCRIPTIONS_TABLE = "CREATE TABLE " +
                 TABLE_KEYWORD_DESCRIPTIONS + "(" +
@@ -133,6 +136,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
         values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
+        values.put(FIELD_KEYWORDS_EF, keyword.ef);
+        values.put(FIELD_KEYWORDS_INTERVAL, keyword.interval);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -225,6 +230,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                         .setRegistrationDate(cursor.getLong(6))
                         .setRelationIds(
                                 getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                        .setEF(cursor.getDouble(7))
+                        .setInterval(cursor.getInt(8))
                         .build();
                 keywords.add(keyword);
                 cursor.moveToNext();
@@ -261,6 +268,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                             .setRegistrationDate(cursor.getLong(6))
                             .setRelationIds(
                                     getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                            .setEF(cursor.getDouble(7))
+                            .setInterval(cursor.getInt(8))
                             .build();
                     keywords.add(keyword);
                     cursor.moveToNext();
@@ -390,6 +399,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                     .setCurrentLevels(cursor.getInt(4))
                     .setReviewTimes(cursor.getInt(5))
                     .setRegistrationDate(cursor.getLong(6))
+                    .setEF(cursor.getDouble(7))
+                    .setInterval(cursor.getInt(8))
                     .build();
             cursor.close();
         } else { throw new NoMatchingDataException(); }
@@ -502,6 +513,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
         values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
+        values.put(FIELD_KEYWORDS_EF, keyword.ef);
+        values.put(FIELD_KEYWORDS_INTERVAL, keyword.interval);
         updateObject(TABLE_KEYWORDS, values,
                 FIELD_KEYWORDS_ID + "=" + keyword.id, null);
     }
