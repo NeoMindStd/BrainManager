@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity
 
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setOnCloseListener(onCloseListener);
 
         return true;
     }
@@ -420,7 +421,17 @@ public class MainActivity extends AppCompatActivity
 
     private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
         @Override
-        public boolean onQueryTextSubmit(String query) {
+        public boolean onQueryTextSubmit(String searchString) {
+            mKeywords.clear();
+            mRecyclerView.removeAllViewsInLayout();
+
+            // Add filtered items
+            String query = "SELECT * FROM " + BrainDBHandler.TABLE_KEYWORDS;
+            query += String.format(" WHERE %s LIKE \"%%%s%%\"", BrainDBHandler.FIELD_KEYWORDS_NAME, searchString);
+            Log.d("Query", query);
+            mKeywords = mBrainDBHandler.getKeywords(query);
+            initRecyclerView();
+
             return false;
         }
 
@@ -428,5 +439,11 @@ public class MainActivity extends AppCompatActivity
         public boolean onQueryTextChange(String newText) {
             return false;
         }
+    };
+
+    private SearchView.OnCloseListener onCloseListener = () -> {
+            loadDB();
+            initRecyclerView();
+            return false;
     };
 }

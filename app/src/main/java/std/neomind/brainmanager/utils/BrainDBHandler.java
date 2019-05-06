@@ -243,6 +243,39 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         return keywords;
     }
 
+    public ArrayList<Keyword> getKeywords(String query) {
+        ArrayList<Keyword> keywords = new ArrayList<>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Keyword keyword = new Keyword.Builder()
+                        .setId(cursor.getInt(0))
+                        .setCid(cursor.getInt(1))
+                        .setName(cursor.getString(2))
+                        .setDescriptions(
+                                getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
+                        .setImagePath(cursor.getString(3))
+                        .setCurrentLevels(cursor.getInt(4))
+                        .setReviewTimes(cursor.getInt(5))
+                        .setRegistrationDate(cursor.getLong(6))
+                        .setRelationIds(
+                                getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                        .setEF(cursor.getDouble(7))
+                        .setInterval(cursor.getInt(8))
+                        .build();
+                keywords.add(keyword);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return keywords;
+    }
+
     public ArrayList<Keyword> getAllKeywordsOfTheCategory(int cid) {
         if(cid == Category.CATEGORY_ALL) {
           return getAllKeywords();
