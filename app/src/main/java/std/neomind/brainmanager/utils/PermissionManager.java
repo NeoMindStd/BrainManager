@@ -43,11 +43,13 @@ public final class PermissionManager {
     private boolean getPermission(final String permission, String permissionText) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permissionResult = mActivity.checkSelfPermission(permission);
-            if (permissionResult == PackageManager.PERMISSION_DENIED) {
+            return permissionResult == PackageManager.PERMISSION_GRANTED;
+            //if (permissionResult == PackageManager.PERMISSION_DENIED) {
                 /*
                  * 해당 권한이 거부된 적이 있는지 유무 판별 해야함.
                  * 거부된 적이 있으면 true, 거부된 적이 없으면 false 리턴
                  */
+                /*
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permission)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
                     dialog.setTitle(getText(R.string.PermissionManager_acquirePermissionDialogTitle))
@@ -58,9 +60,10 @@ public final class PermissionManager {
                     requestPermission(permission);
                 }
                 return true;
-            }
+
+            }*/
         }
-        return false;
+        return true;    // SDK M 이하에서는 설치 시 퍼미션 허용
     }
 
     private void requestPermission(final String permission) {

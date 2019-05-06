@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mPermissionManager = new PermissionManager(this);
-        mPermissionManager.request();
+        if(!mPermissionManager.checkGranted()) mPermissionManager.request();
         initActivity();
     }
 
@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
     private void getCategoriesFromDB() {
         mCategories = mBrainDBHandler.getAllCategories();
         mCategories.add(Category.CATEGORY_ALL,
@@ -269,17 +270,17 @@ public class MainActivity extends AppCompatActivity
                 //.setProgressBarColor(getColorHexStringFromColors(R.color.imagePickerProgressBarColor))// ProgressBar color
                 //.setBackgroundColor(getColorHexStringFromColors(R.color.imagePickerBackground))       // Background color
                 .setCameraOnly(false)                                                                   // Camera mode
-                .setMultipleMode(true)                                                                  // Select multiple images or single image
+                .setMultipleMode(false)                                                                 // Select multiple images or single image
+                .setMaxSize(1)                                                                          // Max images can be selected
                 .setFolderMode(true)                                                                    // Folder mode
                 .setShowCamera(true)                                                                    // Show camera button
                 //.setFolderTitle(getString(R.string.MainActivity_Albums))                              // Folder title (works with FolderMode = true)
                 //.setImageTitle(getString(R.string.MainActivity_Gallery))                              // Image title (works with FolderMode = false)
                 //.setDoneTitle(getString(R.string.MainActivity_Done))                                  // Done button title
                 //.setLimitMessage(getString(R.string.MainActivity_MaximumSelection))                   // Selection limit message
-                .setMaxSize(1)                                                                          // Max images can be selected
                 //.setSavePath(getString(R.string.APP_NAME))                                            // Image capture folder name
                 //.setSelectedImages(images)                                                            // Selected images
-                .setAlwaysShowDoneButton(true)                                                          // Set always show done button fadeIn multiple mode
+                .setAlwaysShowDoneButton(false)                                                         // Set always show done button fadeIn multiple mode
                 .setRequestCode(PICK_IMAGE_REQUEST)                                                     // Set request code, default Config.RC_PICK_IMAGES
                 .setKeepScreenOn(true)                                                                  // Keep screen on when selecting images
                 .start();
