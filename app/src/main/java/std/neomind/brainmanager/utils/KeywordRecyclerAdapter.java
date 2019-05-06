@@ -1,6 +1,5 @@
 package std.neomind.brainmanager.utils;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -156,7 +155,7 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
             PopupMenu popupMenu = new PopupMenu(mActivity.getBaseContext(), v);
             MenuInflater inflater = popupMenu.getMenuInflater();
             Menu menu = popupMenu.getMenu();
-            inflater.inflate(R.menu.context_keyword, menu);
+            inflater.inflate(R.menu.main_context_keyword, menu);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     /*

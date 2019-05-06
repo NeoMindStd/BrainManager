@@ -45,6 +45,15 @@
     <string name="MainActivity_FabItem_addCategories">카테고리 추가</string>
     <string name="MainActivity_FabItem_addKeywords">키워드 추가</string>
 
+    <string name="KeywordActivity_confirm">추가</string>
+    <string name="KeywordActivity_cancel">취소</string>
+    <string name="KeywordActivity_confirmed">추가되었습니다.</string>
+    <string name="KeywordActivity_canceled">취소되었습니다.</string>
+    <string name="KeywordActivity_name">이름</string>
+    <string name="KeywordActivity_nameHint">이름을 입력해주세요.</string>
+    <string name="KeywordActivity_category">카테고리</string>
+    <string name="KeywordActivity_none">없음</string>
+
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>
     <string name="ReviewActivity_thinkAnswer">정답을 생각해보세요.</string>

@@ -41,7 +41,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_app_bar, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.main_action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setMaxWidth(Integer.MAX_VALUE);
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.main_action_settings) {
             return true;
         }
 
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initSpinner() {
         mSpinner.setAdapter(new ArrayAdapter<>(
-                this, R.layout.category_spinner_item, mCategories));
+                this, R.layout.main_category_spinner_item, mCategories));
     }
 
     private void getKeywordsFromDB() {
@@ -391,29 +390,10 @@ public class MainActivity extends AppCompatActivity
                         .show();
                 break;
             case R.id.main_fab_item_register_Keywords:
-                new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.MainActivity_addKeyword))
-                        .setView(editText)
-                        .setPositiveButton(getString(R.string.AlertDialog_confirm),
-                                (dialog, which) -> {
-                                    Keyword resultKeyword = new Keyword.Builder()
-                                            .setName(editText.getText().toString())
-                                            .build();
-                                    mBrainDBHandler.addKeyword(resultKeyword);
-                                    try {
-                                        resultKeyword = mBrainDBHandler.findLastKeyword();
-                                        for(int i = 0; i < mKeywords.size(); i++) {
-                                            if(resultKeyword.name.
-                                                    compareToIgnoreCase(mKeywords.get(i).name) < 0) {
-                                                mKeywords.add(i, resultKeyword);
-                                                initRecyclerView();
-                                                break;
-                                            }
-                                        }
-                                    } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
-                                })
-                        .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
-                        .show();
+                Intent intent = new Intent(this, KeywordActivity.class);
+                startActivity(intent);
+                /*
+                        */
                 break;
         }
         return false;
