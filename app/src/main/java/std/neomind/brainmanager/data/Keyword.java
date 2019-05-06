@@ -18,9 +18,11 @@ public class Keyword {
     public int reviewTimes;                         // self review times
     public long registrationDate;                   // Date that long data type
     private ArrayList<Integer> relationIds;         // self-relation id
+    public double ef;                               // 기억 용이성
+    public int interval;                            // 반복주기
 
     private Keyword(CardView CardView, int id, int cid, String name, ArrayList<Description> descriptions, String imagePath,
-                    int currentLevels, int reviewTimes, long registrationDate, ArrayList<Integer> relationIds) {
+                    int currentLevels, int reviewTimes, long registrationDate, ArrayList<Integer> relationIds, double ef, int interval) {
         this.cardView = CardView;
         this.id = id;
         this.cid = cid;
@@ -31,10 +33,16 @@ public class Keyword {
         this.reviewTimes = reviewTimes;
         this.registrationDate = registrationDate;
         this.relationIds = relationIds;
+        this.ef = ef;
+        this.interval = interval;
     }
 
+    public void setDescriptions(ArrayList<Description> descriptions) { this.descriptions = descriptions; }
     public ArrayList<Description> getDescriptions() { return descriptions; }
+
+    public void setRelationIds(ArrayList<Integer> relationIds) { this.relationIds = relationIds; }
     public ArrayList<Integer> getRelationIds() { return relationIds; }
+
     public CardView getCardView() { return cardView; }
     public void setCardView(CardView CardView) { this.cardView = CardView; }
 
@@ -55,6 +63,8 @@ public class Keyword {
                 ", reviewTimes=" + reviewTimes +
                 ", registrationDate=" + registrationDate +
                 ", relationIds=" + relationIds +
+                ", ef=" + ef +
+                ", interval=" + interval +
                 '}';
     }
 
@@ -72,6 +82,8 @@ public class Keyword {
         private int reviewTimes;                        // self review times
         private long registrationDate;                  // Date that long data type
         private ArrayList<Integer> relationIds;         // self-relation id
+        private double ef;                              // 기억 용이성
+        private int interval;                           // 반복주기
 
         public Builder() {
             cardView = null;
@@ -84,6 +96,8 @@ public class Keyword {
             reviewTimes = NOT_REGISTERED;
             registrationDate = NOT_REGISTERED;
             relationIds = null;
+            ef = NOT_REGISTERED;
+            interval = NOT_REGISTERED;
         }
 
         public Builder setCardView(CardView CardView) {
@@ -136,9 +150,19 @@ public class Keyword {
             return this;
         }
 
+        public Builder setEF(double ef) {
+            this.ef = ef;
+            return this;
+        }
+
+        public Builder setInterval(int interval) {
+            this.interval = interval;
+            return this;
+        }
+
         public Keyword build() {
             return new Keyword(cardView, id, cid, name, descriptions, imagePath,
-                    currentLevels, reviewTimes, registrationDate, relationIds);
+                    currentLevels, reviewTimes, registrationDate, relationIds, ef, interval);
         }
     }
 }

@@ -6,6 +6,7 @@
 
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>
+    <color name="STEEL_PINK">#A13E97</color>
 
     <color name="textColor_gray">#707070</color>
 </resources>
