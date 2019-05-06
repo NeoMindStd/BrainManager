@@ -39,6 +39,9 @@
     <string name="MainActivity_setRelations">Set relations</string>
     <string name="MainActivity_settings">Settings</string>
 
+    <string name="MainActivity_ContextMenu_modifyKeyword">Modify</string>
+    <string name="MainActivity_ContextMenu_deleteKeyword">Delete</string>
+
     <string name="MainActivity_FabItem_addCategories">Add Categories</string>
     <string name="MainActivity_FabItem_addKeywords">Add Keywords</string>
 

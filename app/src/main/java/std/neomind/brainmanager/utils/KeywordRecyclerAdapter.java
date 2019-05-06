@@ -1,9 +1,13 @@
 package std.neomind.brainmanager.utils;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -72,12 +76,23 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
 
         public void build(int i) {
-            itemView.setOnClickListener(new ItemClickLister(i));
+            itemView.setOnClickListener(new ItemClickListener(i));
+            itemView.setOnLongClickListener(new ItemLongClickListener(i, this));
 
             Glide.with(mActivity.getBaseContext())
                     .load(mKeywords.get(i).imagePath)
                     .into(imageView);
             textView.setText(mKeywords.get(i).name);
+        }
+
+        public void removeItem() {
+            mKeywords.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
+        }
+
+        public void removeItem(int i) {
+            mKeywords.remove(i);
+            notifyItemRemoved(i);
         }
 
         @Override
@@ -112,10 +127,10 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
     }
 
-    private class ItemClickLister implements View.OnClickListener {
+    private class ItemClickListener implements View.OnClickListener {
         private int mPosition;
 
-        private ItemClickLister(int position) {
+        private ItemClickListener(int position) {
             this.mPosition = position;
         }
 
@@ -124,6 +139,50 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
             Log.i(TAG, "onClick position: " + mPosition);
 
             mActivity.pickImage(mKeywords.get(mPosition));
+        }
+    }
+    
+    private class ItemLongClickListener implements View.OnLongClickListener {
+        private int mPosition;
+        private KeywordViewHolder mKeywordViewHolder;
+
+        private ItemLongClickListener(int position, KeywordViewHolder keywordViewHolder) {
+            mPosition = position;
+            mKeywordViewHolder = keywordViewHolder;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            PopupMenu popupMenu = new PopupMenu(mActivity.getBaseContext(), v);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            Menu menu = popupMenu.getMenu();
+            inflater.inflate(R.menu.context_keyword, menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    /*
+                    case R.id.item_edit:
+                        Intent editIntent = new Intent(mActivity.getBaseContext(), RegisterActivity.class);
+                        editIntent.putExtra("imageKey", mCoupon._id);
+                        editIntent.putExtra("isModify", true);
+                        // 다음 Flag 는 삭제 금지
+                        editIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(editIntent);
+                        break;*/
+
+                    case R.id.item_remove:
+                        try {
+                            BrainDBHandler dbHandler = new BrainDBHandler(mActivity.getBaseContext());
+                            dbHandler.removeKeyword(mKeywords.get(mPosition).id);       // db 삭제
+                            mKeywordViewHolder.removeItem();                            // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+                return true;
+            });
+            popupMenu.show();
+            return true;
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_edit"
+        android:title="@string/MainActivity_ContextMenu_modifyKeyword" />
+    <item
+        android:id="@+id/item_remove"
+        android:title="@string/MainActivity_ContextMenu_deleteKeyword" />
+</menu>

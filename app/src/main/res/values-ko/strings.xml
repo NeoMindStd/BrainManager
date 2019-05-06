@@ -39,6 +39,9 @@
     <string name="MainActivity_setRelations">관계성 설정</string>
     <string name="MainActivity_settings">환경 설정</string>
 
+    <string name="MainActivity_ContextMenu_modifyKeyword">수정</string>
+    <string name="MainActivity_ContextMenu_deleteKeyword">삭제</string>
+
     <string name="MainActivity_FabItem_addCategories">카테고리 추가</string>
     <string name="MainActivity_FabItem_addKeywords">키워드 추가</string>
 

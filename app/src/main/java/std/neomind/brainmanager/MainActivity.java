@@ -41,7 +41,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -220,10 +222,21 @@ public class MainActivity extends AppCompatActivity
 
     private void getCategoriesFromDB() {
         mCategories = mBrainDBHandler.getAllCategories();
+        mBrainDBHandler.close();
+
+        // Sort
+        Collections.sort(mCategories, (o1, o2) -> {
+            String criteria1, criteria2;
+            int compareResult;
+            criteria1 = o1.name;
+            criteria2 = o2.name;
+            compareResult = criteria1.compareToIgnoreCase(criteria2);
+
+            return compareResult;
+        });
+
         mCategories.add(Category.CATEGORY_ALL,
                 new Category.Builder().setName(getString(R.string.Category_all)).build());
-
-        mBrainDBHandler.close();
 
         for(int i = 0; i < mCategories.size(); i++)
             Log.i(TAG, "loadDB(): mCategories(" + i + ") - " + mCategories.get(i).toStringAbsolutely());
@@ -236,10 +249,22 @@ public class MainActivity extends AppCompatActivity
 
     private void getKeywordsFromDB() {
         mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(mSpinner.getSelectedItemPosition());
+        mBrainDBHandler.close();
+
+        // Sort
+        Collections.sort(mKeywords, (o1, o2) -> {
+            String criteria1, criteria2;
+            int compareResult;
+            criteria1 = o1.name;
+            criteria2 = o2.name;
+            compareResult = criteria1.compareToIgnoreCase(criteria2);
+
+            return compareResult;
+        });
+
         for(int i = 0; i < mKeywords.size(); i++)
             mKeywords.get(i).setCardView( findViewById(R.id.keyword_card_view) );
 
-        mBrainDBHandler.close();
 
         for(int i = 0; i < mKeywords.size(); i++)
             Log.i(TAG, "loadDB(): mKeywords(" + i + ") - " + mKeywords.get(i).toStringAbsolutely());
@@ -350,7 +375,15 @@ public class MainActivity extends AppCompatActivity
                                             .build();
                                     mBrainDBHandler.addCategory(resultCategory);
                                     try {
-                                        mCategories.add(mBrainDBHandler.findLastCategory());
+                                        resultCategory = mBrainDBHandler.findLastCategory();
+                                        for(int i = 1; i < mCategories.size(); i++) {
+                                            if(resultCategory.name.
+                                                    compareToIgnoreCase(mCategories.get(i).name) < 0) {
+                                                mCategories.add(i, resultCategory);
+                                                initSpinner();
+                                                break;
+                                            }
+                                        }
                                     } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
                         .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
@@ -367,7 +400,15 @@ public class MainActivity extends AppCompatActivity
                                             .build();
                                     mBrainDBHandler.addKeyword(resultKeyword);
                                     try {
-                                        mKeywords.add(mBrainDBHandler.findLastKeyword());
+                                        resultKeyword = mBrainDBHandler.findLastKeyword();
+                                        for(int i = 0; i < mKeywords.size(); i++) {
+                                            if(resultKeyword.name.
+                                                    compareToIgnoreCase(mKeywords.get(i).name) < 0) {
+                                                mKeywords.add(i, resultKeyword);
+                                                initRecyclerView();
+                                                break;
+                                            }
+                                        }
                                     } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
                         .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
