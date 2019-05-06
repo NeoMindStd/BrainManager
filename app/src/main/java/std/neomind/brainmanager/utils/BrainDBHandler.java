@@ -384,6 +384,26 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         return findCategory(query);
     }
 
+    public Category findLastCategory() throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " +
+                FIELD_CATEGORIES_ID + " = (SELECT MAX(" + FIELD_CATEGORIES_ID + ") FROM " + TABLE_CATEGORIES + ")";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Category category;
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            category = new Category.Builder()
+                    .setId(cursor.getInt(0))
+                    .setName(cursor.getString(1))
+                    .build();
+            cursor.close();
+        } else { throw new NoMatchingDataException(); }
+        db.close();
+        return category;
+    }
+
     private Keyword findKeyword(String query) throws NoMatchingDataException {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -418,6 +438,32 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
                 field + " = \"" + value + "\"";
         return findKeyword(query);
+    }
+    public Keyword findLastKeyword() throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
+                FIELD_KEYWORDS_ID + " = (SELECT MAX(" + FIELD_KEYWORDS_ID + ") FROM " + TABLE_KEYWORDS + ")";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Keyword keyword;
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            keyword = new Keyword.Builder()
+                    .setId(cursor.getInt(0))
+                    .setCid(cursor.getInt(1))
+                    .setName(cursor.getString(2))
+                    .setImagePath(cursor.getString(3))
+                    .setCurrentLevels(cursor.getInt(4))
+                    .setReviewTimes(cursor.getInt(5))
+                    .setRegistrationDate(cursor.getLong(6))
+                    .setEF(cursor.getDouble(7))
+                    .setInterval(cursor.getInt(8))
+                    .build();
+            cursor.close();
+        } else { throw new NoMatchingDataException(); }
+        db.close();
+        return keyword;
     }
 
     private Description findDescription(String query) throws NoMatchingDataException {

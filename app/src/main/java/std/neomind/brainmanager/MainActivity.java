@@ -345,12 +345,13 @@ public class MainActivity extends AppCompatActivity
                         .setView(editText)
                         .setPositiveButton(getString(R.string.AlertDialog_confirm),
                                 (dialog, which) -> {
-                                    BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
                                     Category resultCategory = new Category.Builder().
                                             setName(editText.getText().toString())
                                             .build();
-                                    dbHandler.addCategory(resultCategory);
-                                    mCategories.add(resultCategory);
+                                    mBrainDBHandler.addCategory(resultCategory);
+                                    try {
+                                        mCategories.add(mBrainDBHandler.findLastCategory());
+                                    } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
                         .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
                         .show();
@@ -361,12 +362,13 @@ public class MainActivity extends AppCompatActivity
                         .setView(editText)
                         .setPositiveButton(getString(R.string.AlertDialog_confirm),
                                 (dialog, which) -> {
-                                    BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
                                     Keyword resultKeyword = new Keyword.Builder()
                                             .setName(editText.getText().toString())
                                             .build();
-                                    dbHandler.addKeyword(resultKeyword);
-                                    mKeywords.add(resultKeyword);
+                                    mBrainDBHandler.addKeyword(resultKeyword);
+                                    try {
+                                        mKeywords.add(mBrainDBHandler.findLastKeyword());
+                                    } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
                         .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
                         .show();
