@@ -35,6 +35,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mSpinner = findViewById(R.id.main_spinner);
+        mSpinner.setOnItemSelectedListener(spinnerItemListener);
         mRecyclerView = findViewById(R.id.main_recyclerView_keyword);
 
         mBrainDBHandler = new BrainDBHandler(this);
@@ -203,32 +206,51 @@ public class MainActivity extends AppCompatActivity
 
     private void loadDB() {
         try {
-            mCategories = mBrainDBHandler.getAllCategories();
-            mCategories.add(Category.CATEGORY_ALL,
-                    new Category.Builder().setName(getString(R.string.Category_all)).build());
+            getCategoriesFromDB();
+            initSpinner();
 
-            mKeywords = mBrainDBHandler.getAllKeywords();
-            for(int i = 0; i < mKeywords.size(); i++)
-                mKeywords.get(i).setCardView( findViewById(R.id.keyword_card_view) );
+            // loading in spinnerItemListener
+            //getKeywordsFromDB();
+            //initRecyclerView();
 
-            mBrainDBHandler.close();
-            for(int i = 0; i < mCategories.size(); i++)
-                Log.i(TAG, "loadDB(): mCategories(" + i + ") - " + mCategories.get(i).toStringAbsolutely());
-            for(int i = 0; i < mKeywords.size(); i++)
-                Log.i(TAG, "loadDB(): mKeywords(" + i + ") - " + mKeywords.get(i).toStringAbsolutely());
-
-            mSpinner.setAdapter(new ArrayAdapter<>(
-                    this, R.layout.category_spinner_item, mCategories));
-
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            mKeywordAdapter = new ScaleInAnimationAdapter(
-                    new AlphaInAnimationAdapter(
-                            new KeywordRecyclerAdapter(this, mKeywords)));
-            mRecyclerView.setAdapter(mKeywordAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void getCategoriesFromDB() {
+        mCategories = mBrainDBHandler.getAllCategories();
+        mCategories.add(Category.CATEGORY_ALL,
+                new Category.Builder().setName(getString(R.string.Category_all)).build());
+
+        mBrainDBHandler.close();
+
+        for(int i = 0; i < mCategories.size(); i++)
+            Log.i(TAG, "loadDB(): mCategories(" + i + ") - " + mCategories.get(i).toStringAbsolutely());
+    }
+
+    private void initSpinner() {
+        mSpinner.setAdapter(new ArrayAdapter<>(
+                this, R.layout.category_spinner_item, mCategories));
+    }
+
+    private void getKeywordsFromDB() {
+        mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(mSpinner.getSelectedItemPosition());
+        for(int i = 0; i < mKeywords.size(); i++)
+            mKeywords.get(i).setCardView( findViewById(R.id.keyword_card_view) );
+
+        mBrainDBHandler.close();
+
+        for(int i = 0; i < mKeywords.size(); i++)
+            Log.i(TAG, "loadDB(): mKeywords(" + i + ") - " + mKeywords.get(i).toStringAbsolutely());
+    }
+
+    private void initRecyclerView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mKeywordAdapter = new ScaleInAnimationAdapter(
+                new AlphaInAnimationAdapter(
+                        new KeywordRecyclerAdapter(this, mKeywords)));
+        mRecyclerView.setAdapter(mKeywordAdapter);
     }
 
     private void refresh() {
@@ -298,6 +320,20 @@ public class MainActivity extends AppCompatActivity
     /***********************************************************
      *                      Event Listener
      ***********************************************************/
+
+    private Spinner.OnItemSelectedListener spinnerItemListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //loadDB();
+            getKeywordsFromDB();
+            initRecyclerView();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
     private SpeedDialView.OnActionSelectedListener faItemClickListener = actionItem -> {
         final EditText editText = new EditText(this);
