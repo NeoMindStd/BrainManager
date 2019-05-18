@@ -20,9 +20,11 @@ public class Keyword {
     private ArrayList<Integer> relationIds;         // self-relation id
     public double ef;                               // 기억 용이성
     public int interval;                            // 반복주기
+    private boolean selected;                       // 다중 삭제 등의 상태시 선택 여부
 
-    private Keyword(CardView CardView, int id, int cid, String name, ArrayList<Description> descriptions, String imagePath,
-                    int currentLevels, int reviewTimes, long registrationDate, ArrayList<Integer> relationIds, double ef, int interval) {
+    private Keyword(CardView CardView, int id, int cid, String name, ArrayList<Description> descriptions,
+                    String imagePath, int currentLevels, int reviewTimes, long registrationDate,
+                    ArrayList<Integer> relationIds, double ef, int interval, boolean seledted) {
         this.cardView = CardView;
         this.id = id;
         this.cid = cid;
@@ -35,6 +37,7 @@ public class Keyword {
         this.relationIds = relationIds;
         this.ef = ef;
         this.interval = interval;
+        this.selected = seledted;
     }
 
     public void setDescriptions(ArrayList<Description> descriptions) { this.descriptions = descriptions; }
@@ -46,10 +49,11 @@ public class Keyword {
     public CardView getCardView() { return cardView; }
     public void setCardView(CardView CardView) { this.cardView = CardView; }
 
+    public boolean isSelected() { return selected; }
+    public void setSelected(boolean selected) { this.selected = selected; }
+
     @Override
-    public String toString() {
-        return name;
-    }
+    public String toString() { return name; }
 
     public String toStringAbsolutely() {
         return "Keyword{" +
@@ -65,6 +69,7 @@ public class Keyword {
                 ", relationIds=" + relationIds +
                 ", ef=" + ef +
                 ", interval=" + interval +
+                ", selected=" + selected +
                 '}';
     }
 
@@ -84,6 +89,7 @@ public class Keyword {
         private ArrayList<Integer> relationIds;         // self-relation id
         private double ef;                              // 기억 용이성
         private int interval;                           // 반복주기
+        private boolean selected;                       // 선택 여부
 
         public Builder() {
             cardView = null;
@@ -98,6 +104,7 @@ public class Keyword {
             relationIds = null;
             ef = NOT_REGISTERED;
             interval = NOT_REGISTERED;
+            selected = false;
         }
 
         public Builder setCardView(CardView CardView) {
@@ -160,9 +167,14 @@ public class Keyword {
             return this;
         }
 
+        public Builder setSelected(boolean selected) {
+            this.selected = selected;
+            return this;
+        }
+
         public Keyword build() {
-            return new Keyword(cardView, id, cid, name, descriptions, imagePath,
-                    currentLevels, reviewTimes, registrationDate, relationIds, ef, interval);
+            return new Keyword(cardView, id, cid, name, descriptions, imagePath, currentLevels,
+                    reviewTimes, registrationDate, relationIds, ef, interval, selected);
         }
     }
 }

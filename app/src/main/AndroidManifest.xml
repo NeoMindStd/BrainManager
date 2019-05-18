@@ -16,9 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CategoryActivity"
+            android:label="@string/CategoryActivity_title"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".KeywordActivity"
-            android:label="@string/title_activity_keyword"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/KeywordActivity_titleRegister"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -34,7 +38,7 @@
             android:name=".ReviewActivity"
             android:label="@string/Label_review"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StatisticsActivity"
             android:label="@string/Label_statistics"
@@ -44,7 +48,7 @@
             android:name=".RelationActivity"
             android:label="@string/Label_relation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/Label_settings"

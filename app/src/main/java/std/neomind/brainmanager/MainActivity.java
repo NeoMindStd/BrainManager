@@ -9,7 +9,6 @@ import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -28,7 +27,7 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.utils.KeywordRecyclerAdapter;
+import std.neomind.brainmanager.utils.MainRecyclerAdapter;
 import std.neomind.brainmanager.utils.PermissionManager;
 
 import android.util.Log;
@@ -40,6 +39,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mPermissionManager = new PermissionManager(this);
-        if(!mPermissionManager.checkGranted()) mPermissionManager.request();
+        if (!mPermissionManager.checkGranted()) mPermissionManager.request();
         initActivity();
     }
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle("");
 
         mFab = findViewById(R.id.main_fab);
-        mFab.setOnActionSelectedListener(faItemClickListener);
+        mFab.setOnActionSelectedListener(fabItemClickListener);
         fabAddAllSubItems();
 
         DrawerLayout drawerLayout = findViewById(R.id.main_drawer_layout);
@@ -139,8 +139,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.main_action_settings) {
-            return true;
+        if (id == R.id.main_action_editCategories) {
+            if(mSpinner.getSelectedItemPosition() != 0) {
+                Intent intent = new Intent(this, CategoryActivity.class);
+                intent.putExtra(CategoryActivity.EXTRAS_CATEGORY, mCategories.get(mSpinner.getSelectedItemPosition()).id);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "삭제할 수 없습니다", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -152,22 +158,24 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view textView clicks here.
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.nav_review :
+            case R.id.nav_review:
                 intent = new Intent(this, ReviewActivity.class);
                 break;
-            case R.id.nav_statistics :
+            case R.id.nav_statistics:
                 intent = new Intent(this, StatisticsActivity.class);
                 break;
-            case R.id.nav_relation :
+            case R.id.nav_relation:
                 intent = new Intent(this, RelationActivity.class);
                 break;
-            case R.id.nav_settings :
+            case R.id.nav_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 break;
         }
         try {
             startActivity(intent);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -238,7 +246,7 @@ public class MainActivity extends AppCompatActivity
         mCategories.add(Category.CATEGORY_ALL,
                 new Category.Builder().setName(getString(R.string.Category_all)).build());
 
-        for(int i = 0; i < mCategories.size(); i++)
+        for (int i = 0; i < mCategories.size(); i++)
             Log.i(TAG, "loadDB(): mCategories(" + i + ") - " + mCategories.get(i).toStringAbsolutely());
     }
 
@@ -262,11 +270,7 @@ public class MainActivity extends AppCompatActivity
             return compareResult;
         });
 
-        for(int i = 0; i < mKeywords.size(); i++)
-            mKeywords.get(i).setCardView( findViewById(R.id.keyword_card_view) );
-
-
-        for(int i = 0; i < mKeywords.size(); i++)
+        for (int i = 0; i < mKeywords.size(); i++)
             Log.i(TAG, "loadDB(): mKeywords(" + i + ") - " + mKeywords.get(i).toStringAbsolutely());
     }
 
@@ -275,49 +279,13 @@ public class MainActivity extends AppCompatActivity
 
         mKeywordAdapter = new ScaleInAnimationAdapter(
                 new AlphaInAnimationAdapter(
-                        new KeywordRecyclerAdapter(this, mKeywords)));
+                        new MainRecyclerAdapter(this, mKeywords)));
         mRecyclerView.setAdapter(mKeywordAdapter);
     }
 
     private void refresh() {
         loadPref();
         loadDB();
-    }
-
-    public void pickImage(Keyword requestImageReceiver) {
-        mRequestImageReceiver = requestImageReceiver;
-
-        ImagePicker.with(this)                                                                  // Initialize ImagePicker with activity or fragment context
-                .setToolbarColor(getColorHexStringFromColors(R.color.colorPrimary))                     // Toolbar color
-                .setStatusBarColor(getColorHexStringFromColors(R.color.colorPrimary))                   // StatusBar color (works with SDK >= 21  )
-                .setToolbarTextColor(getColorHexStringFromColors(R.color.WHITE))                        // Toolbar text color (Title and Done button)
-                .setToolbarIconColor(getColorHexStringFromColors(R.color.WHITE))                        // Toolbar icon color (Back and Camera button)
-                //.setProgressBarColor(getColorHexStringFromColors(R.color.imagePickerProgressBarColor))// ProgressBar color
-                //.setBackgroundColor(getColorHexStringFromColors(R.color.imagePickerBackground))       // Background color
-                .setCameraOnly(false)                                                                   // Camera mode
-                .setMultipleMode(false)                                                                 // Select multiple images or single image
-                .setMaxSize(1)                                                                          // Max images can be selected
-                .setFolderMode(true)                                                                    // Folder mode
-                .setShowCamera(true)                                                                    // Show camera button
-                //.setFolderTitle(getString(R.string.MainActivity_Albums))                              // Folder title (works with FolderMode = true)
-                //.setImageTitle(getString(R.string.MainActivity_Gallery))                              // Image title (works with FolderMode = false)
-                //.setDoneTitle(getString(R.string.MainActivity_Done))                                  // Done button title
-                //.setLimitMessage(getString(R.string.MainActivity_MaximumSelection))                   // Selection limit message
-                //.setSavePath(getString(R.string.APP_NAME))                                            // Image capture folder name
-                //.setSelectedImages(images)                                                            // Selected images
-                .setAlwaysShowDoneButton(false)                                                         // Set always show done button fadeIn multiple mode
-                .setRequestCode(PICK_IMAGE_REQUEST)                                                     // Set request code, default Config.RC_PICK_IMAGES
-                .setKeepScreenOn(true)                                                                  // Keep screen on when selecting images
-                .start();
-    }
-
-    private String getColorHexStringFromColors(int color) {
-        return "#" + Integer.toHexString(getResources().getColor(color));
-    }
-
-    private void fabRemoveAllSubItems() {
-        final int size = mFab.getActionItems().size();
-        for (int i = size - 1; i >= 0; i--) mFab.removeActionItem(i);
     }
 
     private void fabAddAllSubItems() {
@@ -361,14 +329,14 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    private SpeedDialView.OnActionSelectedListener faItemClickListener = actionItem -> {
+    private SpeedDialView.OnActionSelectedListener fabItemClickListener = actionItem -> {
         final EditText editText = new EditText(this);
         switch (actionItem.getId()) {
             case R.id.main_fab_item_register_Categories:
                 new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.MainActivity_addCategory))
                         .setView(editText)
-                        .setPositiveButton(getString(R.string.AlertDialog_confirm),
+                        .setPositiveButton(getString(R.string.Global_confirm),
                                 (dialog, which) -> {
                                     Category resultCategory = new Category.Builder().
                                             setName(editText.getText().toString())
@@ -386,11 +354,13 @@ public class MainActivity extends AppCompatActivity
                                         }
                                     } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
-                        .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
+                        .setNeutralButton(getString(R.string.Global_negative), null)
                         .show();
                 break;
             case R.id.main_fab_item_register_Keywords:
                 Intent intent = new Intent(this, KeywordActivity.class);
+                intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_REGISTER);
+                intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, Keyword.NOT_REGISTERED);
                 startActivity(intent);
                 /*
                         */

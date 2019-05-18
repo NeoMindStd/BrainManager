@@ -8,8 +8,8 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
     <item
-        android:id="@+id/main_action_settings"
+        android:id="@+id/main_action_editCategories"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/MainActivity_Action_editCategories"
         app:showAsAction="never" />
 </menu>

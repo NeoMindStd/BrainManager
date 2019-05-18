@@ -6,9 +6,14 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="Global_menu">Menu</string>
+    <string name="Global_done">DONE</string>
+    <string name="Global_confirm">Confirm</string>
+    <string name="Global_negative">Cancel</string>
+    <string name="Global_added">Keyword added.</string>
+    <string name="Global_updated">Keyword changed.</string>
+    <string name="Global_canceled">Canceled</string>
 
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
@@ -17,11 +22,10 @@
 
     <string name="Category_all">All</string>
 
-    <string name="AlertDialog_confirm">Confirm</string>
-    <string name="AlertDialog_neutral">Cancel</string>
-
     <string name="AlertDialog_button_yes">Yes</string>
     <string name="AlertDialog_button_no">No</string>
+
+    <string name="AlertDialog_askReallyCancel">Are you sure you want to cancel?</string>
 
     <string name="PermissionManager_permissionText_readExternalStorage">Read external storage</string>
     <string name="PermissionManager_permissionText_writeExternalStorage">Write external storage</string>
@@ -39,20 +43,27 @@
     <string name="MainActivity_setRelations">Set relations</string>
     <string name="MainActivity_settings">Settings</string>
 
-    <string name="MainActivity_ContextMenu_modifyKeyword">Modify</string>
-    <string name="MainActivity_ContextMenu_deleteKeyword">Delete</string>
+    <string name="MainActivity_Action_editCategories">Edit selected categories</string>
+
+    <string name="MainActivity_ContextMenu_modify">Modify</string>
+    <string name="MainActivity_ContextMenu_delete">Delete</string>
 
     <string name="MainActivity_FabItem_addCategories">Add Categories</string>
     <string name="MainActivity_FabItem_addKeywords">Add Keywords</string>
 
-    <string name="KeywordActivity_confirm">DONE</string>
-    <string name="KeywordActivity_cancel">CANCEL</string>
-    <string name="KeywordActivity_confirmed">keyword added.</string>
-    <string name="KeywordActivity_canceled">Canceled</string>
+    <string name="CategoryActivity_title">Update</string>
+    <string name="CategoryActivity_uncategorize">Uncategorize</string>
+    <string name="CategoryActivity_keywords">Keywords in the category</string>
+
     <string name="KeywordActivity_name">Name</string>
     <string name="KeywordActivity_nameHint">Please enter a name.</string>
     <string name="KeywordActivity_category">Category</string>
     <string name="KeywordActivity_none">None</string>
+    <string name="KeywordActivity_addImage">Add image</string>
+    <string name="KeywordActivity_updateImage">Change image</string>
+    <string name="KeywordActivity_titleRegister">Add a keyword</string>
+    <string name="KeywordActivity_titleView">View</string>
+    <string name="KeywordActivity_titleUpdate">Update</string>
 
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>
@@ -73,5 +84,4 @@
     <string name="Settings_appInfo">App Info</string>
     <string name="Settings_privacyPolicy"> Personal Information Processing Policy \n- Provides information about the personal information life cycle such as the type, utilization, sharing, and destruction of user\'s personal information modified by this application. \n</string>
     <string name="Settings_apiLicense"> API License \n- Displays the license information of the API used in this application. \n</string>
-    <string name="title_activity_keyword">KeywordActivity</string>
 </resources>

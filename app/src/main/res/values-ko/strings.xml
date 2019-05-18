@@ -6,9 +6,14 @@
     <string name="nav_header_title">안드로이드 스튜디오</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">네비게이션 헤더</string>
-    <string name="action_settings">설정</string>
 
     <string name="Global_menu">메뉴</string>
+    <string name="Global_done">확인</string>
+    <string name="Global_confirm">확인</string>
+    <string name="Global_negative">취소</string>
+    <string name="Global_added">추가되었습니다.</string>
+    <string name="Global_updated">변경되었습니다.</string>
+    <string name="Global_canceled">취소되었습니다.</string>
 
     <string name="Label_review">복습</string>
     <string name="Label_statistics">통계</string>
@@ -17,11 +22,10 @@
 
     <string name="Category_all">모두</string>
 
-    <string name="AlertDialog_confirm">확인</string>
-    <string name="AlertDialog_neutral">취소</string>
-
     <string name="AlertDialog_button_yes">네</string>
     <string name="AlertDialog_button_no">아니오</string>
+
+    <string name="AlertDialog_askReallyCancel">정말로 취소하시겠습니까?</string>
 
     <string name="PermissionManager_permissionText_readExternalStorage">저장소 읽기</string>
     <string name="PermissionManager_permissionText_writeExternalStorage">저장소 쓰기</string>
@@ -39,20 +43,27 @@
     <string name="MainActivity_setRelations">관계성 설정</string>
     <string name="MainActivity_settings">환경 설정</string>
 
-    <string name="MainActivity_ContextMenu_modifyKeyword">수정</string>
-    <string name="MainActivity_ContextMenu_deleteKeyword">삭제</string>
+    <string name="MainActivity_Action_editCategories">현재 카테고리 편집</string>
+
+    <string name="MainActivity_ContextMenu_modify">수정</string>
+    <string name="MainActivity_ContextMenu_delete">삭제</string>
 
     <string name="MainActivity_FabItem_addCategories">카테고리 추가</string>
     <string name="MainActivity_FabItem_addKeywords">키워드 추가</string>
 
-    <string name="KeywordActivity_confirm">추가</string>
-    <string name="KeywordActivity_cancel">취소</string>
-    <string name="KeywordActivity_confirmed">추가되었습니다.</string>
-    <string name="KeywordActivity_canceled">취소되었습니다.</string>
+    <string name="CategoryActivity_title">카테고리 편집</string>
+    <string name="CategoryActivity_uncategorize">카테고리 해제</string>
+    <string name="CategoryActivity_keywords">카테고리에 속한 키워드</string>
+
     <string name="KeywordActivity_name">이름</string>
     <string name="KeywordActivity_nameHint">이름을 입력해주세요.</string>
     <string name="KeywordActivity_category">카테고리</string>
     <string name="KeywordActivity_none">없음</string>
+    <string name="KeywordActivity_addImage">사진 추가</string>
+    <string name="KeywordActivity_updateImage">사진 변경</string>
+    <string name="KeywordActivity_titleRegister">키워드 추가</string>
+    <string name="KeywordActivity_titleView">키워드 보기</string>
+    <string name="KeywordActivity_titleUpdate">키워드 수정</string>
 
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:focusableInTouchMode="true"
-    android:id="@+id/layoutRegisterInputFields"
+    android:id="@+id/layoutKeywordcontentsFields"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -14,7 +14,7 @@
         android:id="@+id/keyword_photoView"
         android:layout_width="match_parent"
         android:layout_height="280dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
@@ -23,7 +23,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/keyword_button_addPhoto"
+        android:id="@+id/keyword_button_addImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -31,7 +31,7 @@
         android:textColor="@color/WHITE"
         app:backgroundTint="@color/colorPrimaryLight"
         android:textSize="16dp"
-        android:text="사진 추가"/>
+        android:text="@string/KeywordActivity_addImage"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/keyword_editText_name"
@@ -51,7 +51,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:text="@string/KeywordActivity_category"
         android:textColor="@color/colorPrimary"/>
 

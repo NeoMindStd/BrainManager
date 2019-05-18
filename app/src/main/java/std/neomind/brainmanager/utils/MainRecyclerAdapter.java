@@ -1,6 +1,6 @@
 package std.neomind.brainmanager.utils;
 
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,24 +15,26 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.RecyclerView;
 
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 
+import std.neomind.brainmanager.KeywordActivity;
 import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.data.Keyword;
 
-public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecyclerAdapter.KeywordViewHolder> {
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "KeywordRecyclerAdapter";
+    private static final String TAG = "MainRecyclerAdapter";
 
     private MainActivity mActivity;
     private ArrayList<Keyword> mKeywords;
 
-    public KeywordRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
+    public MainRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
         mActivity = activity;
         mKeywords = keywords;
     }
@@ -75,6 +77,8 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
 
         public void build(int i) {
+            mKeywords.get(i).setCardView((CardView)itemView);
+
             itemView.setOnClickListener(new ItemClickListener(i));
             itemView.setOnLongClickListener(new ItemLongClickListener(i, this));
 
@@ -135,9 +139,10 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "onClick position: " + mPosition);
-
-            mActivity.pickImage(mKeywords.get(mPosition));
+            Intent intent = new Intent(mActivity, KeywordActivity.class);
+            intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_VIEW);
+            intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
+            mActivity.startActivity(intent);
         }
     }
     
@@ -158,15 +163,13 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
             inflater.inflate(R.menu.main_context_keyword, menu);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    /*
+
                     case R.id.item_edit:
-                        Intent editIntent = new Intent(mActivity.getBaseContext(), RegisterActivity.class);
-                        editIntent.putExtra("imageKey", mCoupon._id);
-                        editIntent.putExtra("isModify", true);
-                        // 다음 Flag 는 삭제 금지
-                        editIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mContext.startActivity(editIntent);
-                        break;*/
+                        Intent intent = new Intent(mActivity, KeywordActivity.class);
+                        intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_UPDATE);
+                        intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
+                        mActivity.startActivity(intent);
+                        break;
 
                     case R.id.item_remove:
                         try {

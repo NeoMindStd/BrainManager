@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="category_fab_item_uncategorize" type="id" />
+    <!--<item name="main_fab_item_add_folder" type="id" />-->
+    <item name="category_fab_item_register_Keywords" type="id" />
+</resources>

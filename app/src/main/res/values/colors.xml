@@ -10,4 +10,5 @@
     <color name="STEEL_PINK">#A13E97</color>
 
     <color name="textColor_gray">#707070</color>
+    <color name="black_HalfTransparent">#80000000</color>
 </resources>

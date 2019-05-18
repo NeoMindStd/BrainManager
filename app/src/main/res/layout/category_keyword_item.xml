@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_cardView_keyword">
+    android:id="@+id/category_cardView_keyword">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
         android:background="?attr/selectableItemBackground">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/main_item_circularImage_keyword"
+            android:id="@+id/category_item_circularImage_keyword"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -23,16 +23,27 @@
             app:civ_border_width="1dp"/>
 
         <TextView
-            android:id="@+id/main_item_textView_keyword"
+            android:id="@+id/category_item_textView_keyword"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:layout_constraintLeft_toRightOf="@id/main_item_circularImage_keyword"
+            app:layout_constraintLeft_toRightOf="@id/category_item_circularImage_keyword"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.5"
             android:layout_marginLeft="12dp"
             android:gravity="center_vertical"
             android:singleLine="true"/>
+
+        <ImageView
+            android:id="@+id/imageViewSelectedMask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/black_HalfTransparent"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_category_item_selected"
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

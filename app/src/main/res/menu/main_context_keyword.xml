@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/item_edit"
-        android:title="@string/MainActivity_ContextMenu_modifyKeyword" />
+        android:title="@string/MainActivity_ContextMenu_modify" />
     <item
         android:id="@+id/item_remove"
-        android:title="@string/MainActivity_ContextMenu_deleteKeyword" />
+        android:title="@string/MainActivity_ContextMenu_delete" />
 </menu>
