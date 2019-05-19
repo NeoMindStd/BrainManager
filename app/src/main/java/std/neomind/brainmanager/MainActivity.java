@@ -280,21 +280,21 @@ public class MainActivity extends AppCompatActivity
     };
 
     private View.OnLongClickListener fabLongClickListener = view -> {
-        final EditText editText = new EditText(this);
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.MainActivity_addCategory))
-                .setView(editText)
-                .setPositiveButton(getString(R.string.AlertDialog_confirm),
-                        (dialog, which) -> {
-                            BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
-                            Category resultCategory = new Category.Builder().
-                                    setName(editText.getText().toString())
-                                    .build();
-                            dbHandler.addCategory(resultCategory);
-                            mCategories.add(resultCategory);
-                        })
-                .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
-                .show();
+            final EditText editText = new EditText(this);
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.MainActivity_addCategory))
+                    .setView(editText)
+                    .setPositiveButton(getString(R.string.AlertDialog_confirm),
+                            (dialog, which) -> {
+                                BrainDBHandler dbHandler = new BrainDBHandler(MainActivity.this);
+                                Category resultCategory = new Category.Builder().
+                                        setName(editText.getText().toString())
+                                        .build();
+                                dbHandler.addCategory(resultCategory);
+                                mCategories.add(resultCategory);
+                            })
+                    .setNeutralButton(getString(R.string.AlertDialog_neutral), null)
+                    .show();
         return true;
     };
 

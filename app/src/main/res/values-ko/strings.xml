@@ -45,6 +45,7 @@
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
     <string name="ReviewActivity_answer">A.</string>
     <string name="ReviewActivity_is">입니다</string>
+    <string name="ReviewActivity_alertDialogOK">확인</string>
 
     <string name="Statistics_forgettingCurve">망각 곡선</string>
     <string name="Statistics_setPeriod">기간설정</string>

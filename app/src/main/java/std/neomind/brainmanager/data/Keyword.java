@@ -1,5 +1,7 @@
 package std.neomind.brainmanager.data;
 
+import android.widget.ArrayAdapter;
+
 import java.util.ArrayList;
 
 import androidx.cardview.widget.CardView;
@@ -34,6 +36,7 @@ public class Keyword {
     }
 
     public ArrayList<Description> getDescriptions() { return descriptions; }
+    public void setRelationIds(ArrayList<Integer> Ids) {this.relationIds = Ids;}
     public ArrayList<Integer> getRelationIds() { return relationIds; }
     public CardView getCardView() { return cardView; }
     public void setCardView(CardView CardView) { this.cardView = CardView; }
