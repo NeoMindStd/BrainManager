@@ -10,21 +10,19 @@
     <item
         android:id="@+id/relation_action_switch_left"
         android:icon="@drawable/ic_relation_grid"
-        android:title="@string/MainActivity_search"
+        android:title=""
         android:enabled="false"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/relation_action_switch"
         android:title=""
         app:showAsAction="always"
-        android:actionLayout="@layout/switch_layout"
+        app:actionLayout="@layout/switch_layout"
         />
     <item
         android:id="@+id/relation_action_switch_right"
         android:icon="@drawable/ic_relation_list"
-        android:title="@string/MainActivity_search"
+        android:title=""
         android:enabled="false"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        app:showAsAction="always" />
 </menu>

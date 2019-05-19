@@ -1,29 +1,37 @@
 package std.neomind.brainmanager.utils;
 
 import android.app.Activity;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewPropertyAnimatorListener;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.recyclerview.widget.RecyclerView;
+
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
+
+import std.neomind.brainmanager.KeywordActivity;
+import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.data.Keyword;
 
 public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationListRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "KeywordRecyclerAdapter";
+    private static final String TAG = "MainRecyclerAdapter";
 
     private Activity mActivity;
     private ArrayList<Keyword> mKeywords;
@@ -31,6 +39,7 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
     public RelationListRecyclerAdapter(Activity activity, ArrayList<Keyword> keywords) {
         mActivity = activity;
         mKeywords = keywords;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -71,12 +80,24 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
         }
 
         public void build(int i) {
-            itemView.setOnClickListener(new ItemClickLister(i));
+            mKeywords.get(i).setCardView((CardView)itemView);
+
+            itemView.setOnClickListener(new ItemClickListener(i));
 
             Glide.with(mActivity.getBaseContext())
                     .load(mKeywords.get(i).imagePath)
                     .into(imageView);
             textView.setText(mKeywords.get(i).name);
+        }
+
+        public void removeItem() {
+            mKeywords.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
+        }
+
+        public void removeItem(int i) {
+            mKeywords.remove(i);
+            notifyItemRemoved(i);
         }
 
         @Override
@@ -111,17 +132,26 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
         }
     }
 
-    private class ItemClickLister implements View.OnClickListener {
+    private class ItemClickListener implements View.OnClickListener {
         private int mPosition;
+        private Boolean clicked;
 
-        private ItemClickLister(int position) {
+        private ItemClickListener(int position) {
             this.mPosition = position;
+            this.clicked = false;
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "onClick position: " + mPosition);
-
+            if (clicked) {
+                clicked = false;
+                mKeywords.get(mPosition).setSelected(false);
+                v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
+            } else {
+                clicked = true;
+                mKeywords.get(mPosition).setSelected(true);
+                v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));
+            }
         }
     }
 }

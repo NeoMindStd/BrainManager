@@ -1,5 +1,6 @@
 package std.neomind.brainmanager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -20,12 +21,14 @@ import android.view.WindowManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +38,7 @@ import androidx.core.content.ContextCompat;
 import androidx.gridlayout.widget.GridLayout;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.snackbar.Snackbar;
 
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;
@@ -69,6 +73,9 @@ public class ReviewActivity extends AppCompatActivity{
     private ConstraintLayout keywordLayout;
     private ConstraintLayout descriptionLayout;
 
+    private Button nextButton;
+    private Button AnswerButton;;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,29 +95,35 @@ public class ReviewActivity extends AppCompatActivity{
             e.printStackTrace();
         }
         mKeywordsSize = mKeywords.size();
-        Button nextButton = findViewById(R.id.review_button_nextExam);
-        nextButton.setOnClickListener(onNextClickEvent);
-        Button AnswerButton = findViewById(R.id.review_button_showAnswer);
-        AnswerButton.setOnClickListener(onAnswerViewClickEvent);
+        if(mKeywordsSize == 0){
+            finish();
+            Toast.makeText(getApplicationContext(), "키워드가 없습니다", Toast.LENGTH_LONG).show();
+        }
+        else {
+            nextButton = findViewById(R.id.review_button_nextExam);
+            nextButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.textColor_gray));
+            AnswerButton = findViewById(R.id.review_button_showAnswer);
+            AnswerButton.setOnClickListener(onAnswerViewClickEvent);
 
-        /* ENDDO 변경
-        ////////////테스트
-        //int textView, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
-        Keyword.Builder b = new Keyword.Builder();
-        b.setText("와!");
-        Keyword tempKey = b.build();
-        b.setText("으윽!");
-        Keyword tempKey2 = b.build();
-        mKeywords = new ArrayList<Keyword>();
-        mKeywords.add(tempKey);
-        mKeywords.add(tempKey2);
-        ///////////////
-        */
+            /* ENDDO 변경
+            ////////////테스트
+            //int textView, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
+            Keyword.Builder b = new Keyword.Builder();
+            b.setText("와!");
+            Keyword tempKey = b.build();
+            b.setText("으윽!");
+            Keyword tempKey2 = b.build();
+            mKeywords = new ArrayList<Keyword>();
+            mKeywords.add(tempKey);
+            mKeywords.add(tempKey2);
+            ///////////////
+            */
 
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
-        currentmKeyIndex = 0;
-        currentExamType = generate_view(mKeywords.get(currentmKeyIndex));   //TODO 0가 리턴될 경우 오류처리 표시 해야됨.
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            setSupportActionBar(toolbar);
+            currentmKeyIndex = 0;
+            currentExamType = generate_view(mKeywords.get(currentmKeyIndex));   //TODO 0가 리턴될 경우 오류처리 표시 해야됨.
+        }
     }
     //examType은 0,1,2가 있다. 0.오류 1.기본형, 2.객관식문제형, 3.텍스트문제형
     //        this.text = text;
@@ -177,8 +190,15 @@ public class ReviewActivity extends AppCompatActivity{
         ((EditText) descriptionLayout.getChildAt(0)).setText("");
 
         //keysize = key.name.size()
-        if(key.name.isEmpty() && key.imagePath.isEmpty())
-            return 0;
+        if(key.name.isEmpty() || (key.imagePath.isEmpty() && key.getDescriptions().isEmpty())) {
+            //TODO 코드 중복 존재함.
+            if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mKeywords.get(currentmKeyIndex));
+            else{
+                finish();
+                Toast.makeText(getApplicationContext(), "정상적인 키워드가 없습니다", Toast.LENGTH_LONG).show();
+            }
+            return currentExamType;
+        }
         while(true) {
             if (r == 1) {
                answerString = key.name;
@@ -204,7 +224,7 @@ public class ReviewActivity extends AppCompatActivity{
                     keywordLayout.getChildAt(1).setOnLongClickListener(longClickListener);
                 }
                 descriptionLayout.getChildAt(0).setVisibility(View.VISIBLE);
-                ((EditText) descriptionLayout.getChildAt(0)).setOnKeyListener(onKeyEvent);
+                descriptionLayout.getChildAt(0).setOnKeyListener(onKeyEvent);
 
                 examStartTime = System.currentTimeMillis(); //문제의 시작시간을 저장
                 return 1;
@@ -237,11 +257,11 @@ public class ReviewActivity extends AppCompatActivity{
 //                }
                 //객관식 문제 제출 총 4개 답안중에 하나 선택해서 정답을 골라야함.
                 //case는 문제 갯수를 뜻하는 것이다. case 2,3만을 조건으로 잡고 default를 쓸 수 있겠지만 혹시모른 에러를 잡기위해 case 4 활용
-                r = randomGenerator.nextInt(EXAM_LAYOUT_COUNT);
+                r = randomGenerator.nextInt(count);
                 answer = r; // 문제 정답 번호와 answer을 일치시킴
 
-                //랜덤한 3개의 정답이 아닌 보기 //TODO 관련성 기반으로 보기가 주어지는 경우도 정의해야함.
-                int tempRandom[] = new int[EXAM_LAYOUT_COUNT -1];
+                //랜덤한 count개의 정답이 아닌 보기 //TODO 관련성 기반으로 보기가 주어지는 경우도 정의해야함.
+                int tempRandom[] = new int[count - 1];
                 for(int i=0; i<tempRandom.length; i++) {
                     while (true) {
                         boolean ck = true;
@@ -263,7 +283,7 @@ public class ReviewActivity extends AppCompatActivity{
                     examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
                     examLayoutArray[i].setVisibility(View.VISIBLE);
                     if(count-1 < i) {   //사용가능한 문제 개수-1 보다 i가 클경우
-                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_gray_rounded));
+//                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_gray_rounded));
                         continue;
                     }
                     if(r==i) {
@@ -472,19 +492,51 @@ public class ReviewActivity extends AppCompatActivity{
         //param2.setMargins(0, 0, 0, bMargin);
     }
     // 분단위로 다음 복습시간을 반환함.
-    private int getReviewTime(Keyword key, int answerTime, boolean passed){
+    private int getReviewTime(int answerTime, boolean passed){
+        Keyword key = mKeywords.get(currentmKeyIndex);
+        ArrayList<Integer> keyRelList =  key.getRelationIds();
+        int relCount = 0;
+        for(int i = currentmKeyIndex-1; i > -1; i--) {
+            boolean breakCk = true;
+            for(Integer relID : keyRelList) {
+                if(mKeywords.get(i).id == relID) {
+                    relCount++;
+                    breakCk = false;
+                }
+            }
+            if(breakCk){
+                break;
+            }
+        }
+        if(currentExamType == 2){
+            BrainDBHandler dbHandler = new BrainDBHandler(this);
+            Keyword k;
+            int i = 0;
+            for(Integer relID : keyRelList) {
+                try {
+                    k = dbHandler.findKeyword(BrainDBHandler.FIELD_CATEGORIES_ID, relID);
+                    if(!k.imagePath.isEmpty() && !k.getDescriptions().isEmpty()) {
+                        relCount++;
+                        i++;
+                    }
+                }
+                catch(BrainDBHandler.NoMatchingDataException e){
+                    e.printStackTrace();
+                }
+                if(i == 4) break;
+            }
+        }
         int rating;
-        double ef;
+        int lastInterval = key.interval;
         int nextInterval;
-        int lastInterval;
+        double ef;
+        double relation = 1.0 * Math.pow(0.93, relCount);
+        relation = relation < 0.5 ? 0.5 : relation;
+
+
 //        Date collectReviewDate;//TODO DB Keyword에서 불어오거나 시스템에서 불러오거나 어쨌건 불러와져야함.
         int diff_Interval;
         Date nowDate = new Date();
-        if(key.reviewTimes > 1) {
-            //TODO
-//            diff_Interval = (int) (collectReviewDate.getTime() - nowDate.getTime()) / 60000;
-//            diff_Interval = diff_Interval > 0 ? diff_Interval : -diff_Interval;
-        }
 
         //TODO DB Keyword에서 ef라는 기억용이성 변수를 받아와서 ef에 저장시켜야됨.
         //TODO DB Keyword에서 last_interval을 들고 와서 lastInterval에 저장시켜야됨. 이전에 복습된 주기가 Keyword에 포함되어 있어야할듯.
@@ -495,6 +547,18 @@ public class ReviewActivity extends AppCompatActivity{
         //TODO 예전에 맞췄었던 것 등급 매기기 else if()
         else rating = 0;                                    //완전히 잊음
 
+        if(key.reviewTimes == 0){
+            ef = 2.5;
+        }else {
+            ef = key.ef;
+            ef = ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
+            if(ef<1.3) ef=1.3;
+            else if(ef>2.5) ef=2.5;
+            //TODO  알림시간을 받아와야함.
+//            diff_Interval = (int) (collectReviewDate.getTime() - nowDate.getTime()) / 60000;
+//            diff_Interval = diff_Interval > 0 ? diff_Interval : -diff_Interval;
+        }
+
         //가정1.예정 복습시간보다 복습을 빨리하거나 늦게하면 그 차이를 다음 복습간격과의 %를 구하여
         //그 %만큼 복습을 더 빨리해야한다. 자주 복습을 하면 약간의 이익이 있고 늦게 복습을 하면 그만큼 이익이 줄어야된다.
         //예시: EF=2.5이고 한번 복습(20분에 복습한 것)이 이루어졌었다. 두번째 복습은 임의값인 하루(24시간)가 되어야함.
@@ -504,47 +568,62 @@ public class ReviewActivity extends AppCompatActivity{
         //만약 2시간 일찍이 아닌 20시간 일찍 복습했다면 24+(144-24)*2/24시간(34시간)이 다음 복습 시간이다.
         //여기서 예외적으로 이전 복습시간이 24시간 초과 57시간 미만이면 EF를 곱하는게 아닌 6을 곱하는 것으로 한다.
         //또한 위의 규칙은 첫번째 복습에서 적용되지 않는다.
-        if(rating<2) {
-            key.reviewTimes=0;
-            return 20;
-        }
-        else{
-            //TODO
-//            ef = ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
-//            if(ef<1.3) ef=1.3;
-//            else if(ef>2.5) ef=2.5;
-        }
+//        if(rating<2) {
+//            key.reviewTimes=0;
+//            return 20;
+//        }
+//        else{
+//            //TODO
+////            ef = ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
+////            if(ef<1.3) ef=1.3;
+////            else if(ef>2.5) ef=2.5;
+//        }
 
         if(key.reviewTimes == 0)
             return 20;
         else if(key.reviewTimes == 1) {
+            //TODO
+//            nextInterval = 20 + (1440 - 20)*diff_Interval/20;
+//            return nextInterval;
             return 1440;
         }
         else if(key.reviewTimes == 2){
             //TODO
-//            nextInterval = 1440 + (207360 - 1440)*diff_Interval/1440;
+//            nextInterval = 1440 + (8,640‬ - 1440)*(1440+diff_Interval)/1440;
 //            return nextInterval;
             return 20;
         }
         else{
             //TODO
-            //nextInterval = (int)(lastInterval * ef);
+//            nextInterval = (int)(lastInterval * ef * relation);
             //if(lastInterval>1440 && lastInterval<3420) nextInterval *= 6;
             return 20;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     //설명을 적어서 맞추는 문제일 때 엔터키의 동작을 변경하는 이벤트 리스너
     private View.OnKeyListener onKeyEvent = new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    //엔터입력시 할일 처리
-                    //없으면 입력 하지 않음.
-                }
+//            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+//                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+//                    //엔터입력시 할일 처리
+//                    //없으면 입력 하지 않음.
+//                }
+//            }
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                //엔터입력시 할일 처리
+                //없으면 입력 하지 않음.
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
             }
-            return false;
+            return (keyCode == KeyEvent.KEYCODE_ENTER);
         }
     };
     private View.OnClickListener onAnswerViewClickEvent = new View.OnClickListener(){
@@ -554,21 +633,22 @@ public class ReviewActivity extends AppCompatActivity{
             examEndTime = System.currentTimeMillis(); //문제의 종료시간을 저장
             examEndTime = examEndTime - examStartTime;
             boolean passed = false;
-            int anwserTime = (int)examEndTime;    //int형으로 형변환
+            int answerTime = (int)examEndTime;    //int형으로 형변환
 
             switch(currentExamType){
                 case 1:
+                    if(answerString.replaceAll("\\p{Z}", "").equals(((EditText) descriptionLayout.getChildAt(0)).getText().toString().replaceAll("\\p{Z}", ""))){
+                        passed = true;
+                    }
                     ((EditText) descriptionLayout.getChildAt(0)).setText(answerString);
-                    ((EditText) descriptionLayout.getChildAt(0)).setTextAppearance(R.style.anwserKeywordTheme);
+                    ((EditText) descriptionLayout.getChildAt(0)).setTextAppearance(R.style.answerKeywordTheme);
                     ((EditText) descriptionLayout.getChildAt(0)).setCursorVisible(false);
                     descriptionLayout.getChildAt(0).setEnabled(false);
                     descriptionLayout.getChildAt(0).setClickable(false);
                     descriptionLayout.getChildAt(0).setFocusable(false);
                     descriptionLayout.getChildAt(0).setFocusableInTouchMode(false);
 
-                    if(answerString == key.name){
-                        passed = true;
-                    }
+
                     break;
                 case 2:
                     examLayoutArray[answer].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_red_rounded));
@@ -577,17 +657,28 @@ public class ReviewActivity extends AppCompatActivity{
                     }
                     break;
                 case 3:
-                    if(answerString == examText.getText().toString()) {
+                    if(answerString.replaceAll("\\p{Z}", "").equals(examText.getText().toString().replaceAll("\\p{Z}", ""))) {
                         passed = true;
                     }
+                    examText.setText(answerString);
+                    examText.setTextAppearance(R.style.answerTextExamTheme);
+                    examText.setCursorVisible(false);
+                    examText.setEnabled(false);
+                    examText.setClickable(false);
+                    examText.setFocusable(false);
+                    examText.setFocusableInTouchMode(false);
                     break;
                 default:
                     return; //오류
             }
             if(passed){
                 //TODO 맞췄음을 보여주는 레이아웃변형
+                Snackbar.make(v, "정답입니다!!!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }else{
                 //TODO 틀렸음을 보여주는 레이아웃 변형
+                Snackbar.make(v, "틀렸네요.......", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
 
             //TODO getReviewTime() 함수로 알림 반환=>알림기능에 연계
@@ -596,15 +687,20 @@ public class ReviewActivity extends AppCompatActivity{
             Test resultTest = new Test.Builder()
                     .setCid(key.cid)
                     .setKid(key.id)
-                    .setAnswerTime(anwserTime)
+                    .setAnswerTime(answerTime)
                     .build();
             dbHandler.addTest(resultTest);
+
+            AnswerButton.setOnClickListener(null);
+            nextButton.setOnClickListener(onNextClickEvent);
         }
     };
 
     private  View.OnClickListener onNextClickEvent = new View.OnClickListener(){
         @Override
         public void onClick(View v){
+            AnswerButton.setOnClickListener(onAnswerViewClickEvent);
+            nextButton.setOnClickListener(null);
             if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mKeywords.get(currentmKeyIndex));
             else{
                    finish();

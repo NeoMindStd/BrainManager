@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.recyclerview.selection.ItemKeyProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
@@ -23,13 +24,11 @@ import std.neomind.brainmanager.data.Keyword;
 public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGridRecyclerAdapter.RelationViewHolder> {
     //rContext 액티비티 context 를 저장함.
     private Context rContext;
-    private ArrayList<Integer> selectedList;
 
     //rKeywords 전체 키워드들의 배열리스트를 저장함.
     private ArrayList<Keyword> rKeywords;
 
     public RelationGridRecyclerAdapter(Context context, ArrayList<Keyword> keywords) {
-        selectedList = new ArrayList<Integer>();
         rContext = context;
         rKeywords = keywords;
     }
@@ -47,6 +46,11 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
         return viewHolder;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     //아이템을 생성할 때 발생하는 메소드
     @Override
     public void onBindViewHolder(@NonNull RelationViewHolder viewHolder, int position) {
@@ -61,7 +65,6 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
             viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_gray_edge));
         }
     }
-    public ArrayList<Integer> getSelectedList(){ return selectedList; }
     @Override
     public int getItemCount() { return (null != rKeywords) ? rKeywords.size() : 0; }
 
@@ -165,13 +168,14 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
             //
             if (clicked) {
                 clicked = false;
-                selectedList.remove((Integer)this.key.id);
+                key.setSelected(false);
                 textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
             } else {
-                selectedList.add(this.key.id);
                 clicked = true;
+                key.setSelected(true);
                 textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_blue_edge));
             }
         }
     }
 }
+
