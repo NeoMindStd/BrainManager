@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/relation_action_search"
+        android:icon="@drawable/ic_main_search"
+        android:title="@string/MainActivity_search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/relation_action_switch_left"
+        android:icon="@drawable/ic_relation_grid"
+        android:title="@string/MainActivity_search"
+        android:enabled="false"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/relation_action_switch"
+        android:title=""
+        app:showAsAction="always"
+        android:actionLayout="@layout/switch_layout"
+        />
+    <item
+        android:id="@+id/relation_action_switch_right"
+        android:icon="@drawable/ic_relation_list"
+        android:title="@string/MainActivity_search"
+        android:enabled="false"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+</menu>

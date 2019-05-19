@@ -74,6 +74,10 @@
                 android:id="@+id/review_imageView_keyword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginLeft="3dp"
                 android:gravity="center"
                 android:contentDescription="@string/ReviewActivity_imageViewKeywordDescription" />
 
@@ -94,9 +98,9 @@
             app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
             app:layout_constraintVertical_bias="1.0">
 
-            <TextView
+            <EditText
                 style="@style/keywordTheme"
-                android:id="@+id/review_textView_description"
+                android:id="@+id/review_editText_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -106,6 +110,10 @@
                 android:id="@+id/review_imageView_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginLeft="3dp"
                 android:gravity="center"
                 android:visibility="gone"/>
 
@@ -152,6 +160,10 @@
                     android:id="@+id/review_image_exam1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
                     android:adjustViewBounds="true"
                     android:gravity="center"
                     android:visibility="visible" />
@@ -186,6 +198,10 @@
                     android:id="@+id/review_imageView_exam2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
                     android:gravity="center"/>
@@ -220,6 +236,10 @@
                     android:id="@+id/review_imageView_exam3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
                     android:gravity="center"/>
@@ -254,6 +274,10 @@
                     android:id="@+id/review_imageView_exam4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
                     android:adjustViewBounds="true"
                     android:visibility="visible"
                     android:gravity="center" />
@@ -307,33 +331,14 @@
                     android:focusableInTouchMode="true"
                     style="@style/textExamTheme"
                     android:visibility="visible"
-                    app:columnCount="4"
+                    app:columnCount="3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/review_layout_keyword">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ReviewActivity_answer"
-                        style="@style/textExamTheme"/>
-
-                    <EditText
-                        android:id="@+id/review_editText_test"
-                        android:text=""
-                        style="@style/textExamTheme"
-                        android:singleLine = "true"
-                        android:lines = "1"/>
-
-                    <TextView
-                        android:text="@string/ReviewActivity_is"
-                        style="@style/textExamTheme"/>
-
                 </androidx.gridlayout.widget.GridLayout>
 
             </HorizontalScrollView>
 
         </ScrollView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
