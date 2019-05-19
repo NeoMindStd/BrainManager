@@ -28,7 +28,9 @@ public final class PermissionManager {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.RECEIVE_BOOT_COMPLETED,
                 Manifest.permission.CAMERA,
-                Manifest.permission.WAKE_LOCK);
+                Manifest.permission.WAKE_LOCK,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET);
     }
 
     public boolean checkGranted() {
@@ -37,6 +39,8 @@ public final class PermissionManager {
         denied = denied || getPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED, getText(R.string.PermissionManager_permissionText_receiveBootCompleted));
         denied = denied || getPermission(Manifest.permission.CAMERA, getText(R.string.PermissionManager_permissionText_camera));
         denied = denied || getPermission(Manifest.permission.WAKE_LOCK, getText(R.string.PermissionManager_permissionText_wakeLock));
+        denied = denied || getPermission(Manifest.permission.ACCESS_NETWORK_STATE, getText(R.string.PermissionManager_accessNetworkState));
+        denied = denied || getPermission(Manifest.permission.INTERNET, getText(R.string.PermissionManager_permissionText_internet));
         return !denied;
     }
 
