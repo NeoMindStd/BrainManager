@@ -32,7 +32,7 @@
             android:id="@+id/settings_textView_reviewType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Settings_reviewType" />
+            android:text="@string/SettingsActivity_reviewType" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,21 +44,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/Settings_push" />
+                android:text="@string/SettingsActivity_push" />
 
             <RadioButton
                 android:id="@+id/settings_radioButton_lockScreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/Settings_lockScreen" />
+                android:text="@string/SettingsActivity_lockScreen" />
 
             <RadioButton
                 android:id="@+id/settings_radioButton_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/Settings_alarm" />
+                android:text="@string/SettingsActivity_alarm" />
 
         </LinearLayout>
 
@@ -74,13 +74,13 @@
             android:id="@+id/settings_textView_setNightMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Settings_setNightMode" />
+            android:text="@string/SettingsActivity_setNightMode" />
 
         <CheckBox
             android:id="@+id/settings_checkBox_setNightMode"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/Settings_nightModeDescription" />
+            android:text="@string/SettingsActivity_nightModeDescription" />
 
     </LinearLayout>
 
@@ -94,7 +94,7 @@
             android:id="@+id/settings_textView_appInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Settings_appInfo" />
+            android:text="@string/SettingsActivity_appInfo" />
 
         <TextView
             android:id="@+id/settings_textView_privacyPolicy"
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:layout_weight="2"
-            android:text= "@string/Settings_privacyPolicy" />
+            android:text= "@string/SettingsActivity_privacyPolicy" />
 
         <TextView
             android:id="@+id/settings_textView_license"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:layout_weight="2"
-            android:text= "@string/Settings_apiLicense" />
+            android:text= "@string/SettingsActivity_openSourceLibraries" />
     </LinearLayout>
 
 </LinearLayout>

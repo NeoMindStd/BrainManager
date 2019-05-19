@@ -1,9 +1,12 @@
 package std.neomind.brainmanager.utils;
 
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -12,24 +15,26 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.RecyclerView;
 
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 
+import std.neomind.brainmanager.KeywordActivity;
 import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.data.Keyword;
 
-public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecyclerAdapter.KeywordViewHolder> {
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "KeywordRecyclerAdapter";
+    private static final String TAG = "MainRecyclerAdapter";
 
     private MainActivity mActivity;
     private ArrayList<Keyword> mKeywords;
 
-    public KeywordRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
+    public MainRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
         mActivity = activity;
         mKeywords = keywords;
     }
@@ -72,12 +77,25 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
 
         public void build(int i) {
-            itemView.setOnClickListener(new ItemClickLister(i));
+            mKeywords.get(i).setCardView((CardView)itemView);
+
+            itemView.setOnClickListener(new ItemClickListener(i));
+            itemView.setOnLongClickListener(new ItemLongClickListener(i, this));
 
             Glide.with(mActivity.getBaseContext())
                     .load(mKeywords.get(i).imagePath)
                     .into(imageView);
             textView.setText(mKeywords.get(i).name);
+        }
+
+        public void removeItem() {
+            mKeywords.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
+        }
+
+        public void removeItem(int i) {
+            mKeywords.remove(i);
+            notifyItemRemoved(i);
         }
 
         @Override
@@ -112,18 +130,61 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
     }
 
-    private class ItemClickLister implements View.OnClickListener {
+    private class ItemClickListener implements View.OnClickListener {
         private int mPosition;
 
-        private ItemClickLister(int position) {
+        private ItemClickListener(int position) {
             this.mPosition = position;
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "onClick position: " + mPosition);
+            Intent intent = new Intent(mActivity, KeywordActivity.class);
+            intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_VIEW);
+            intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
+            mActivity.startActivity(intent);
+        }
+    }
+    
+    private class ItemLongClickListener implements View.OnLongClickListener {
+        private int mPosition;
+        private KeywordViewHolder mKeywordViewHolder;
 
-            mActivity.pickImage(mKeywords.get(mPosition));
+        private ItemLongClickListener(int position, KeywordViewHolder keywordViewHolder) {
+            mPosition = position;
+            mKeywordViewHolder = keywordViewHolder;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            PopupMenu popupMenu = new PopupMenu(mActivity.getBaseContext(), v);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            Menu menu = popupMenu.getMenu();
+            inflater.inflate(R.menu.main_context_keyword, menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+
+                    case R.id.item_edit:
+                        Intent intent = new Intent(mActivity, KeywordActivity.class);
+                        intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_UPDATE);
+                        intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
+                        mActivity.startActivity(intent);
+                        break;
+
+                    case R.id.item_remove:
+                        try {
+                            BrainDBHandler dbHandler = new BrainDBHandler(mActivity.getBaseContext());
+                            dbHandler.removeKeyword(mKeywords.get(mPosition).id);       // db 삭제
+                            mKeywordViewHolder.removeItem();                            // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+                return true;
+            });
+            popupMenu.show();
+            return true;
         }
     }
 }

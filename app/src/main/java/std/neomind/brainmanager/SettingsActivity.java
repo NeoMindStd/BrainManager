@@ -1,5 +1,6 @@
 package std.neomind.brainmanager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -60,5 +61,22 @@ public class SettingsActivity extends AppCompatActivity {
         LineData data = new LineData(dataSets);
 
         mChart.setData(data);
+
+        findViewById(R.id.settings_textView_privacyPolicy).setOnClickListener(view -> {
+            Intent intent = new Intent(this, WebViewActivity.class);
+            String str = getResources().getString(R.string.SettingsActivity_privacyPolicy);
+            str = str.substring(0, str.indexOf('\n'));
+            intent.putExtra("TITLE", str);
+            intent.putExtra("URL", getResources().getString(R.string.SettingsActivity_privacyPolicyURL));
+            startActivity(intent);
+        });
+        findViewById(R.id.settings_textView_license).setOnClickListener(view -> {
+            Intent intent = new Intent(this, WebViewActivity.class);
+            String str = getResources().getString(R.string.SettingsActivity_openSourceLibraries);
+            str = str.substring(0, str.indexOf('\n'));
+            intent.putExtra("TITLE", str);
+            intent.putExtra("URL", getResources().getString(R.string.SettingsActivity_openSourceLibrariesURL));
+            startActivity(intent);
+        });
     }
 }

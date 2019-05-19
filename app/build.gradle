@@ -47,4 +47,5 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation "com.leinardi.android:speed-dial:2.0.1"
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 }
