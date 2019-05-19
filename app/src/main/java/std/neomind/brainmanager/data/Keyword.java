@@ -1,5 +1,7 @@
 package std.neomind.brainmanager.data;
 
+import android.widget.ArrayAdapter;
+
 import java.util.ArrayList;
 
 import androidx.cardview.widget.CardView;

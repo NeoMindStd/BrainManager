@@ -13,11 +13,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="review_Button_Green">
+        <item name="android:backgroundTint">@color/colorPrimaryLight</item>
+    </style>
+    <style name="review_Button_Accent">
+        <item name="android:backgroundTint">@color/colorAccent</item>
+    </style>
+
     <style name="keywordTheme">
         <item name="android:textSize">50sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/BLACK</item>
     </style>
-
 
     <style name="examTheme">
         <item name="android:textSize">30sp</item>
@@ -27,6 +34,16 @@
     <style name="textExamTheme">
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center</item>
+    </style>
+    <style name="answerTextExamTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="answerKeywordTheme">
+        <item name="android:textSize">50sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
