@@ -31,7 +31,7 @@ import std.neomind.brainmanager.data.Keyword;
 
 public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationListRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "MainRecyclerAdapter";
+    private static final String TAG = "RelationListRecyclerAdapter";
 
     private Activity mActivity;
     private ArrayList<Keyword> mKeywords;
@@ -46,7 +46,7 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
     @Override
     public KeywordViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.main_keyword_item, viewGroup, false);
+                .inflate(R.layout.review_relation_keyword_item, viewGroup, false);
         KeywordViewHolder keywordViewHolder = new KeywordViewHolder(view);
         return keywordViewHolder;
     }
@@ -75,8 +75,8 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
 
         KeywordViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.main_item_circularImage_keyword);
-            textView = itemView.findViewById(R.id.main_item_textView_keyword);
+            imageView = itemView.findViewById(R.id.reviewRelation_item_circularImage_keyword);
+            textView = itemView.findViewById(R.id.reviewRelation_item_textView_keyword);
         }
 
         public void build(int i) {

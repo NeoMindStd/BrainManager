@@ -3,9 +3,6 @@
     <string name="app_name">BrainManager</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
 
     <string name="Global_menu">Menu</string>
     <string name="Global_done">DONE</string>
@@ -34,12 +31,9 @@
     <string name="PermissionManager_permissionText_wakeLock">Wake up device</string>
     <string name="PermissionManager_accessNetworkState">Access network state</string>
     <string name="PermissionManager_permissionText_internet">Internet</string>
-    <string name="PermissionManager_acquirePermissionDialogTitle">Permissions are required.</string>
-    <string name="PermissionManager_acquirePermissionDialogMsg">To use this feature, you need %s permission on your device. Would you like to continue?</string>
 
     <string name="MainActivity_search">Search</string>
     <string name="MainActivity_addCategory">New Category</string>
-    <string name="MainActivity_addKeyword">New Keyword</string>
     <string name="MainActivity_review">Review</string>
     <string name="MainActivity_statistics">Statistics</string>
     <string name="MainActivity_setRelations">Set relations</string>
@@ -69,14 +63,9 @@
 
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>
-    <string name="ReviewActivity_thinkAnswer">Think of the correct answer.</string>
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
-    <string name="ReviewActivity_answer" translatable="false">A.</string>
-    <string name="ReviewActivity_is">is</string>
-    <string name="ReviewActivity_alertDialogOK">OK</string>
 
     <string name="Statistics_forgettingCurve">Forgetting curve</string>
-    <string name="Statistics_setPeriod">Set period</string>
 
     <string name="SettingsActivity_reviewType">Review type</string>
     <string name="SettingsActivity_push">Push notification</string>

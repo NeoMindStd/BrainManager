@@ -8,7 +8,6 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
     <item
-        android:id="@+id/relation_action_switch_left"
         android:icon="@drawable/ic_relation_grid"
         android:title=""
         android:enabled="false"
@@ -20,7 +19,6 @@
         app:actionLayout="@layout/switch_layout"
         />
     <item
-        android:id="@+id/relation_action_switch_right"
         android:icon="@drawable/ic_relation_list"
         android:title=""
         android:enabled="false"

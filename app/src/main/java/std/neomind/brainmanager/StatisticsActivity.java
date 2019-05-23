@@ -1,26 +1,15 @@
 package std.neomind.brainmanager;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-
 import androidx.appcompat.app.AppCompatActivity;
+import std.neomind.brainmanager.utils.fifteenDaysChart;
+import std.neomind.brainmanager.utils.oneMonthDaysChart;
 
 import java.util.ArrayList;
 
@@ -51,11 +40,11 @@ public class StatisticsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(arrayList.get(i)=="최근한달") {
-                    Intent intent = new Intent(getApplicationContext(),oneMonthDaysChart.class);
+                    Intent intent = new Intent(getApplicationContext(), oneMonthDaysChart.class);
                     startActivity(intent);
                 }
                 else{
-                    Intent intent = new Intent(getApplicationContext(),fifteenDaysChart.class);
+                    Intent intent = new Intent(getApplicationContext(), fifteenDaysChart.class);
                     startActivity(intent);
                 }
                 }

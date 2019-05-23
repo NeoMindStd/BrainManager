@@ -17,8 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".oneMonthDaysChart"></activity>
-        <activity android:name=".fifteenDaysChart" />
+        <activity android:name=".utils.oneMonthDaysChart"></activity>
+        <activity android:name=".utils.fifteenDaysChart" />
         <activity
             android:name=".CategoryActivity"
             android:label="@string/CategoryActivity_title"

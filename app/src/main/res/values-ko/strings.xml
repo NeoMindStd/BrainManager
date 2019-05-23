@@ -3,8 +3,6 @@
     <string name="app_name">브레인 매니저</string>
     <string name="navigation_drawer_open">네비게이션 드로어 열림</string>
     <string name="navigation_drawer_close">네비게이션 드로어 닫힘</string>
-    <string name="nav_header_title">안드로이드 스튜디오</string>
-    <string name="nav_header_desc">네비게이션 헤더</string>
 
     <string name="Global_menu">메뉴</string>
     <string name="Global_done">확인</string>
@@ -33,12 +31,9 @@
     <string name="PermissionManager_permissionText_wakeLock">디바이스 깨우기</string>
     <string name="PermissionManager_accessNetworkState">네트워크 상태 접근</string>
     <string name="PermissionManager_permissionText_internet">인터넷</string>
-    <string name="PermissionManager_acquirePermissionDialogTitle">권한이 필요합니다.</string>
-    <string name="PermissionManager_acquirePermissionDialogMsg">이 기능을 사용하기 위해서는 단말기의 \"%s\" 권한이 필요합니다. 계속 하시겠습니까?</string>
 
     <string name="MainActivity_search">검색</string>
     <string name="MainActivity_addCategory">카테고리 추가</string>
-    <string name="MainActivity_addKeyword">키워드 추가</string>
     <string name="MainActivity_review">복습하기</string>
     <string name="MainActivity_statistics">통계</string>
     <string name="MainActivity_setRelations">관계성 설정</string>
@@ -68,13 +63,9 @@
 
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>
-    <string name="ReviewActivity_thinkAnswer">정답을 생각해보세요.</string>
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
-    <string name="ReviewActivity_is">입니다</string>
-    <string name="ReviewActivity_alertDialogOK">확인</string>
 
     <string name="Statistics_forgettingCurve">망각 곡선</string>
-    <string name="Statistics_setPeriod">기간설정</string>
 
     <string name="SettingsActivity_reviewType">학습형태</string>
     <string name="SettingsActivity_push">푸시알림</string>

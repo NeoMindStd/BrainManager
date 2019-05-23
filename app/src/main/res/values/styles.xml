@@ -16,9 +16,6 @@
     <style name="review_Button_Green">
         <item name="android:backgroundTint">@color/colorPrimaryLight</item>
     </style>
-    <style name="review_Button_Accent">
-        <item name="android:backgroundTint">@color/colorAccent</item>
-    </style>
 
     <style name="keywordTheme">
         <item name="android:textSize">50sp</item>

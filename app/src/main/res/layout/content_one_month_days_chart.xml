@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".oneMonthDaysChart">
+    tools:context=".utils.oneMonthDaysChart">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +42,6 @@
 
             </LinearLayout>
             <Spinner
-                android:id="@+id/spinner2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></Spinner>
         </LinearLayout>

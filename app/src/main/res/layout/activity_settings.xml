@@ -29,7 +29,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/settings_textView_reviewType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/SettingsActivity_reviewType" />
@@ -40,21 +39,18 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/settings_radioButton_banner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/SettingsActivity_push" />
 
             <RadioButton
-                android:id="@+id/settings_radioButton_lockScreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/SettingsActivity_lockScreen" />
 
             <RadioButton
-                android:id="@+id/settings_radioButton_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -71,13 +67,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/settings_textView_setNightMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/SettingsActivity_setNightMode" />
 
         <CheckBox
-            android:id="@+id/settings_checkBox_setNightMode"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/SettingsActivity_nightModeDescription" />
@@ -91,7 +85,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/settings_textView_appInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/SettingsActivity_appInfo" />
