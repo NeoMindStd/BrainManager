@@ -157,7 +157,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public boolean onLongClick(View v) {
-            PopupMenu popupMenu = new PopupMenu(mActivity.getBaseContext(), v);
+            PopupMenu popupMenu = new PopupMenu(mActivity, v);
             MenuInflater inflater = popupMenu.getMenuInflater();
             Menu menu = popupMenu.getMenu();
             inflater.inflate(R.menu.main_context_keyword, menu);
