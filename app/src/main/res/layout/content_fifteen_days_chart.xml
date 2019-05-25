@@ -41,9 +41,31 @@
                     android:layout_height="match_parent" />
 
             </LinearLayout>
-            <Spinner
+
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></Spinner>
+                android:layout_height="wrap_content"
+                android:text="목표정답률 설정" />
+
+            <Spinner
+                android:id="@+id/spinnerSelectGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.02">
+            </Spinner>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="목표시간 설정" />
+
+            <Spinner
+                android:id="@+id/spinnerSelecttime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.02">
+            </Spinner>
         </LinearLayout>
 
     </LinearLayout>
