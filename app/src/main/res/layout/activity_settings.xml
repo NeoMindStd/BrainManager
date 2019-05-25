@@ -39,26 +39,35 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/settings_radioButton_banner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/SettingsActivity_push" />
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <RadioButton
-                android:id="@+id/settings_radioButton_lockScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/SettingsActivity_lockScreen" />
+                <RadioButton
+                    android:id="@+id/settings_radioButton_banner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/SettingsActivity_push"/>
 
-            <RadioButton
-                android:id="@+id/settings_radioButton_notification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/SettingsActivity_alarm" />
+                <RadioButton
+                    android:id="@+id/settings_radioButton_lockScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/SettingsActivity_lockScreen"/>
+
+                <RadioButton
+                    android:id="@+id/settings_radioButton_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/SettingsActivity_alarm"/>
+
+            </RadioGroup>
+
 
         </LinearLayout>
 
