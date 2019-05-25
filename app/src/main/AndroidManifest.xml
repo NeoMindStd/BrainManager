@@ -64,6 +64,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity android:name=".noti.noti2.main22"/>
+
+        <receiver android:name=".noti.Broadcast22"></receiver>
+        <receiver android:name=".noti.noti2.BroadcastD2"></receiver>
+
+        <service
+            android:name=".noti.noti2.ring"
+            android:enabled="true"></service>
     </application>
 
 </manifest>
