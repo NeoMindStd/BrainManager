@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,11 +25,14 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
     //rContext 액티비티 context 를 저장함.
     private Context rContext;
 
+    private Keyword rSelectK;
+
     //rKeywords 전체 키워드들의 배열리스트를 저장함.
     private ArrayList<Keyword> rKeywords;
 
-    public RelationGridRecyclerAdapter(Context context, ArrayList<Keyword> keywords) {
+    public RelationGridRecyclerAdapter(Context context, Keyword targetK, ArrayList<Keyword> keywords) {
         rContext = context;
+        rSelectK = targetK;
         rKeywords = keywords;
     }
 
@@ -53,12 +57,27 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
     //아이템을 생성할 때 발생하는 메소드
     @Override
     public void onBindViewHolder(@NonNull RelationViewHolder viewHolder, int position) {
-        if(!rKeywords.get(position).name.equals("")) {
+        Keyword currentItemKey = rKeywords.get(position);
+        if(!currentItemKey.name.equals("")) {
             viewHolder.textView.setGravity(Gravity.CENTER);
             viewHolder.textView.setTextAppearance(R.style.textExamTheme);
             viewHolder.textView.setText(rKeywords.get(position).name);
-            KeyGridClickListener keyGridClickListener = new KeyGridClickListener(rKeywords.get(position), viewHolder.textView);
+            KeyGridClickListener keyGridClickListener = new KeyGridClickListener(rKeywords.get(position));
             viewHolder.textView.setOnClickListener(keyGridClickListener);
+            boolean ck_rel = false;
+            //기존 관계성 체크
+            for(Integer id : rSelectK.getRelationIds()){
+                if(currentItemKey.id == id) {
+                    ck_rel = true;
+                    break;
+                }
+            }
+            if (ck_rel) {
+                currentItemKey.setSelected(true);
+                viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_blue_edge));
+            } else {
+                viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
+            }
         }
         else{
             viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_gray_edge));
@@ -152,28 +171,32 @@ public class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGr
 
     private class KeyGridClickListener implements View.OnClickListener {
         private Keyword key;
-        private TextView textView;
-        private Boolean clicked;
 
-        public KeyGridClickListener(Keyword keyword, TextView textView) {
+        public KeyGridClickListener(Keyword keyword) {
             this.key = keyword;
-            this.textView = textView;
-            this.clicked = false;
         }
 
         public void onClick(View v) {
             //---------------------------------------------------------
             // 클릭된 키워드들을 저장함.
             //
-            if (clicked) {
-                clicked = false;
+            BrainDBHandler dbHandler = new BrainDBHandler(rContext);
+            if (key.isSelected()) {
                 key.setSelected(false);
-                textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
+                dbHandler.removeRelation(rSelectK.id, key.id);
+                v.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
             } else {
-                clicked = true;
                 key.setSelected(true);
-                textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_blue_edge));
+                try {
+                    dbHandler.addRelation(rSelectK.id, key.id);
+                }
+                catch(BrainDBHandler.DataDuplicationException e){
+                    Toast.makeText(rContext, "오류가 발생했습니다.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+                v.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_blue_edge));
             }
+            dbHandler.close();
         }
     }
 }

@@ -11,6 +11,7 @@
     <string name="Global_added">추가되었습니다.</string>
     <string name="Global_updated">변경되었습니다.</string>
     <string name="Global_canceled">취소되었습니다.</string>
+    <string name="Global_OK">확인</string>
 
     <string name="Label_review">복습</string>
     <string name="Label_statistics">통계</string>
@@ -64,6 +65,12 @@
     <string name="ReviewActivity_showAnswerButton">정답 보기</string>
     <string name="ReviewActivity_nextButton">다음</string>
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
+    <string name="ReviewActivity_noKeyword">키워드가 없습니다</string>
+    <string name="ReviewActivity_lastKeyword">마지막 키워드입니다</string>
+    <string name="ReviewActivity_correct">정답!!!</string>
+    <string name="ReviewActivity_wrong">틀렸네요\.\.\. 괜찮아요</string>
+
+    <string name="RelationActivity_noKeyword">키워드가 없습니다</string>
 
     <string name="Statistics_forgettingCurve">망각 곡선</string>
 
