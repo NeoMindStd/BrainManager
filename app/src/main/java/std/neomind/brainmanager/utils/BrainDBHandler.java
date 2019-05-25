@@ -349,7 +349,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 int relationKid = cursor.getInt(0);
-                if(relationKid == kid) cursor.getInt(1);
+                if(relationKid == kid) relationKid =  cursor.getInt(1);
                 relationKids.add(relationKid);
                 cursor.moveToNext();
             }
@@ -687,8 +687,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         boolean result = false;
 
         String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
-                FIELD_RELATIONS_KID1 + " = " + kid1 +" AND " +
-                FIELD_RELATIONS_KID2 + " = " + kid2;
+                FIELD_RELATIONS_KID1 + " = " + Math.min(kid1, kid2) +" AND " +
+                FIELD_RELATIONS_KID2 + " = " + Math.max(kid1, kid2);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -696,7 +696,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             db.delete(TABLE_RELATIONS,
                     FIELD_RELATIONS_KID1 + " = ? AND " + FIELD_RELATIONS_KID2 + " = ?",
-                    new String[]{String.valueOf(kid1), String.valueOf(kid2)});
+                    new String[]{String.valueOf( Math.min(kid1, kid2)), String.valueOf(Math.max(kid1, kid2))});
             cursor.close();
             result = true;
         }

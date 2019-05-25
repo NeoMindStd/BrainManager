@@ -157,15 +157,22 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view textView clicks here.
         Intent intent = null;
+        ArrayList<Integer> list = new ArrayList<>();
+        for(Keyword k : mKeywords){
+            list.add(k.id);
+        }
+
         switch (item.getItemId()) {
             case R.id.nav_review:
                 intent = new Intent(this, ReviewActivity.class);
+                intent.putExtra(ReviewActivity.EXTRAS_KEYWORD, list);
                 break;
             case R.id.nav_statistics:
                 intent = new Intent(this, StatisticsActivity.class);
                 break;
             case R.id.nav_relation:
                 intent = new Intent(this, RelationActivity.class);
+                intent.putExtra(RelationActivity.EXTRAS_KEYWORD, list);
                 break;
             case R.id.nav_settings:
                 intent = new Intent(this, SettingsActivity.class);

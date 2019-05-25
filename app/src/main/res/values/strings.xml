@@ -11,6 +11,7 @@
     <string name="Global_added">Keyword added.</string>
     <string name="Global_updated">Keyword changed.</string>
     <string name="Global_canceled">Canceled</string>
+    <string name="Global_OK">OK</string>
 
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
@@ -64,6 +65,12 @@
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
+    <string name="ReviewActivity_noKeyword">There\'s no keywords</string>
+    <string name="ReviewActivity_lastKeyword">Last Keyword of List</string>
+    <string name="ReviewActivity_correct">Correct!!!</string>
+    <string name="ReviewActivity_wrong">Wrong\.\.\. Thats OK</string>
+
+    <string name="RelationActivity_noKeyword">There\'s no keywords</string>
 
     <string name="Statistics_forgettingCurve">Forgetting curve</string>
 

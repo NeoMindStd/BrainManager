@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -34,10 +35,12 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
     private static final String TAG = "RelationListRecyclerAdapter";
 
     private Activity mActivity;
+    private Keyword mSelectK;
     private ArrayList<Keyword> mKeywords;
 
-    public RelationListRecyclerAdapter(Activity activity, ArrayList<Keyword> keywords) {
+    public RelationListRecyclerAdapter(Activity activity, Keyword targetK, ArrayList<Keyword> keywords) {
         mActivity = activity;
+        mSelectK = targetK;
         mKeywords = keywords;
         setHasStableIds(true);
     }
@@ -80,9 +83,27 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
         }
 
         public void build(int i) {
-            mKeywords.get(i).setCardView((CardView)itemView);
+            Keyword currentItemKey = mKeywords.get(i);
+            currentItemKey.setCardView((CardView)itemView);
 
-            itemView.setOnClickListener(new ItemClickListener(i));
+            if(!currentItemKey.name.equals("")) {
+                boolean ck_rel = false;
+                //기존 관계성 체크
+                for(Integer id : mSelectK.getRelationIds()){
+                    if(currentItemKey.id == id) ck_rel = true;
+                }
+                if (ck_rel) {
+                    currentItemKey.setSelected(true);
+                    itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
+                }
+                itemView.setOnClickListener(new ItemClickListener(i));
+            }
+            else{
+                itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_gray_edge));
+            }
+
 
             Glide.with(mActivity.getBaseContext())
                     .load(mKeywords.get(i).imagePath)
@@ -134,22 +155,27 @@ public class RelationListRecyclerAdapter extends RecyclerView.Adapter<RelationLi
 
     private class ItemClickListener implements View.OnClickListener {
         private int mPosition;
-        private Boolean clicked;
 
         private ItemClickListener(int position) {
             this.mPosition = position;
-            this.clicked = false;
         }
 
         @Override
         public void onClick(View v) {
-            if (clicked) {
-                clicked = false;
+            BrainDBHandler dbHandler = new BrainDBHandler(mActivity);
+            if (mKeywords.get(mPosition).isSelected()) {
                 mKeywords.get(mPosition).setSelected(false);
+                dbHandler.removeRelation(mSelectK.id, mKeywords.get(mPosition).id);
                 v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
             } else {
-                clicked = true;
                 mKeywords.get(mPosition).setSelected(true);
+                try {
+                    dbHandler.addRelation(mSelectK.id, mKeywords.get(mPosition).id);
+                }
+                catch(BrainDBHandler.DataDuplicationException e){
+                    Toast.makeText(mActivity, "오류가 발생했습니다.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));
             }
         }
