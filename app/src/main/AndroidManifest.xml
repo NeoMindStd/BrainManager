@@ -67,9 +67,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name=".utils.notification.Broadcast22"
-            android:enabled="true"
-            android:exported="false">
+            android:name=".utils.notification.Broadcast22">
         </receiver>
         <receiver android:name=".utils.notification.BroadcastD2"
             android:enabled="true"
