@@ -12,6 +12,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -25,6 +32,7 @@ import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 import std.neomind.brainmanager.KeywordActivity;
 import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
+import std.neomind.brainmanager.ReviewActivity;
 import std.neomind.brainmanager.data.Keyword;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.KeywordViewHolder> {
@@ -176,7 +184,63 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                             BrainDBHandler dbHandler = new BrainDBHandler(mActivity.getBaseContext());
                             dbHandler.removeKeyword(mKeywords.get(mPosition).id);       // db 삭제
                             mKeywordViewHolder.removeItem();                            // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
-                        } catch (Exception e) {
+
+                            ArrayList<Integer> reviewList = new ArrayList<>();
+                            ArrayList<Long> reviewDateList = new ArrayList<>();
+
+                            //TODO 사실 이런 부분들은 전부 메서드로 만들어야 깔끔하지만 시간 없어서 걍 복붙함
+                            try {
+                                FileInputStream fileStream = new FileInputStream(new File(mActivity.getFilesDir() ,"BrainAlarm.data"));
+                                try {
+                                    ObjectInputStream os = new ObjectInputStream(fileStream);
+
+                                    reviewList = (ArrayList<Integer>)os.readObject();
+                                    reviewDateList = (ArrayList<Long>) os.readObject();
+                                    //y
+                                    os.close();
+                                }
+                                catch (Exception ioe){
+                                    ioe.printStackTrace();
+                                }
+                                finally {
+                                    try {
+                                        fileStream.close();
+                                        try{
+                                            FileOutputStream fileStream2 = new FileOutputStream(new File(mActivity.getFilesDir(),"BrainAlarm.data"));
+                                            try {
+                                                ObjectOutputStream os2 = new ObjectOutputStream(fileStream2);
+                                                reviewDateList.remove(reviewList.indexOf(mKeywords.get(mPosition).id));
+                                                reviewList.remove(mKeywords.get(mPosition).id);
+
+                                                os2.writeObject(reviewList);
+                                                os2.writeObject(reviewDateList);
+                                                os2.close();
+                                            }
+                                            catch (Exception ioe){
+                                                ioe.printStackTrace();
+                                            }
+                                            finally {
+                                                try {
+                                                    fileStream2.close();
+                                                }
+                                                catch (IOException ioee){
+                                                    ioee.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                        catch(FileNotFoundException e2){
+                                            e2.printStackTrace();
+                                        }
+                                    }
+                                    catch (IOException ioee){
+                                        ioee.printStackTrace();
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }catch (Exception e){
                             e.printStackTrace();
                         }
                         break;

@@ -71,6 +71,8 @@
     <string name="ReviewActivity_wrong">Wrong\.\.\. Thats OK</string>
 
     <string name="RelationActivity_noKeyword">There\'s no keywords</string>
+    <string name="RelationActivity_error"> errors occurred</string>
+    <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
     <string name="Statistics_forgettingCurve">Forgetting curve</string>
 

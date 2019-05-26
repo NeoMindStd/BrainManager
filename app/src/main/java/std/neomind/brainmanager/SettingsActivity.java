@@ -99,8 +99,8 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
 
                 case R.id.settings_radioButton_notification:
-                    Intent intent2 = new Intent(getApplicationContext(), std.neomind.brainmanager.noti.noti2.main22.class);
-                    startActivity(intent2);
+//                    Intent intent2 = new Intent(getApplicationContext(), std.neomind.brainmanager.noti.noti2.main22.class);
+//                    startActivity(intent2);
                     break;
             }
         }

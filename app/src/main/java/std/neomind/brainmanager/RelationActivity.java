@@ -189,10 +189,14 @@ public class RelationActivity extends AppCompatActivity
             }
             dbHandler.close();
             if(exCount != 0) {
-                Toast.makeText(this, exCount + "개의 오류가 발생했습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, exCount + getString(R.string.RelationActivity_error), Toast.LENGTH_LONG).show();
             }
-            Snackbar.make(view, relationCount + "개의 관계성이 추가되었습니다.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, relationCount + getString(R.string.RelationActivity_relationAdd), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.Global_OK), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v){
+                        }
+                    }).show();
             currentrKeyIndex++;
             generate_recycler();
         });
