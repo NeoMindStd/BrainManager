@@ -74,6 +74,9 @@
     <string name="RelationActivity_error">개의 오류가 발생했습니다</string>
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
 
+    <string name="Notification_title">브레인 매니저</string>
+    <string name="Notification_text">복습할 시간이에요</string>
+
     <string name="Statistics_forgettingCurve">망각 곡선</string>
 
     <string name="SettingsActivity_reviewType">학습형태</string>

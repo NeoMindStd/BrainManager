@@ -752,7 +752,8 @@ public class ReviewActivity extends AppCompatActivity{
         key.reviewTimes++;
         if(key.currentLevels == 0) {
             key.currentLevels++;
-            return (long)(examEndTime+(20*60000*relation));
+            key.interval = (int)(20 * relation);
+            return (long)(examEndTime+(key.interval*60000));
         }
         else if(key.currentLevels == 1) {
             if(reviewList.isEmpty() || reviewDateList.isEmpty()){
