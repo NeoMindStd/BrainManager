@@ -26,8 +26,8 @@ public class Broadcast22 extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newintent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(context);
-        builder.setSmallIcon(R.drawable.image0).setTicker("HETT").setWhen(System.currentTimeMillis())
-                .setNumber(1).setContentTitle("Brain Manager").setContentText("STUDY TIME")
+        builder.setSmallIcon(R.mipmap.ic_launcher).setTicker("HETT").setWhen(System.currentTimeMillis())
+                .setNumber(1).setContentTitle(context.getString(R.string.Notification_title)).setContentText(context.getString(R.string.Notification_text))
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingIntent).setAutoCancel(true);
 
         notificationmanager.notify(1, builder.build());

@@ -73,6 +73,9 @@
     <string name="RelationActivity_error"> errors occurred</string>
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
+    <string name="Notification_title">Brain Manager</string>
+    <string name="Notification_text">STUDY TIME</string>
+
     <string name="Statistics_forgettingCurve">Forgetting curve</string>
 
     <string name="SettingsActivity_reviewType">Review type</string>
