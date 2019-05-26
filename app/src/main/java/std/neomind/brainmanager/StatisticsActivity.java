@@ -27,6 +27,7 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
         arrayList= new ArrayList<>();
+        arrayList.add("선택하시오");
         arrayList.add("최근한달");
         arrayList.add("최근15일");
 
@@ -36,6 +37,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         spinner = (Spinner)findViewById(R.id.spinnerSelectPeriod);
         spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -43,13 +45,14 @@ public class StatisticsActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), oneMonthDaysChart.class);
                     startActivity(intent);
                 }
-                else{
+                else if(arrayList.get(i)=="최근15일"){
                     Intent intent = new Intent(getApplicationContext(), fifteenDaysChart.class);
                     startActivity(intent);
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }

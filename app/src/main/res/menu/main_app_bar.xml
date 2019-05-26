@@ -8,6 +8,11 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
     <item
+        android:id="@+id/main_action_deleteCategories"
+        android:orderInCategory="100"
+        android:title="@string/MainActivity_Action_deleteCategories"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/main_action_editCategories"
         android:orderInCategory="100"
         android:title="@string/MainActivity_Action_editCategories"

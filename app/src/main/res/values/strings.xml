@@ -39,8 +39,11 @@
     <string name="MainActivity_statistics">Statistics</string>
     <string name="MainActivity_setRelations">Set relations</string>
     <string name="MainActivity_settings">Settings</string>
+    <string name="MainActivity_unableToDelete">Unable to delete</string>
+    <string name="MainActivity_unableToEdit">Unable to edit</string>
 
-    <string name="MainActivity_Action_editCategories">Edit selected categories</string>
+    <string name="MainActivity_Action_deleteCategories">Delete selected category</string>
+    <string name="MainActivity_Action_editCategories">Edit selected category</string>
 
     <string name="MainActivity_ContextMenu_modify">Modify</string>
     <string name="MainActivity_ContextMenu_delete">Delete</string>
@@ -55,12 +58,16 @@
     <string name="KeywordActivity_name">Name</string>
     <string name="KeywordActivity_nameHint">Please enter a name.</string>
     <string name="KeywordActivity_category">Category</string>
+    <string name="KeywordActivity_descriptions">Descriptions</string>
     <string name="KeywordActivity_none">None</string>
     <string name="KeywordActivity_addImage">Add image</string>
     <string name="KeywordActivity_updateImage">Change image</string>
     <string name="KeywordActivity_titleRegister">Add a keyword</string>
     <string name="KeywordActivity_titleView">View</string>
     <string name="KeywordActivity_titleUpdate">Update</string>
+    <string name="KeywordActivity_addDescription">Add</string>
+    <string name="KeywordActivity_updateDescription">Update</string>
+    <string name="KeywordActivity_deleteDescription">Delete</string>
 
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>

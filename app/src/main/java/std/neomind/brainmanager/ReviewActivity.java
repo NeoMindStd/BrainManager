@@ -406,17 +406,28 @@ public class ReviewActivity extends AppCompatActivity{
                     }
                 }
 
-                int sizeCount = 0;
+                int sizeCount = 0;  //관계성이 있는 키워드가 지정될 랜덤 위치를 저장할 배열
                 int tempRandomRel[] = new int[tempRandom.length];
+
+
+
                 for(int i=0; i<tempRandomRel.length; i++){
                     tempRandomRel[i] = randomGenerator.nextInt(tempRandom.length);
                     for(int j=0; j<i; j++) {
                         if(tempRandomRel[i] == tempRandomRel[j]) i--;
                     }
-                }
-                for(int i=0; i<relationIndexs.size(); i++) {
+                }//랜덤하게 인덱스를 3개 만드는거임.
+                //크기에 맞춰서 사이즈를 제작.
+                int temp_size = relationIndexs.size() > 3 ? 4 : relationIndexs.size();
+                temp_size = temp_size > tempRandom.length ? tempRandom.length : temp_size;
+
+                for(int i=0; i<temp_size; i++) {
                     tempRandom[tempRandomRel[i]] = relationIndexs.get(randomGenerator.nextInt(relationIndexs.size()));
-                }
+                    for(int j=0; j<temp_size; j++) {
+                        if(j != tempRandomRel[i])
+                            if(tempRandom[tempRandomRel[i]] == tempRandom[j]) i--;
+                    }
+                }//관계성들 갯수에 맞게 랜덤 인덱스를 생성시켜 allkeywrds에서의 인덱스를 저장시킴
 
                 for(int i=0; i<tempRandom.length; i++) {
                     while (true) {
@@ -689,8 +700,8 @@ public class ReviewActivity extends AppCompatActivity{
             int i = 0;
             for(Integer relID : keyRelList) {
                 try {
-                    k = dbHandler.findKeyword(BrainDBHandler.FIELD_CATEGORIES_ID, relID);
-                    if(!k.imagePath.isEmpty() && !k.getDescriptions().isEmpty()) {
+                    k = dbHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, relID);
+                    if(!k.imagePath.isEmpty() || k.getDescriptions() != null) {
                         relCount++;
                         i++;
                     }

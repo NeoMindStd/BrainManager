@@ -11,4 +11,16 @@ public class Description {
         int id = -1;
         description = "";
     }
+
+    @Override
+    public String toString() {
+        return description;
+    }
+
+    public String toStringAbsolutely() {
+        return "Description{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

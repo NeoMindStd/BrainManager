@@ -32,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        rg = (RadioGroup) findViewById(R.id.radioGroup);
+        rg = findViewById(R.id.radioGroup);
         rg.setOnCheckedChangeListener(m);
 
         mChart = findViewById(R.id.settings_chart);
@@ -77,32 +77,29 @@ public class SettingsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, WebViewActivity.class);
             String str = getResources().getString(R.string.SettingsActivity_privacyPolicy);
             str = str.substring(0, str.indexOf('\n'));
-            intent.putExtra("TITLE", str);
-            intent.putExtra("URL", getResources().getString(R.string.SettingsActivity_privacyPolicyURL));
+            intent.putExtra(WebViewActivity.EXTRAS_TITLE, str);
+            intent.putExtra(WebViewActivity.EXTRAS_URL, getResources().getString(R.string.SettingsActivity_privacyPolicyURL));
             startActivity(intent);
         });
         findViewById(R.id.settings_textView_license).setOnClickListener(view -> {
             Intent intent = new Intent(this, WebViewActivity.class);
             String str = getResources().getString(R.string.SettingsActivity_openSourceLibraries);
             str = str.substring(0, str.indexOf('\n'));
-            intent.putExtra("TITLE", str);
-            intent.putExtra("URL", getResources().getString(R.string.SettingsActivity_openSourceLibrariesURL));
+            intent.putExtra(WebViewActivity.EXTRAS_TITLE, str);
+            intent.putExtra(WebViewActivity.EXTRAS_URL, getResources().getString(R.string.SettingsActivity_openSourceLibrariesURL));
             startActivity(intent);
         });
     }
-    RadioGroup.OnCheckedChangeListener m = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.settings_radioButton_banner:
-                    new SettingsActivity.AlarmHATT(getApplicationContext()).Alarm();
-                    break;
+    RadioGroup.OnCheckedChangeListener m = (group, checkedId) -> {
+        switch (checkedId) {
+            case R.id.settings_radioButton_banner:
+                new SettingsActivity.AlarmHATT(getApplicationContext()).Alarm();
+                break;
 
-                case R.id.settings_radioButton_notification:
+            case R.id.settings_radioButton_notification:
 //                    Intent intent2 = new Intent(getApplicationContext(), std.neomind.brainmanager.utils.noti.noti2.main22.class);
 //                    startActivity(intent2);
-                    break;
-            }
+                break;
         }
     };
 
