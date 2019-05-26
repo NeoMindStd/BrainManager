@@ -143,6 +143,18 @@ public class BrainDBHandler extends SQLiteOpenHelper {
 
         db.insert(TABLE_KEYWORDS, null, values);
         db.close();
+
+        for(Description description : keyword.getDescriptions()) {
+            try {
+                addDescription(description, findLastKeyword().id);
+            } catch (NoMatchingDataException e) {}
+        }
+        for(int relationId : keyword.getRelationIds()) {
+            try {
+                addRelation(relationId, findLastKeyword().id);
+            } catch (DataDuplicationException e) {}
+            catch (NoMatchingDataException e) {}
+        }
     }
 
     public void addDescription(Description description, int kid) {
@@ -448,10 +460,14 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                     .setId(cursor.getInt(0))
                     .setCid(cursor.getInt(1))
                     .setName(cursor.getString(2))
+                    .setDescriptions(
+                            getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
                     .setImagePath(cursor.getString(3))
                     .setCurrentLevels(cursor.getInt(4))
                     .setReviewTimes(cursor.getInt(5))
                     .setRegistrationDate(cursor.getLong(6))
+                    .setRelationIds(
+                            getAllRelationsOfTheKeyword(cursor.getInt(0)))
                     .setEF(cursor.getDouble(7))
                     .setInterval(cursor.getInt(8))
                     .build();
@@ -472,6 +488,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                 field + " = \"" + value + "\"";
         return findKeyword(query);
     }
+
     public Keyword findLastKeyword() throws NoMatchingDataException {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
                 FIELD_KEYWORDS_ID + " = (SELECT MAX(" + FIELD_KEYWORDS_ID + ") FROM " + TABLE_KEYWORDS + ")";
@@ -486,10 +503,14 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                     .setId(cursor.getInt(0))
                     .setCid(cursor.getInt(1))
                     .setName(cursor.getString(2))
+                    .setDescriptions(
+                            getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
                     .setImagePath(cursor.getString(3))
                     .setCurrentLevels(cursor.getInt(4))
                     .setReviewTimes(cursor.getInt(5))
                     .setRegistrationDate(cursor.getLong(6))
+                    .setRelationIds(
+                            getAllRelationsOfTheKeyword(cursor.getInt(0)))
                     .setEF(cursor.getDouble(7))
                     .setInterval(cursor.getInt(8))
                     .build();
