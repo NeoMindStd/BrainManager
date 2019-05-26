@@ -2,6 +2,7 @@ package std.neomind.brainmanager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -24,6 +25,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,12 +45,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Test;
+import std.neomind.brainmanager.noti.noti2.BroadcastD2;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
 public class ReviewActivity extends AppCompatActivity{
     static final int EXAM_LAYOUT_COUNT = 4;
     public static final String EXTRAS_KEYWORD = "keyword";
+    public static final String EXTRAS_MODE = "mode";
 
     private int currentExamType;    //0이면 오류 1이면 기본문제. 2면 객관식문제 3이면 설명빈칸입력문제
     private Context mContext;
@@ -56,8 +66,10 @@ public class ReviewActivity extends AppCompatActivity{
 
     private ConstraintLayout examAllLayout;
     private ConstraintLayout[] examLayoutArray;
-    private int tMargin, lrMargin, bMargin, width, height, keyTextSize, desTextSize;
-    Point device_size;
+//    private int tMargin, lrMargin, bMargin, width, height, keyTextSize, desTextSize;
+//    Point device_size;
+    private ArrayList<Integer> reviewList;
+    private ArrayList<Long> reviewDateList;
 
     private int selectedExam;   //-1일 때는 선택x상태
     private int answer;
@@ -87,8 +99,78 @@ public class ReviewActivity extends AppCompatActivity{
         textExamScroll = findViewById(R.id.review_scroll_exam);
 ////
         ArrayList<Integer> listID = new ArrayList<>();
-        listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
+        String mode = getIntent().getStringExtra(EXTRAS_MODE);
+        /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
+        if(mode == null){
+            listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
+            try {
+                FileInputStream fileStream = new FileInputStream(new File(getFilesDir(),"BrainAlarm.data"));
+                try {
+                    ObjectInputStream os = new ObjectInputStream(fileStream);
 
+                    reviewList = (ArrayList<Integer>)os.readObject();
+                    reviewDateList = (ArrayList<Long>) os.readObject();
+
+                    os.close();
+                }
+                catch (Exception ioe){              //일반 복습하기를 눌렸을 때 하나라도 오류가 생기면 이렇게 됨.
+                    reviewList = new ArrayList<>();
+                    reviewDateList = new ArrayList<>();
+                    ioe.printStackTrace();
+                }
+                finally {
+                    try {
+                        fileStream.close();
+                    }
+                    catch (IOException ioee){
+                        ioee.printStackTrace();
+                    }
+                }
+            }
+            catch (FileNotFoundException e){    //일반 복습하기를 눌렸을 때 하나라도 오류가 생기면 이렇게 됨.
+                reviewList = new ArrayList<>();
+                reviewDateList = new ArrayList<>();
+                e.printStackTrace();
+            }
+        }
+        else{
+            /**알람을 눌렸을 때 표시될 저장된 객체 불러오기 **/
+            try {
+                FileInputStream fileStream = new FileInputStream(new File(getFilesDir(),"BrainAlarm.data"));
+                try {
+                    ObjectInputStream os = new ObjectInputStream(fileStream);
+
+                    reviewList = (ArrayList<Integer>)os.readObject();
+                    reviewDateList = (ArrayList<Long>) os.readObject();
+
+                    os.close();
+                }
+                catch (Exception ioe){
+                    ioe.printStackTrace();
+                }
+                finally {
+                    try {
+                        fileStream.close();
+                    }
+                    catch (IOException ioee){
+                        ioee.printStackTrace();
+                    }
+                    /** 저장된 객체들 중 알림 시간이 넘은 것들을 불러옴 **/
+                    long now = System.currentTimeMillis();
+                    for(long date : reviewDateList){
+                        if(date < now){
+                            listID.add(reviewDateList.indexOf(date));
+                        }
+                    }
+                }
+            }
+            catch (FileNotFoundException e){    //하나라도 오류가 생기면 안됨.
+                e.printStackTrace();
+                finish();
+                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
 
 
         if(listID.isEmpty()){
@@ -96,6 +178,7 @@ public class ReviewActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_noKeyword), Toast.LENGTH_LONG).show();
         }
         else {
+            //리스트 연성.
             BrainDBHandler brainDBHandler = new BrainDBHandler(mContext);
             try {
                 allKeywords = brainDBHandler.getAllKeywords();
@@ -108,10 +191,13 @@ public class ReviewActivity extends AppCompatActivity{
                 if(listID.contains(key.id))
                     mTargetKeywords.add(key);
             }
+            //임시 리스트 제거
+            listID.clear();
 
             allKeySize = allKeywords.size();
             mKeywordsSize = mTargetKeywords.size();
 
+            //연성된 리스트 정렬
             Collections.sort(mTargetKeywords, (o1, o2) -> {
                 String criteria1, criteria2;
                 int compareResult;
@@ -122,6 +208,7 @@ public class ReviewActivity extends AppCompatActivity{
                 return compareResult;
             });
 
+            //관계성 기반으로 정렬
             ArrayList<Integer> ckList = new ArrayList<>();
             ArrayList<Integer> relationList;
             int pos = 0;
@@ -142,6 +229,7 @@ public class ReviewActivity extends AppCompatActivity{
                 }
                 pos++;
             }
+            //임시 리스트 제거
             ckList.clear();
 
             nextButton = findViewById(R.id.review_button_nextExam);
@@ -621,6 +709,7 @@ public class ReviewActivity extends AppCompatActivity{
         double ef;
         double relation = Math.pow(1.07 , relCount);
         relation = relation > 1.5 ? 1.5 : relation;
+        long correctReviewDate;
 
 
 //        Date collectReviewDate;
@@ -629,12 +718,12 @@ public class ReviewActivity extends AppCompatActivity{
         //SM-2과는 조금 다르게 5가지 변수 사용.
         if(answerTime < 10000 && passed) rating = 5;        //반응이 즉각적인 맞는 응답.
         else if(answerTime < 30000 && passed) rating = 4;   //반응이 느린 맞는 응답
-        else if(answerTime < 60000 && passed) rating = 3;   //반응이 심각히 느린 맞는 응답
-        else if(answerTime < 10000) rating = 2;             //빨리 풀었지만 오답
-        else rating = 0;                                    //완전히 잊음
+        else if(passed) rating = 3;   //반응이 심각히 느린 맞는 응답
+        else if(answerTime > 5000 && answerTime < 10000 && !passed) rating = 2;             //빨리 풀었지만 오답. 너무 빨리풀었는데 오답인경우 그냥 찍은걸로 치부
+        else if(!passed) rating = 0;                                    //완전히 잊음
+        else rating = 0;
 
-        if(rating < 2)
-            key.currentLevels = 0;
+
 
         if(key.reviewTimes == 0){
             ef = 2.5;
@@ -644,13 +733,11 @@ public class ReviewActivity extends AppCompatActivity{
             ef = ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
             if(ef<1.3) ef=1.3;
             else if(ef>2.5) ef=2.5;
-
-            key.ef = ef;
-            //TODO  알림시간을 받아와야함.
-            diffInterval = 0;
-            //diff_Interval = (int) (correctReviewDate.getTime() - examEndTime) / 60000;
-           // //diff_Interval = diff_Interval > 0 ? diff_Interval : -diff_Interval;
         }
+        key.ef = ef;
+
+        if(rating < 2)
+            key.currentLevels = 0;
 
         //가정1.예정 복습시간보다 복습을 빨리하거나 늦게하면 그 차이를 다음 복습간격과의 %를 구하여
         //그 %만큼 복습을 더 빨리해야한다. 자주 복습을 하면 약간의 이익이 있고 늦게 복습을 하면 그만큼 이익이 줄어야된다.
@@ -661,34 +748,59 @@ public class ReviewActivity extends AppCompatActivity{
         //예정 복습시간 이전에 복습하는 경우엔 relation만으로 조절되며, 만약 틀리면 currentLevels가 0으로 초기화되버린다.
         //
 
+
         key.reviewTimes++;
         if(key.currentLevels == 0) {
             key.currentLevels++;
-            return (int)(20*relation);
+            return (long)(examEndTime+(20*60000*relation));
         }
         else if(key.currentLevels == 1) {
+            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
+                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
+                return Long.MIN_VALUE;
+            }else{
+                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+            }
             if(diffInterval < 0) {
                 key.currentLevels++;
-                return (int)(1440*relation);
+                key.interval = (int)(1440 * relation);
+                return (long)(examEndTime+(key.interval*60000));
             }
-            return diffInterval;
+            return correctReviewDate;
         }
         else if(key.currentLevels == 2){
 //            nextInterval = 1440 + (8640‬ - 1440)*(1440+diff_Interval)/1440;
 //            return nextInterval;
+            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
+                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
+                return Long.MIN_VALUE;
+            }else{
+                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+            }
             if(diffInterval < 0) {
                 key.currentLevels++;
-                return (int)(8640*relation);
+                key.interval = (int)(8640 * relation);
+                return (long)(examEndTime+(key.interval*60000));
             }
-            return diffInterval;
+            return correctReviewDate;
         }
         else{
+            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
+                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
+                return Long.MIN_VALUE;
+            }else{
+                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+            }
             if(diffInterval < 0) {
                 key.currentLevels++;
                 nextInterval = (int)(lastInterval * ef * relation);
-                return nextInterval;
+                key.interval = nextInterval;
+                return examEndTime + nextInterval*60000;
             }
-            return diffInterval;
+            return correctReviewDate;
         }
     }
 
@@ -726,7 +838,7 @@ public class ReviewActivity extends AppCompatActivity{
             //Date nowDate = new Date(examEndTime); 추후 Date 저장으로 바뀌면 이걸로 사용
 
             boolean passed = false;
-            int answerTime = (int)examEndTime;    //int형으로 형변환
+            int answerTime = (int)(examEndTime - examStartTime);    //int형으로 형변환
 
             switch(currentExamType){
                 case 1:
@@ -788,7 +900,67 @@ public class ReviewActivity extends AppCompatActivity{
 
             //TODO getReviewTime() 함수로 알림 반환=>알림기능에 연계
 
+            long nextReviewTime = getReviewTime(key, answerTime, passed);
+
+            if(!reviewList.isEmpty() && !reviewDateList.isEmpty()){
+                int temp = reviewList.indexOf(key.id);
+                if(temp != -1){
+                    if(reviewDateList.get(temp) < examStartTime) {
+                        reviewList.remove(temp);
+                        reviewDateList.remove(temp);
+                        reviewList.add(key.id);
+                        reviewDateList.add(nextReviewTime);
+                    }
+                }
+                else{
+                    reviewList.add(key.id);
+                    reviewDateList.add(nextReviewTime);
+                }
+            }
+            else{
+                reviewList.add(key.id);
+                reviewDateList.add(nextReviewTime);
+            }
+
+
+
+            /** 객체 저장 **/
+            try{
+                FileOutputStream fileStream = new FileOutputStream(new File(getFilesDir(),"BrainAlarm.data"));
+                try {
+                    ObjectOutputStream os = new ObjectOutputStream(fileStream);
+
+                    os.writeObject(reviewList);
+                    os.writeObject(reviewDateList);
+                    os.close();
+                }
+                catch (Exception ioe){
+                    ioe.printStackTrace();
+                }
+                finally {
+                    try {
+                        fileStream.close();
+                    }
+                    catch (IOException ioee){
+                        ioee.printStackTrace();
+                    }
+                }
+            }
+            catch(FileNotFoundException e2){
+                e2.printStackTrace();
+            }
+
+            Intent intent = new Intent(mContext, BroadcastD2.class);
+            intent.putExtra(BroadcastD2.EXTRAS_KEYS_ID, key.id);
+            intent.putExtra(BroadcastD2.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
+            sendBroadcast(intent);
+
+
+
+
+
             BrainDBHandler dbHandler = new BrainDBHandler(ReviewActivity.this);
+            dbHandler.updateKeyword(key);
             Test resultTest = new Test.Builder()
                     .setCid(key.cid)
                     .setKid(key.id)
@@ -892,3 +1064,4 @@ public class ReviewActivity extends AppCompatActivity{
         return true;
     };
 }
+

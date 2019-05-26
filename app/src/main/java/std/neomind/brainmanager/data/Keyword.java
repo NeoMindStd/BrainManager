@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView;
 // 구글의 권고사항에 따른 데이터 직접접근 (setter/getter 지양)
 public class Keyword {
     public static final int NOT_REGISTERED = -1;
+    public static final int ZERO_INIT = 0;
 
     private CardView cardView;                      // cardView to be set
     public int id;                                  // primary key id
@@ -100,12 +101,12 @@ public class Keyword {
             name = "";
             descriptions = null;
             imagePath = "";
-            currentLevels = NOT_REGISTERED;
-            reviewTimes = NOT_REGISTERED;
-            registrationDate = NOT_REGISTERED;
+            currentLevels = ZERO_INIT;
+            reviewTimes = ZERO_INIT;
+            registrationDate = System.currentTimeMillis();
             relationIds = null;
-            ef = NOT_REGISTERED;
-            interval = NOT_REGISTERED;
+            ef = ZERO_INIT;
+            interval = ZERO_INIT;
             selected = false;
         }
 
