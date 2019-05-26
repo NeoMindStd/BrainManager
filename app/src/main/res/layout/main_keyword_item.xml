@@ -2,12 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/keyword_card_view">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp">
+        android:layout_height="72dp"
+        android:background="?attr/selectableItemBackground">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/main_item_circularImage_keyword"

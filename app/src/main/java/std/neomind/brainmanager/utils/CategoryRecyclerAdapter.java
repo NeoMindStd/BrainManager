@@ -1,5 +1,7 @@
 package std.neomind.brainmanager.utils;
 
+import android.app.Activity;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +14,22 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.RecyclerView;
-
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
-
-import std.neomind.brainmanager.MainActivity;
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.data.Keyword;
 
-public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecyclerAdapter.KeywordViewHolder> {
+public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.KeywordViewHolder> {
 
-    private static final String TAG = "KeywordRecyclerAdapter";
+    private static final String TAG = "CategoryRecyclerAdapter";
 
-    private MainActivity mActivity;
+    private Activity mActivity;
     private ArrayList<Keyword> mKeywords;
 
-    public KeywordRecyclerAdapter(MainActivity activity, ArrayList<Keyword> keywords) {
+    public CategoryRecyclerAdapter(Activity activity, ArrayList<Keyword> keywords) {
         mActivity = activity;
         mKeywords = keywords;
     }
@@ -38,7 +38,7 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
     @Override
     public KeywordViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.main_keyword_item, viewGroup, false);
+                .inflate(R.layout.category_keyword_item, viewGroup, false);
         KeywordViewHolder keywordViewHolder = new KeywordViewHolder(view);
         return keywordViewHolder;
     }
@@ -67,17 +67,30 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
 
         KeywordViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.main_item_circularImage_keyword);
-            textView = itemView.findViewById(R.id.main_item_textView_keyword);
+            Log.d(TAG, "KeywordViewHolder: itemView : " + itemView);
+            imageView = itemView.findViewById(R.id.category_item_circularImage_keyword);
+            textView = itemView.findViewById(R.id.category_item_textView_keyword);
         }
 
         public void build(int i) {
-            itemView.setOnClickListener(new ItemClickLister(i));
+            mKeywords.get(i).setCardView((CardView)itemView);
+
+            itemView.setOnClickListener(new ItemClickListener(i));
 
             Glide.with(mActivity.getBaseContext())
                     .load(mKeywords.get(i).imagePath)
                     .into(imageView);
             textView.setText(mKeywords.get(i).name);
+        }
+
+        public void removeItem() {
+            mKeywords.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
+        }
+
+        public void removeItem(int i) {
+            mKeywords.remove(i);
+            notifyItemRemoved(i);
         }
 
         @Override
@@ -112,18 +125,20 @@ public class KeywordRecyclerAdapter extends RecyclerView.Adapter<KeywordRecycler
         }
     }
 
-    private class ItemClickLister implements View.OnClickListener {
+    private class ItemClickListener implements View.OnClickListener {
         private int mPosition;
 
-        private ItemClickLister(int position) {
+        private ItemClickListener(int position) {
             this.mPosition = position;
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "onClick position: " + mPosition);
+            Keyword keyword = mKeywords.get(mPosition);
+            keyword.setSelected(!keyword.isSelected());
 
-            mActivity.pickImage(mKeywords.get(mPosition));
+            keyword.getCardView().findViewById(R.id.imageViewSelectedMask).
+                    setVisibility(keyword.isSelected() ? View.VISIBLE : View.GONE);
         }
     }
 }

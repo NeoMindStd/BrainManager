@@ -15,43 +15,11 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/statistics_chart1"
+        <Spinner
+            android:id="@+id/spinnerSelectPeriod"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"></Spinner>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/statistics_chart2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/statistics_textView_setPeriod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Statistics_setPeriod" />
-
-        <SeekBar
-            android:id="@+id/statistic_seekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
 
 </LinearLayout>

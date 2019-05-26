@@ -2,11 +2,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start"
     tools:mContext=".ReviewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/review_toolbar"
+            app:title="@string/Label_review"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,5 +21,50 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_review" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/review_constraintLayout_popup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="#BF000000"
+        android:visibility="gone">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/review_photo_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintWidth_percent="0.9" />
+
+        <ScrollView
+            android:id="@+id/review_text_scroll"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/review_relation_edge"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintWidth_percent="0.9">
+
+            <TextView
+                android:id="@+id/review_text_view"
+                style="@style/textExamTheme"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

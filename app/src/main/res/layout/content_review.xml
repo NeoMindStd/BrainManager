@@ -8,36 +8,43 @@
     tools:mContext=".ReviewActivity"
     tools:showIn="@layout/activity_review">
 
-    <Button
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/review_Button_Green"
         android:id="@+id/review_button_showAnswer"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/review_relation_edge"
         android:freezesText="false"
+        android:insetTop="0dp"
+        android:insetRight="1dp"
+        android:insetBottom="0dp"
         android:text="@string/ReviewActivity_showAnswerButton"
-        android:textColor="@color/textColor_gray"
         android:textSize="30sp"
+        app:background="@drawable/review_relation_gray_edge"
+        app:backgroundTint="@color/colorPrimaryLight"
+        app:cornerRadius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/review_button_nextExam"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/review_button_nextExam"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="80sp"
-        android:background="@drawable/review_relation_edge"
+        android:backgroundTint="@color/colorPrimaryLight"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:insetLeft="1dp"
         android:text="@string/ReviewActivity_nextButton"
-        android:textColor="@color/textColor_gray"
         android:textSize="30sp"
+        app:cornerRadius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/review_button_showAnswer"
         app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/review_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -46,7 +53,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/review_layout_keyword"
@@ -55,27 +62,27 @@
             android:background="@drawable/review_relation_rounded"
             android:gravity="center"
             android:visibility="visible"
-            app:layout_constraintVertical_bias="0.05"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            app:layout_constraintWidth_percent="0.8">
 
             <TextView
                 style="@style/keywordTheme"
-                android:id="@+id/review_textView_keword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <ImageView
-                android:id="@+id/review_imageView_keyword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/ReviewActivity_imageViewKeywordDescription"
                 android:gravity="center"
-                android:contentDescription="@string/ReviewActivity_imageViewKeywordDescription" />
+                tools:layout_editor_absoluteX="-34dp"
+                tools:layout_editor_absoluteY="3dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -88,26 +95,28 @@
             android:background="@drawable/review_relation_rounded"
             android:gravity="center"
             android:visibility="gone"
-            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintWidth_percent="0.8">
 
-            <TextView
+            <EditText
                 style="@style/keywordTheme"
-                android:id="@+id/review_textView_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/review_imageView_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginBottom="3dp"
                 android:gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -120,10 +129,10 @@
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="150dp"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
-            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
+            app:layout_constraintWidth_percent="0.8">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/review_layout_exam1"
@@ -139,7 +148,6 @@
                 app:layout_constraintVertical_weight="1">
 
                 <TextView
-                    android:id="@+id/review_textView_exam1"
                     style="@style/examTheme"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -149,9 +157,12 @@
                     app:layout_constraintHorizontal_chainStyle="spread" />
 
                 <ImageView
-                    android:id="@+id/review_image_exam1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="3dp"
                     android:adjustViewBounds="true"
                     android:gravity="center"
                     android:visibility="visible" />
@@ -164,31 +175,33 @@
                 android:layout_height="0dp"
                 android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintVertical_weight="1"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/review_layout_exam3"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/review_layout_exam1"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="1">
 
                 <TextView
                     style="@style/examTheme"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/review_textView_exam2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_constraintHorizontal_weight="1"
+                    android:gravity="center"
                     android:text=""
                     android:visibility="visible"
-                    android:gravity="center"/>
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintHorizontal_weight="1" />
 
                 <ImageView
-                    android:id="@+id/review_imageView_exam2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="3dp"
                     android:adjustViewBounds="true"
-                    android:visibility="visible"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -198,31 +211,33 @@
                 android:layout_height="0dp"
                 android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintVertical_weight="1"
-                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/review_layout_exam4">
+                app:layout_constraintRight_toLeftOf="@id/review_layout_exam4"
+                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
+                app:layout_constraintVertical_weight="1">
 
                 <TextView
                     style="@style/examTheme"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/review_textView_exam3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_constraintHorizontal_weight="1"
+                    android:gravity="center"
                     android:text=""
                     android:visibility="visible"
-                    android:gravity="center"/>
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintHorizontal_weight="1" />
 
                 <ImageView
-                    android:id="@+id/review_imageView_exam3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="3dp"
                     android:adjustViewBounds="true"
-                    android:visibility="visible"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -232,31 +247,33 @@
                 android:layout_height="0dp"
                 android:background="@drawable/review_relation_rounded"
                 android:visibility="gone"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintVertical_weight="1"
-                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/review_layout_exam3"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
+                app:layout_constraintVertical_weight="1">
 
                 <TextView
                     style="@style/examTheme"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    android:id="@+id/review_textView_exam4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_constraintHorizontal_weight="1"
+                    android:gravity="center"
                     android:text=""
                     android:visibility="visible"
-                    android:gravity="center"/>
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintHorizontal_weight="1" />
 
                 <ImageView
-                    android:id="@+id/review_imageView_exam4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="3dp"
                     android:adjustViewBounds="true"
-                    android:visibility="visible"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -288,8 +305,8 @@
             android:contextClickable="true"
             android:gravity="center"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"
             app:layout_constraintWidth_percent="0.8">
 
@@ -299,41 +316,21 @@
 
                 <androidx.gridlayout.widget.GridLayout
                     android:id="@+id/review_gridLayout_exam"
+                    style="@style/textExamTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contextClickable="true"
-                    android:gravity="center"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    style="@style/textExamTheme"
+                    android:gravity="center"
                     android:visibility="visible"
-                    app:columnCount="4"
+                    app:columnCount="3"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/review_layout_keyword">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ReviewActivity_answer"
-                        style="@style/textExamTheme"/>
-
-                    <EditText
-                        android:id="@+id/review_editText_test"
-                        android:text=""
-                        style="@style/textExamTheme"
-                        android:singleLine = "true"
-                        android:lines = "1"/>
-
-                    <TextView
-                        android:text="@string/ReviewActivity_is"
-                        style="@style/textExamTheme"/>
-
-                </androidx.gridlayout.widget.GridLayout>
+                    app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"></androidx.gridlayout.widget.GridLayout>
 
             </HorizontalScrollView>
 
         </ScrollView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

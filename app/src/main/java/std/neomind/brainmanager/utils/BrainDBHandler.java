@@ -37,6 +37,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
     public static final String FIELD_KEYWORDS_CURRENT_LEVELS = "current_levels";
     public static final String FIELD_KEYWORDS_REVIEW_TIMES = "review_times";
     public static final String FIELD_KEYWORDS_REGISTRATION_DATE = "registration_date";
+    public static final String FIELD_KEYWORDS_EF = "ef";
+    public static final String FIELD_KEYWORDS_INTERVAL = "interval";
 
     public static final String FIELD_KEYWORD_DESCRIPTIONS_ID = "_id";
     public static final String FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION = "description";
@@ -80,7 +82,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                 FIELD_KEYWORDS_CID + " INTEGER NOT NULL REFERENCES " + TABLE_CATEGORIES + "(" + FIELD_CATEGORIES_ID + "), " +
                 FIELD_KEYWORDS_NAME + " TEXT, " + FIELD_KEYWORDS_IMAGE_PATH + " TEXT, " +
                 FIELD_KEYWORDS_CURRENT_LEVELS + " INTEGER, " + FIELD_KEYWORDS_REVIEW_TIMES + " INTEGER, " +
-                FIELD_KEYWORDS_REGISTRATION_DATE + " INTEGER" + ")";
+                FIELD_KEYWORDS_REGISTRATION_DATE + " INTEGER, " + FIELD_KEYWORDS_EF + " REAL, " +
+                FIELD_KEYWORDS_INTERVAL + " INTEGER" + ")";
 
         final String CREATE_KEYWORD_DESCRIPTIONS_TABLE = "CREATE TABLE " +
                 TABLE_KEYWORD_DESCRIPTIONS + "(" +
@@ -133,6 +136,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
         values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
+        values.put(FIELD_KEYWORDS_EF, keyword.ef);
+        values.put(FIELD_KEYWORDS_INTERVAL, keyword.interval);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -225,6 +230,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                         .setRegistrationDate(cursor.getLong(6))
                         .setRelationIds(
                                 getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                        .setEF(cursor.getDouble(7))
+                        .setInterval(cursor.getInt(8))
                         .build();
                 keywords.add(keyword);
                 cursor.moveToNext();
@@ -234,6 +241,78 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         db.close();
 
         return keywords;
+    }
+
+    public ArrayList<Keyword> getKeywords(String query) {
+        ArrayList<Keyword> keywords = new ArrayList<>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Keyword keyword = new Keyword.Builder()
+                        .setId(cursor.getInt(0))
+                        .setCid(cursor.getInt(1))
+                        .setName(cursor.getString(2))
+                        .setDescriptions(
+                                getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
+                        .setImagePath(cursor.getString(3))
+                        .setCurrentLevels(cursor.getInt(4))
+                        .setReviewTimes(cursor.getInt(5))
+                        .setRegistrationDate(cursor.getLong(6))
+                        .setRelationIds(
+                                getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                        .setEF(cursor.getDouble(7))
+                        .setInterval(cursor.getInt(8))
+                        .build();
+                keywords.add(keyword);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return keywords;
+    }
+
+    public ArrayList<Keyword> getAllKeywordsOfTheCategory(int cid) {
+        if(cid == Category.CATEGORY_ALL) {
+            return getAllKeywords();
+        } else {
+            ArrayList<Keyword> keywords = new ArrayList<>();
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
+                    FIELD_KEYWORDS_CID + " = " + cid;
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    Keyword keyword = new Keyword.Builder()
+                            .setId(cursor.getInt(0))
+                            .setCid(cursor.getInt(1))
+                            .setName(cursor.getString(2))
+                            .setDescriptions(
+                                    getAllDescriptionsOfTheKeyword(cursor.getInt(0)))
+                            .setImagePath(cursor.getString(3))
+                            .setCurrentLevels(cursor.getInt(4))
+                            .setReviewTimes(cursor.getInt(5))
+                            .setRegistrationDate(cursor.getLong(6))
+                            .setRelationIds(
+                                    getAllRelationsOfTheKeyword(cursor.getInt(0)))
+                            .setEF(cursor.getDouble(7))
+                            .setInterval(cursor.getInt(8))
+                            .build();
+                    keywords.add(keyword);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+            db.close();
+
+            return keywords;
+        }
     }
 
     public ArrayList<Description> getAllDescriptionsOfTheKeyword(int kid) {
@@ -270,7 +349,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 int relationKid = cursor.getInt(0);
-                if(relationKid == kid) cursor.getInt(1);
+                if(relationKid == kid) relationKid =  cursor.getInt(1);
                 relationKids.add(relationKid);
                 cursor.moveToNext();
             }
@@ -338,6 +417,26 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         return findCategory(query);
     }
 
+    public Category findLastCategory() throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " +
+                FIELD_CATEGORIES_ID + " = (SELECT MAX(" + FIELD_CATEGORIES_ID + ") FROM " + TABLE_CATEGORIES + ")";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Category category;
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            category = new Category.Builder()
+                    .setId(cursor.getInt(0))
+                    .setName(cursor.getString(1))
+                    .build();
+            cursor.close();
+        } else { throw new NoMatchingDataException(); }
+        db.close();
+        return category;
+    }
+
     private Keyword findKeyword(String query) throws NoMatchingDataException {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -353,6 +452,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
                     .setCurrentLevels(cursor.getInt(4))
                     .setReviewTimes(cursor.getInt(5))
                     .setRegistrationDate(cursor.getLong(6))
+                    .setEF(cursor.getDouble(7))
+                    .setInterval(cursor.getInt(8))
                     .build();
             cursor.close();
         } else { throw new NoMatchingDataException(); }
@@ -370,6 +471,32 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
                 field + " = \"" + value + "\"";
         return findKeyword(query);
+    }
+    public Keyword findLastKeyword() throws NoMatchingDataException {
+        String query = "SELECT * FROM " + TABLE_KEYWORDS + " WHERE " +
+                FIELD_KEYWORDS_ID + " = (SELECT MAX(" + FIELD_KEYWORDS_ID + ") FROM " + TABLE_KEYWORDS + ")";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Keyword keyword;
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            keyword = new Keyword.Builder()
+                    .setId(cursor.getInt(0))
+                    .setCid(cursor.getInt(1))
+                    .setName(cursor.getString(2))
+                    .setImagePath(cursor.getString(3))
+                    .setCurrentLevels(cursor.getInt(4))
+                    .setReviewTimes(cursor.getInt(5))
+                    .setRegistrationDate(cursor.getLong(6))
+                    .setEF(cursor.getDouble(7))
+                    .setInterval(cursor.getInt(8))
+                    .build();
+            cursor.close();
+        } else { throw new NoMatchingDataException(); }
+        db.close();
+        return keyword;
     }
 
     private Description findDescription(String query) throws NoMatchingDataException {
@@ -465,6 +592,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         values.put(FIELD_KEYWORDS_CURRENT_LEVELS, keyword.currentLevels);
         values.put(FIELD_KEYWORDS_REVIEW_TIMES, keyword.reviewTimes);
         values.put(FIELD_KEYWORDS_REGISTRATION_DATE, keyword.registrationDate);
+        values.put(FIELD_KEYWORDS_EF, keyword.ef);
+        values.put(FIELD_KEYWORDS_INTERVAL, keyword.interval);
         updateObject(TABLE_KEYWORDS, values,
                 FIELD_KEYWORDS_ID + "=" + keyword.id, null);
     }
@@ -558,8 +687,8 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         boolean result = false;
 
         String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
-                FIELD_RELATIONS_KID1 + " = " + kid1 +" AND " +
-                FIELD_RELATIONS_KID2 + " = " + kid2;
+                FIELD_RELATIONS_KID1 + " = " + Math.min(kid1, kid2) +" AND " +
+                FIELD_RELATIONS_KID2 + " = " + Math.max(kid1, kid2);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -567,7 +696,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             db.delete(TABLE_RELATIONS,
                     FIELD_RELATIONS_KID1 + " = ? AND " + FIELD_RELATIONS_KID2 + " = ?",
-                    new String[]{String.valueOf(kid1), String.valueOf(kid2)});
+                    new String[]{String.valueOf( Math.min(kid1, kid2)), String.valueOf(Math.max(kid1, kid2))});
             cursor.close();
             result = true;
         }

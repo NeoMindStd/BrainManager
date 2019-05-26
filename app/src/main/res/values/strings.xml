@@ -3,12 +3,15 @@
     <string name="app_name">BrainManager</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="Global_menu">Menu</string>
+    <string name="Global_done">DONE</string>
+    <string name="Global_confirm">Confirm</string>
+    <string name="Global_negative">Cancel</string>
+    <string name="Global_added">Keyword added.</string>
+    <string name="Global_updated">Keyword changed.</string>
+    <string name="Global_canceled">Canceled</string>
+    <string name="Global_OK">OK</string>
 
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
@@ -17,45 +20,73 @@
 
     <string name="Category_all">All</string>
 
-    <string name="AlertDialog_confirm">Confirm</string>
-    <string name="AlertDialog_neutral">Cancel</string>
-
     <string name="AlertDialog_button_yes">Yes</string>
     <string name="AlertDialog_button_no">No</string>
+
+    <string name="AlertDialog_askReallyCancel">Are you sure you want to cancel?</string>
 
     <string name="PermissionManager_permissionText_readExternalStorage">Read external storage</string>
     <string name="PermissionManager_permissionText_writeExternalStorage">Write external storage</string>
     <string name="PermissionManager_permissionText_receiveBootCompleted">Receive boot completed</string>
     <string name="PermissionManager_permissionText_camera">Camera</string>
     <string name="PermissionManager_permissionText_wakeLock">Wake up device</string>
-    <string name="PermissionManager_acquirePermissionDialogTitle">Permissions are required.</string>
-    <string name="PermissionManager_acquirePermissionDialogMsg">To use this feature, you need %s permission on your device. Would you like to continue?</string>
+    <string name="PermissionManager_accessNetworkState">Access network state</string>
+    <string name="PermissionManager_permissionText_internet">Internet</string>
 
     <string name="MainActivity_search">Search</string>
     <string name="MainActivity_addCategory">New Category</string>
-    <string name="MainActivity_addKeyword">New Keyword</string>
     <string name="MainActivity_review">Review</string>
     <string name="MainActivity_statistics">Statistics</string>
     <string name="MainActivity_setRelations">Set relations</string>
     <string name="MainActivity_settings">Settings</string>
 
+    <string name="MainActivity_Action_editCategories">Edit selected categories</string>
+
+    <string name="MainActivity_ContextMenu_modify">Modify</string>
+    <string name="MainActivity_ContextMenu_delete">Delete</string>
+
+    <string name="MainActivity_FabItem_addCategories">Add Categories</string>
+    <string name="MainActivity_FabItem_addKeywords">Add Keywords</string>
+
+    <string name="CategoryActivity_title">Update</string>
+    <string name="CategoryActivity_uncategorize">Uncategorize</string>
+    <string name="CategoryActivity_keywords">Keywords in the category</string>
+
+    <string name="KeywordActivity_name">Name</string>
+    <string name="KeywordActivity_nameHint">Please enter a name.</string>
+    <string name="KeywordActivity_category">Category</string>
+    <string name="KeywordActivity_none">None</string>
+    <string name="KeywordActivity_addImage">Add image</string>
+    <string name="KeywordActivity_updateImage">Change image</string>
+    <string name="KeywordActivity_titleRegister">Add a keyword</string>
+    <string name="KeywordActivity_titleView">View</string>
+    <string name="KeywordActivity_titleUpdate">Update</string>
+
     <string name="ReviewActivity_showAnswerButton">Show answer</string>
     <string name="ReviewActivity_nextButton">Next</string>
-    <string name="ReviewActivity_thinkAnswer">Think of the correct answer.</string>
     <string name="ReviewActivity_imageViewKeywordDescription">TODO</string>
-    <string name="ReviewActivity_answer">A.</string>
-    <string name="ReviewActivity_is">is</string>
+    <string name="ReviewActivity_noKeyword">There\'s no keywords</string>
+    <string name="ReviewActivity_lastKeyword">Last Keyword of List</string>
+    <string name="ReviewActivity_correct">Correct!!!</string>
+    <string name="ReviewActivity_wrong">Wrong\.\.\. Thats OK</string>
+
+    <string name="RelationActivity_error"> errors occurred</string>
+    <string name="RelationActivity_relationAdd"> relationship have been added.</string>
+
+    <string name="Notification_title">Brain Manager</string>
+    <string name="Notification_text">STUDY TIME</string>
 
     <string name="Statistics_forgettingCurve">Forgetting curve</string>
-    <string name="Statistics_setPeriod">Set period</string>
 
-    <string name="Settings_reviewType">Review type</string>
-    <string name="Settings_push">Push notification</string>
-    <string name="Settings_lockScreen">Lock screen</string>
-    <string name="Settings_alarm">Alarm</string>
-    <string name="Settings_setNightMode">Set night mode</string>
-    <string name="Settings_nightModeDescription">(sound off when 11:00pm~08:00am)</string>
-    <string name="Settings_appInfo">App Info</string>
-    <string name="Settings_privacyPolicy"> Personal Information Processing Policy \n- Provides information about the personal information life cycle such as the type, utilization, sharing, and destruction of user\'s personal information modified by this application. \n</string>
-    <string name="Settings_apiLicense"> API License \n- Displays the license information of the API used in this application. \n</string>
+    <string name="SettingsActivity_reviewType">Review type</string>
+    <string name="SettingsActivity_push">Push notification</string>
+    <string name="SettingsActivity_lockScreen">Lock screen</string>
+    <string name="SettingsActivity_alarm">Alarm</string>
+    <string name="SettingsActivity_setNightMode">Set night mode</string>
+    <string name="SettingsActivity_nightModeDescription">(sound off when 11:00pm~08:00am)</string>
+    <string name="SettingsActivity_appInfo">App Info</string>
+    <string name="SettingsActivity_privacyPolicy"> Personal Information Processing Policy \n- Provides information about the personal information life cycle such as the type, utilization, sharing, and destruction of user\'s personal information modified by this application. \n</string>
+    <string name="SettingsActivity_privacyPolicyURL" translatable="false">https://neomindstd.github.io/app_docs/privacy_policies/BrainManager</string>
+    <string name="SettingsActivity_openSourceLibraries"> API License \n- Displays the license information of the API used in this application. \n</string>
+    <string name="SettingsActivity_openSourceLibrariesURL" translatable="false">https://neomindstd.github.io/app_docs/opensrc_libraries/BrainManager</string>
 </resources>
