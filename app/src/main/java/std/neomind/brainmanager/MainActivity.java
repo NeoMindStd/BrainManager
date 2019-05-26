@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = "MainActivity";
-    private static final int PICK_IMAGE_REQUEST = 1;
 
     private PermissionManager mPermissionManager;
     private BrainDBHandler mBrainDBHandler;
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        loadPref();
         loadDB();
     }
 
@@ -139,14 +137,20 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.main_action_editCategories) {
-            if(mSpinner.getSelectedItemPosition() != 0) {
-                Intent intent = new Intent(this, CategoryActivity.class);
-                intent.putExtra(CategoryActivity.EXTRAS_CATEGORY, mCategories.get(mSpinner.getSelectedItemPosition()).id);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "삭제할 수 없습니다", Toast.LENGTH_SHORT).show();
-            }
+        switch(id) {
+            case R.id.main_action_deleteCategories :
+                if (mSpinner.getSelectedItemPosition() != Category.CATEGORY_ALL) {
+                    mBrainDBHandler.removeCategory(mCategories.get(mSpinner.getSelectedItemPosition()).id);
+                    onResume();
+                } else Toast.makeText(this, R.string.MainActivity_unableToDelete, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_action_editCategories :
+                if (mSpinner.getSelectedItemPosition() != Category.CATEGORY_ALL) {
+                    Intent intent = new Intent(this, CategoryActivity.class);
+                    intent.putExtra(CategoryActivity.EXTRAS_CATEGORY, mCategories.get(mSpinner.getSelectedItemPosition()).id);
+                    startActivity(intent);
+                } else Toast.makeText(this, R.string.MainActivity_unableToEdit, Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -193,32 +197,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onMenuItemClick(MenuItem item) {
         Log.d(TAG, "onMenuItemClick: textView :" + item);
         return false;
-    }
-
-    private static Keyword mRequestImageReceiver;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        try {
-            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && null != data) {
-                ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
-                String[] imagePath = new String[images.size()];
-                for (int i = 0; i < images.size(); i++) imagePath[i] = images.get(i).getPath();
-
-                if (imagePath.length > 0) {
-                    mRequestImageReceiver.imagePath = imagePath[0];
-                    mBrainDBHandler.updateKeyword(mRequestImageReceiver);
-                    refresh();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void loadPref() {
-
     }
 
     private void loadDB() {
@@ -290,11 +268,6 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mKeywordAdapter);
     }
 
-    private void refresh() {
-        loadPref();
-        loadDB();
-    }
-
     private void fabAddAllSubItems() {
         List<SpeedDialActionItem> speedDialActionItems = new ArrayList<>();
         List<Pair<Integer, Pair<Integer, Integer>>> subItems = new ArrayList<>();
@@ -352,13 +325,16 @@ public class MainActivity extends AppCompatActivity
                                     try {
                                         resultCategory = mBrainDBHandler.findLastCategory();
                                         for(int i = 1; i < mCategories.size(); i++) {
-                                            if(resultCategory.name.
+                                            if(i ==  mCategories.size()-1) {
+                                                mCategories.add(resultCategory);
+                                                break;
+                                            } else if(resultCategory.name.
                                                     compareToIgnoreCase(mCategories.get(i).name) < 0) {
                                                 mCategories.add(i, resultCategory);
-                                                initSpinner();
                                                 break;
                                             }
                                         }
+                                        initSpinner();
                                     } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
                                 })
                         .setNeutralButton(getString(R.string.Global_negative), null)
@@ -369,8 +345,6 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_REGISTER);
                 intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, Keyword.NOT_REGISTERED);
                 startActivity(intent);
-                /*
-                 */
                 break;
         }
         return false;

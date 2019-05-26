@@ -23,7 +23,7 @@ public class Broadcast22 extends BroadcastReceiver {
         Intent newintent = new Intent(context, ReviewActivity.class);
         newintent.putExtra(ReviewActivity.EXTRAS_MODE, "bannermode");
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newintent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newintent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_launcher).setTicker("HETT").setWhen(System.currentTimeMillis())

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import std.neomind.brainmanager.data.Category;
+import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import java.util.Collections;
 
 public class KeywordActivity extends AppCompatActivity {
     private static final String TAG = "KeywordActivity";
+
 
     public static final int INTENT_MODE_REGISTER = 0;
     public static final int INTENT_MODE_VIEW = 1;
@@ -51,9 +54,14 @@ public class KeywordActivity extends AppCompatActivity {
     private Keyword mKeyword;
 
     private PhotoView mPhotoView;
+    private View mDivider;
     private Button mAddImageButton;
     private MaterialEditText mNameEditText;
-    private Spinner mSpinner;
+    private Spinner mCategorySpinner;
+    private Spinner mDescriptionSpinner;
+    private Button mDescriptionAddButton;
+    private Button mDescriptionUpdateButton;
+    private Button mDescriptionDeleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +76,30 @@ public class KeywordActivity extends AppCompatActivity {
         getBundleExtras();
 
         mPhotoView = findViewById(R.id.keyword_photoView);
+        mDivider = findViewById(R.id.keyword_divider_photoView_editText);
         mAddImageButton = findViewById(R.id.keyword_button_addImage);
         mAddImageButton.setOnClickListener(view -> pickImage());
 
+        mKeyword = loadKeywordFromDB(keywordID);
         loadCategoriesFromDB();
 
         mNameEditText = findViewById(R.id.keyword_editText_name);
 
-        mSpinner = findViewById(R.id.keyword_spinner_categories);
-        mSpinner.setAdapter(new ArrayAdapter<>(
-                this, R.layout.keyword_category_spinner_item, mCategories));
+        mCategorySpinner = findViewById(R.id.keyword_spinner_categories);
+        mCategorySpinner.setAdapter(new ArrayAdapter<>(
+                this, R.layout.global_spinner_item, mCategories));
+
+        mDescriptionSpinner = findViewById(R.id.keyword_spinner_descriptions);
+        initDescriptionSpinner();
+
+        mDescriptionAddButton = findViewById(R.id.keyword_button_addDescription);
+        mDescriptionAddButton.setOnClickListener(mCategoryButtonClickListener);
+
+        mDescriptionUpdateButton = findViewById(R.id.keyword_button_updateDescription);
+        mDescriptionUpdateButton.setOnClickListener(mCategoryButtonClickListener);
+
+        mDescriptionDeleteButton = findViewById(R.id.keyword_button_deleteDescription);
+        mDescriptionDeleteButton.setOnClickListener(mCategoryButtonClickListener);
 
         switch(currentMode) {
             case INTENT_MODE_REGISTER :
@@ -89,17 +111,20 @@ public class KeywordActivity extends AppCompatActivity {
             case INTENT_MODE_VIEW :
                 getSupportActionBar().setTitle(R.string.KeywordActivity_titleView);
 
-                mKeyword = loadKeywordFromDB(keywordID);
                 Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
 
+                mAddImageButton.setVisibility(View.GONE);
                 if(!mKeyword.imagePath.isEmpty()) {
                     Glide.with(this)
                             .load(mKeyword.imagePath)
                             .into(mPhotoView);
-                    mAddImageButton.setVisibility(View.GONE);
                 } else {
                     mPhotoView.setVisibility(View.GONE);
+                    mDivider.setVisibility(View.GONE);
                 }
+                mDescriptionAddButton.setVisibility(View.GONE);
+                mDescriptionUpdateButton.setVisibility(View.GONE);
+                mDescriptionDeleteButton.setVisibility(View.GONE);
 
                 findViewById(R.id.layoutKeywordcontentsFields).
                         setFocusableInTouchMode(false); // mNameEditText's label 강조하기 위함
@@ -111,17 +136,16 @@ public class KeywordActivity extends AppCompatActivity {
 
                 for(int i = 0; i < mCategories.size(); i++) {
                     if(mCategories.get(i).id == mKeyword.cid) {
-                        mSpinner.setSelection(i);
+                        mCategorySpinner.setSelection(i);
                     }
                 }
-                mSpinner.setEnabled(false);
-                mSpinner.setBackground(null);
+                mCategorySpinner.setEnabled(false);
+                mCategorySpinner.setBackground(null);
                 break;
 
             case INTENT_MODE_UPDATE:
                 getSupportActionBar().setTitle(R.string.KeywordActivity_titleUpdate);
 
-                mKeyword = loadKeywordFromDB(keywordID);
                 Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
 
                 if(!mKeyword.imagePath.isEmpty()) {
@@ -135,7 +159,7 @@ public class KeywordActivity extends AppCompatActivity {
 
                 for(int i = 0; i < mCategories.size(); i++) {
                     if(mCategories.get(i).id == mKeyword.cid) {
-                        mSpinner.setSelection(i);
+                        mCategorySpinner.setSelection(i);
                     }
                 }
                 break;
@@ -182,6 +206,65 @@ public class KeywordActivity extends AppCompatActivity {
             Log.i(TAG, "loadCategoriesFromDB(): mCategories(" + i + ") - " + mCategories.get(i).toStringAbsolutely());
     }
 
+    private void initDescriptionSpinner() {
+        //Log.d(TAG, "initDescriptionSpinner: test + mKeyword : " + mKeyword.toStringAbsolutely());
+        if(mKeyword != null) mDescriptionSpinner.setAdapter(new ArrayAdapter<>(
+                this, R.layout.global_spinner_item, mKeyword.getDescriptions()));
+    }
+
+    private View.OnClickListener mCategoryButtonClickListener = view -> {
+        final EditText editText = new EditText(this);
+        switch (view.getId()) {
+            case R.id.keyword_button_addDescription :
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.MainActivity_addCategory))
+                        .setView(editText)
+                        .setPositiveButton(getString(R.string.Global_confirm),
+                                (dialog, which) -> {
+                                    Description description = new Description();
+                                    description.description = editText.getText().toString();
+                                    mBrainDBHandler.addDescription(description, keywordID);
+                                    mKeyword.setDescriptions(
+                                            mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                    initDescriptionSpinner();
+                                })
+                        .setNeutralButton(getString(R.string.Global_negative), null)
+                        .show();
+                break;
+            case R.id.keyword_button_updateDescription :
+                if(!mKeyword.getDescriptions().isEmpty()) {
+                    Description description = mKeyword.getDescriptions().
+                            get(mDescriptionSpinner.getSelectedItemPosition());
+                    editText.setText(description.toString());
+                    editText.setSelection(description.toString().length());
+                    new AlertDialog.Builder(this)
+                            .setTitle(getString(R.string.MainActivity_addCategory))
+                            .setView(editText)
+                            .setPositiveButton(getString(R.string.Global_confirm),
+                                    (dialog, which) -> {
+                                        description.description = editText.getText().toString();
+                                        mBrainDBHandler.updateDescription(description, keywordID);
+                                        mKeyword.setDescriptions(
+                                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        initDescriptionSpinner();
+                                    })
+                            .setNeutralButton(getString(R.string.Global_negative), null)
+                            .show();
+                }
+                break;
+            case R.id.keyword_button_deleteDescription :
+                if(!mKeyword.getDescriptions().isEmpty()) {
+                    mBrainDBHandler.removeDescription(
+                            mKeyword.getDescriptions().get(
+                                    mDescriptionSpinner.getSelectedItemPosition()).id);
+                    mKeyword.setDescriptions(
+                            mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                    initDescriptionSpinner();
+                }
+                break;
+        }
+    };
+
     @Override
     public void onBackPressed() {
         if(currentMode == INTENT_MODE_VIEW)  super.onBackPressed();
@@ -215,7 +298,7 @@ public class KeywordActivity extends AppCompatActivity {
 
             case R.id.keyword_action_done:
                 mKeyword.name = mNameEditText.getText().toString();
-                mKeyword.cid = mCategories.get(mSpinner.getSelectedItemPosition()).id;
+                mKeyword.cid = mCategories.get(mCategorySpinner.getSelectedItemPosition()).id;
 
                 String toastString = "";
 
@@ -275,9 +358,9 @@ public class KeywordActivity extends AppCompatActivity {
                 .setMaxSize(1)                                                                          // Max images can be selected
                 .setFolderMode(true)                                                                    // Folder mode
                 .setShowCamera(true)                                                                    // Show camera button
-                //.setFolderTitle(getString(R.string.MainActivity_Albums))                              // Folder title (works with FolderMode = true)
-                //.setImageTitle(getString(R.string.MainActivity_Gallery))                              // Image title (works with FolderMode = false)
-                //.setDoneTitle(getString(R.string.MainActivity_Done))                                  // Done button title
+                //.setFolderTitle(getString(R.string.MainActivity_Albums))                              // Folder EXTRAS_TITLE (works with FolderMode = true)
+                //.setImageTitle(getString(R.string.MainActivity_Gallery))                              // Image EXTRAS_TITLE (works with FolderMode = false)
+                //.setDoneTitle(getString(R.string.MainActivity_Done))                                  // Done button EXTRAS_TITLE
                 //.setLimitMessage(getString(R.string.MainActivity_MaximumSelection))                   // Selection limit message
                 //.setSavePath(getString(R.string.APP_NAME))                                            // Image capture folder name
                 //.setSelectedImages(images)                                                            // Selected images

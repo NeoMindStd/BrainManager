@@ -33,11 +33,16 @@
         android:textSize="16dp"
         android:text="@string/KeywordActivity_addImage"/>
 
+    <View
+        android:id="@+id/keyword_divider_photoView-editText"
+        style="@style/Divider"/>
+
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/keyword_editText_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="20dp"
         android:hint="@string/KeywordActivity_nameHint"
         android:textSize="16dp"
         android:focusable="true"
@@ -48,9 +53,12 @@
         app:met_maxCharacters="20"
         app:met_singleLineEllipsis="true" />
 
+    <View style="@style/Divider"/>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textSize="14dp"
         android:text="@string/KeywordActivity_category"
         android:textColor="@color/colorPrimary"/>
@@ -59,5 +67,65 @@
         android:id="@+id/keyword_spinner_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <View style="@style/Divider"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="14dp"
+        android:text="@string/KeywordActivity_descriptions"
+        android:textColor="@color/colorPrimary"/>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/keyword_spinner_descriptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/keyword_button_addDescription"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:textColor="@color/WHITE"
+            app:backgroundTint="@color/colorPrimaryLight"
+            android:textSize="16dp"
+            android:text="@string/KeywordActivity_addDescription"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/keyword_button_updateDescription"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:textColor="@color/WHITE"
+            app:backgroundTint="@color/colorPrimaryLight"
+            android:textSize="16dp"
+            android:text="@string/KeywordActivity_updateDescription"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/keyword_button_deleteDescription"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:textColor="@color/WHITE"
+            app:backgroundTint="@color/colorPrimaryLight"
+            android:textSize="16dp"
+            android:text="@string/KeywordActivity_deleteDescription"/>
+
+    </LinearLayout>
 
 </LinearLayout>

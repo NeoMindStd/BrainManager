@@ -152,7 +152,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.insert(TABLE_CATEGORIES, null, values);
+        db.insert(TABLE_KEYWORD_DESCRIPTIONS, null, values);
         db.close();
     }
 
@@ -602,7 +602,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(FIELD_KEYWORD_DESCRIPTIONS_DESCRIPTION, description.description);
         values.put(FIELD_KEYWORD_DESCRIPTIONS_KID, kid);
-        updateObject(TABLE_RELATIONS, values,
+        updateObject(TABLE_KEYWORD_DESCRIPTIONS, values,
                 FIELD_KEYWORD_DESCRIPTIONS_ID + " = " + description.id, null);
     }
 
