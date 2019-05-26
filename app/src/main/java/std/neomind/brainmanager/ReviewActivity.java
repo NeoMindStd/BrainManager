@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.os.Bundle;
 
 
@@ -45,7 +44,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Test;
-import std.neomind.brainmanager.noti.noti2.BroadcastD2;
+import std.neomind.brainmanager.utils.notification.BroadcastD2;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
@@ -66,7 +65,7 @@ public class ReviewActivity extends AppCompatActivity{
 
     private ConstraintLayout examAllLayout;
     private ConstraintLayout[] examLayoutArray;
-//    private int tMargin, lrMargin, bMargin, width, height, keyTextSize, desTextSize;
+    //    private int tMargin, lrMargin, bMargin, width, height, keyTextSize, desTextSize;
 //    Point device_size;
     private ArrayList<Integer> reviewList;
     private ArrayList<Long> reviewDateList;
@@ -333,7 +332,7 @@ public class ReviewActivity extends AppCompatActivity{
         }
         while(true) {
             if (r == 1) {
-               answerString = key.name;
+                answerString = key.name;
 
                 descriptionLayout.setVisibility(View.VISIBLE);
                 if (key.imagePath.isEmpty()) {
@@ -983,8 +982,8 @@ public class ReviewActivity extends AppCompatActivity{
             nextButton.setOnClickListener(null);
             if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(currentmKeyIndex));
             else{
-                   finish();
-                   Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_lastKeyword), Toast.LENGTH_LONG).show();
+                finish();
+                Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_lastKeyword), Toast.LENGTH_LONG).show();
             }
         }
     };

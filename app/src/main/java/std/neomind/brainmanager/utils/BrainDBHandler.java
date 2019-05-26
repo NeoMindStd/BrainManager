@@ -278,7 +278,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
 
     public ArrayList<Keyword> getAllKeywordsOfTheCategory(int cid) {
         if(cid == Category.CATEGORY_ALL) {
-          return getAllKeywords();
+            return getAllKeywords();
         } else {
             ArrayList<Keyword> keywords = new ArrayList<>();
 

@@ -20,7 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import std.neomind.brainmanager.noti.Broadcast22;
+import std.neomind.brainmanager.utils.notification.Broadcast22;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
 
                 case R.id.settings_radioButton_notification:
-//                    Intent intent2 = new Intent(getApplicationContext(), std.neomind.brainmanager.noti.noti2.main22.class);
+//                    Intent intent2 = new Intent(getApplicationContext(), std.neomind.brainmanager.utils.noti.noti2.main22.class);
 //                    startActivity(intent2);
                     break;
             }

@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         mPermissionManager = new PermissionManager(this);
         if (!mPermissionManager.checkGranted()) mPermissionManager.request();
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, Keyword.NOT_REGISTERED);
                 startActivity(intent);
                 /*
-                        */
+                 */
                 break;
         }
         return false;
@@ -399,8 +399,8 @@ public class MainActivity extends AppCompatActivity
     };
 
     private SearchView.OnCloseListener onCloseListener = () -> {
-            loadDB();
-            initRecyclerView();
-            return false;
+        loadDB();
+        initRecyclerView();
+        return false;
     };
 }

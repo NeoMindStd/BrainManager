@@ -70,7 +70,6 @@
     <string name="ReviewActivity_correct">정답!!!</string>
     <string name="ReviewActivity_wrong">틀렸네요\.\.\. 괜찮아요</string>
 
-    <string name="RelationActivity_noKeyword">키워드가 없습니다</string>
     <string name="RelationActivity_error">개의 오류가 발생했습니다</string>
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
 

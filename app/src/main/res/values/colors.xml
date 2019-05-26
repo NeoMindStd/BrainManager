@@ -8,6 +8,5 @@
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>
 
-    <color name="textColor_gray">#707070</color>
     <color name="black_HalfTransparent">#80000000</color>
 </resources>

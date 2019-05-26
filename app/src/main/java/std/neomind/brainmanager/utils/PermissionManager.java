@@ -49,10 +49,10 @@ public final class PermissionManager {
             int permissionResult = mActivity.checkSelfPermission(permission);
             return permissionResult == PackageManager.PERMISSION_GRANTED;
             //if (permissionResult == PackageManager.PERMISSION_DENIED) {
-                /*
-                 * 해당 권한이 거부된 적이 있는지 유무 판별 해야함.
-                 * 거부된 적이 있으면 true, 거부된 적이 없으면 false 리턴
-                 */
+            /*
+             * 해당 권한이 거부된 적이 있는지 유무 판별 해야함.
+             * 거부된 적이 있으면 true, 거부된 적이 없으면 false 리턴
+             */
                 /*
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, permission)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);

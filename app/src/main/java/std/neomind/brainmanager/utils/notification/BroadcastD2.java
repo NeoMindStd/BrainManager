@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.noti.noti2;
+package std.neomind.brainmanager.utils.notification;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

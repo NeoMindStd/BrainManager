@@ -47,7 +47,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), fifteenDaysChart.class);
                     startActivity(intent);
                 }
-                }
+            }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }

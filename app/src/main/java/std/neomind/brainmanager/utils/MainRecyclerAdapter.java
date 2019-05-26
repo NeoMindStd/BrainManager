@@ -153,7 +153,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             mActivity.startActivity(intent);
         }
     }
-    
+
     private class ItemLongClickListener implements View.OnLongClickListener {
         private int mPosition;
         private KeywordViewHolder mKeywordViewHolder;

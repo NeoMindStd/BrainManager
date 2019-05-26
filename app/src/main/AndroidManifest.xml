@@ -66,14 +66,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".noti.noti2.main22"/>
-
         <receiver
-            android:name=".noti.Broadcast22"
+            android:name=".utils.notification.Broadcast22"
             android:enabled="true"
             android:exported="false">
         </receiver>
-        <receiver android:name=".noti.noti2.BroadcastD2"
+        <receiver android:name=".utils.notification.BroadcastD2"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -84,7 +82,7 @@
         </receiver>
 
         <service
-            android:name=".noti.noti2.ring"
+            android:name=".utils.notification.ring"
             android:enabled="true"></service>
     </application>
 

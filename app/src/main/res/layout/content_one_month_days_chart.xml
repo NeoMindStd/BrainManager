@@ -42,7 +42,6 @@
 
             </LinearLayout>
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="목표치 설정" />
@@ -53,7 +52,6 @@
                 android:layout_weight="0.02">
             </Spinner>
             <TextView
-                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="목표시간 설정" />

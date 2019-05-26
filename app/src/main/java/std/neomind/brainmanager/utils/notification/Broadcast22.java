@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.noti;
+package std.neomind.brainmanager.utils.notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,11 +10,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import java.util.ArrayList;
-
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.ReviewActivity;
-import std.neomind.brainmanager.SettingsActivity;
 
 public class Broadcast22 extends BroadcastReceiver {
 

@@ -13,7 +13,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     public static final String title = "TITLE";
     public static final String tag = "URL";
-    
+
     private Toolbar toolbarPrivacyPolicy;
     private WebView webView;
 

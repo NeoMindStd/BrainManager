@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.noti.noti2;
+package std.neomind.brainmanager.utils.notification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -18,12 +18,9 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import std.neomind.brainmanager.R;
-import std.neomind.brainmanager.noti.Broadcast22;
 
 
 public class ring extends Service {
-
-    static public final String EXTRAS_ALARM_MODE = "newAlarm";
     static public final String EXTRAS_KEYS_ID = "keywordId";
     static public final String EXTRAS_KEY_REVIEW_DATE = "keywordReviewDate";
     static public final String EXTRAS_WAKE_UP = "wakeUp";
@@ -32,8 +29,6 @@ public class ring extends Service {
     ArrayList<Long> reviewDateList;
 
     MediaPlayer mediaPlayer;
-    int startId;
-    boolean isRunning;
 
     @Nullable
     @Override
@@ -66,7 +61,7 @@ public class ring extends Service {
 
                 reviewList = (ArrayList<Integer>)os.readObject();
                 reviewDateList = (ArrayList<Long>) os.readObject();
-        //y
+                //y
                 os.close();
             }
             catch (Exception ioe){
@@ -82,7 +77,7 @@ public class ring extends Service {
             }
         }
         catch (FileNotFoundException e){    //새로 만드는 부분 => 없앰
-        //e
+            //e
             e.printStackTrace();
         }
 
