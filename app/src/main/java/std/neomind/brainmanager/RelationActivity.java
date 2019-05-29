@@ -92,6 +92,7 @@ public class RelationActivity extends AppCompatActivity
         if(rTargetIdList.isEmpty()){
             finish();
             Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_noKeyword), Toast.LENGTH_LONG).show();
+            return;
         }
 
         /* TODO 변경

@@ -80,6 +80,8 @@
     <string name="RelationActivity_error"> errors occurred</string>
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
+    <string name="AlarmReceiver_Error">Alarm setting: Error Occur</string>
+
     <string name="Notification_title">Brain Manager</string>
     <string name="Notification_text">STUDY TIME</string>
 

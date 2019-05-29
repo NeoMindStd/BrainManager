@@ -67,9 +67,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name=".utils.notification.Broadcast22">
+            android:name=".utils.notification.NotificationReceiver">
         </receiver>
-        <receiver android:name=".utils.notification.BroadcastD2"
+        <receiver android:name=".utils.notification.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -78,10 +78,6 @@
 
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".utils.notification.ring"
-            android:enabled="true"></service>
     </application>
 
 </manifest>

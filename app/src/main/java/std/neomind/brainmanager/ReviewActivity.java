@@ -24,13 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +37,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Test;
-import std.neomind.brainmanager.utils.notification.BroadcastD2;
+import std.neomind.brainmanager.utils.BrainSerialDataIO;
+import std.neomind.brainmanager.utils.notification.AlarmReceiver;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
@@ -86,6 +80,8 @@ public class ReviewActivity extends AppCompatActivity{
     private Button nextButton;
     private Button AnswerButton;
 
+    private boolean openFlag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,79 +93,42 @@ public class ReviewActivity extends AppCompatActivity{
         descriptionLayout = findViewById(R.id.review_layout_description);
         textExamScroll = findViewById(R.id.review_scroll_exam);
 ////
+        reviewList = new ArrayList<>();
+        reviewDateList = new ArrayList<>();
         ArrayList<Integer> listID = new ArrayList<>();
-        String mode = getIntent().getStringExtra(EXTRAS_MODE);
         /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
-        if(mode == null){
+        if(getIntent().getStringExtra(EXTRAS_MODE) == null){
             listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
             try {
-                FileInputStream fileStream = new FileInputStream(new File(getFilesDir(),"BrainAlarm.data"));
-                try {
-                    ObjectInputStream os = new ObjectInputStream(fileStream);
-
-                    reviewList = (ArrayList<Integer>)os.readObject();
-                    reviewDateList = (ArrayList<Long>) os.readObject();
-
-                    os.close();
-                }
-                catch (Exception ioe){              //일반 복습하기를 눌렸을 때 하나라도 오류가 생기면 이렇게 됨.
-                    reviewList = new ArrayList<>();
-                    reviewDateList = new ArrayList<>();
-                    ioe.printStackTrace();
-                }
-                finally {
-                    try {
-                        fileStream.close();
-                    }
-                    catch (IOException ioee){
-                        ioee.printStackTrace();
-                    }
-                }
-            }
-            catch (FileNotFoundException e){    //일반 복습하기를 눌렸을 때 하나라도 오류가 생기면 이렇게 됨.
+                BrainSerialDataIO.getNextReviewTimeInfo(mContext, reviewList, reviewDateList);
+            } catch (BrainSerialDataIO.LoadFailException e) {   //오류가 생기면 초기화 한다.
+                reviewList = new ArrayList<>();
+                reviewDateList = new ArrayList<>();
+                e.printStackTrace();
+            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
                 reviewList = new ArrayList<>();
                 reviewDateList = new ArrayList<>();
                 e.printStackTrace();
             }
         }
         else{
-            /**알람을 눌렸을 때 표시될 저장된 객체 불러오기 **/
+            /**알람 배너를 눌렸을 때 표시될 저장된 객체 불러오기 **/
             try {
-                FileInputStream fileStream = new FileInputStream(new File(getFilesDir(),"BrainAlarm.data"));
-                try {
-                    ObjectInputStream os = new ObjectInputStream(fileStream);
-
-                    reviewList = (ArrayList<Integer>)os.readObject();
-                    reviewDateList = (ArrayList<Long>) os.readObject();
-
-                    os.close();
-                }
-                catch (Exception ioe){
-                    ioe.printStackTrace();
-                }
-                finally {
-                    try {
-                        fileStream.close();
-                    }
-                    catch (IOException ioee){
-                        ioee.printStackTrace();
-                    }
-                    /** 저장된 객체들 중 알림 시간이 넘은 것들을 불러옴 **/
-                    long now = System.currentTimeMillis();
-                    for(long date : reviewDateList){
-                        if(date < now){
-                            listID.add(reviewDateList.indexOf(date));
-                        }
-                    }
-                }
-            }
-            catch (FileNotFoundException e){    //하나라도 오류가 생기면 안됨.
+                BrainSerialDataIO.getNextReviewTimeInfo(mContext, reviewList, reviewDateList);
+            } catch (BrainSerialDataIO.LoadFailException e) {
                 e.printStackTrace();
-                finish();
-                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
-                return;
+            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                e.printStackTrace();
+            }
+            /** 저장된 객체들 중 알림 시간이 넘은 것들을 불러옴 **/
+            long now = System.currentTimeMillis();
+            for(long date : reviewDateList) {
+                if (date < now) {
+                    listID.add(reviewDateList.indexOf(date));
+                }
             }
         }
+
 
 
         if(listID.isEmpty()){
@@ -230,24 +189,11 @@ public class ReviewActivity extends AppCompatActivity{
             }
             //임시 리스트 제거
             ckList.clear();
+            relationList=null;
 
             nextButton = findViewById(R.id.review_button_nextExam);
             AnswerButton = findViewById(R.id.review_button_showAnswer);
             AnswerButton.setOnClickListener(onAnswerViewClickEvent);
-
-            /* ENDDO 변경
-            ////////////테스트
-            //int textView, int cid, String text, String imagePath, int currentLevels, int reviewTimes, String registrationDate
-            Keyword.Builder b = new Keyword.Builder();
-            b.setText("와!");
-            Keyword tempKey = b.build();
-            b.setText("으윽!");
-            Keyword tempKey2 = b.build();
-            mTargetKeywords = new ArrayList<Keyword>();
-            mTargetKeywords.add(tempKey);
-            mTargetKeywords.add(tempKey2);
-            ///////////////
-            */
 
             Toolbar toolbar = findViewById(R.id.main_toolbar);
             setSupportActionBar(toolbar);
@@ -256,8 +202,6 @@ public class ReviewActivity extends AppCompatActivity{
         }
     }
     //examType은 0,1,2가 있다. 0.오류 1.기본형, 2.객관식문제형, 3.텍스트문제형
-    //        this.text = text;
-    //        this.imagePath = imagePath;
     private int generate_view(Keyword key){
         selectedExam = -1;
         Random randomGenerator = new Random();
@@ -265,44 +209,14 @@ public class ReviewActivity extends AppCompatActivity{
         ////테스트
         int keyIndex = allKeywords.indexOf(key);
 
-        ////
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//        WindowManager windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-//        windowManager.getDefaultDisplay().getMetrics(metrics);
-//        //Log.d("device dpi", "=>" + metrics.densityDpi);
-//        Display display = getWindowManager().getDefaultDisplay();
-//        device_size = new Point();
-//        display.getSize(device_size);
-//
-//        tMargin = (int)(metrics.densityDpi / 20 * metrics.densityDpi / 160f);
-//        bMargin = (int)(metrics.densityDpi / 50 * metrics.densityDpi / 160f);
-//
-//        height = (int)(metrics.densityDpi / 3.2 * metrics.densityDpi / 160f);
-//        keyTextSize = (int)(metrics.densityDpi / 10);
-//        desTextSize = (int)(metrics.densityDpi / 20);
-
-
-        //keywordText.setText("키워드"); //키워드가 들어감
-        //ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) keywordLayout.getLayoutParams();
-        //param.setMargins(0, tMargin, 0, bMargin);
-
-//        if(key.name.isEmpty() && ){
-//            keywordText.setText("키워드를 만들어주세요");
-//            return 0;
-//        }
-        //아직 db 미구현
-//        if(key.key!=Null)
-//
-        //ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) keywordLayout.getLayoutParams();
-        //param.setMargins(0, tMargin, 0, bMargin);
-
         //레이아웃 참조를 가져올 지역변수.
 
 
         keywordLayout = findViewById(R.id.review_layout_keyword);
-        for(int i=0; i<keywordLayout.getChildCount(); i++)
+        for(int i=0; i<keywordLayout.getChildCount(); i++) {
             keywordLayout.getChildAt(i).setVisibility(View.GONE);
+            keywordLayout.getChildAt(i).setOnLongClickListener(null);
+        }
 
         //VISIBLE 초기화
 
@@ -321,7 +235,7 @@ public class ReviewActivity extends AppCompatActivity{
 
 
         //keysize = key.name.size()
-        if(key.name.isEmpty() || (key.imagePath.isEmpty() && key.getDescriptions().isEmpty())) {
+        if(key.name.isEmpty() || (key.imagePath.isEmpty() && (key.getDescriptions() == null || key.getDescriptions().isEmpty()))) {
             //TODO 코드 중복 존재함.
             if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(currentmKeyIndex));
             else{
@@ -396,6 +310,7 @@ public class ReviewActivity extends AppCompatActivity{
                 Arrays.fill(tempRandom, -1);
 
                 ArrayList<Integer> relationList = mTargetKeywords.get(currentmKeyIndex).getRelationIds();
+
                 ArrayList<Integer> relationIndexs = new ArrayList<>();
                 for(Keyword tKey : allKeywords){
                     for(int id : relationList){
@@ -404,6 +319,12 @@ public class ReviewActivity extends AppCompatActivity{
                             break;
                         }
                     }
+                }
+                relationList.clear();
+                //관계성중에 비어있는 관계성 삭제
+                for(int index : relationIndexs){
+                    if(allKeywords.get(index).imagePath.isEmpty() && allKeywords.get(index).getDescriptions().isEmpty())
+                        relationIndexs.remove((Integer)index);
                 }
 
                 int sizeCount = 0;  //관계성이 있는 키워드가 지정될 랜덤 위치를 저장할 배열
@@ -459,6 +380,9 @@ public class ReviewActivity extends AppCompatActivity{
                     examLayoutArray[i] = (ConstraintLayout) examAllLayout.getChildAt(i);
                     examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
                     examLayoutArray[i].setVisibility(View.VISIBLE);
+                    examLayoutArray[i].getChildAt(0).setOnClickListener(null);
+                    examLayoutArray[i].getChildAt(1).setOnClickListener(null);
+
                     if(count-1 < i) {   //사용가능한 문제 개수-1 보다 i가 클경우
 //                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_gray_rounded));
                         continue;
@@ -744,10 +668,6 @@ public class ReviewActivity extends AppCompatActivity{
             if(ef<1.3) ef=1.3;
             else if(ef>2.5) ef=2.5;
         }
-        key.ef = ef;
-
-        if(rating < 2)
-            key.currentLevels = 0;
 
         //가정1.예정 복습시간보다 복습을 빨리하거나 늦게하면 그 차이를 다음 복습간격과의 %를 구하여
         //그 %만큼 복습을 더 빨리해야한다. 자주 복습을 하면 약간의 이익이 있고 늦게 복습을 하면 그만큼 이익이 줄어야된다.
@@ -757,7 +677,15 @@ public class ReviewActivity extends AppCompatActivity{
         //그 이후 복습간격은 ef에 맞춰 조절된다.
         //예정 복습시간 이전에 복습하는 경우엔 relation만으로 조절되며, 만약 틀리면 currentLevels가 0으로 초기화되버린다.
         //
-
+        //만약 첫복습이 아닌데 불구하고 reviewList와 reviewDateList의 크기가 0이거나 key.id의 인덱스를 찾을 수 없는 경우 에러값을 반환한다.
+        // => 에러값이 아닌 currentLevels를 0으로 바꾸자
+        if(key.currentLevels > 0 && (reviewList.isEmpty() || reviewDateList.isEmpty() || reviewList.indexOf(key.id) == -1)){
+            Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
+            key.currentLevels = 0;
+        }
+        if(rating < 2)
+            key.currentLevels = 0;
+        key.ef = ef;
 
         key.reviewTimes++;
         if(key.currentLevels == 0) {
@@ -766,45 +694,31 @@ public class ReviewActivity extends AppCompatActivity{
             return (long)(examEndTime+(key.interval*60000));
         }
         else if(key.currentLevels == 1) {
-            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
-                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
-                return Long.MIN_VALUE;
-            }else{
-                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
-            }
+            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+
             if(diffInterval < 0) {
                 key.currentLevels++;
                 key.interval = (int)(1440 * relation);
-                return (long)(examEndTime+(key.interval*60000));
+                return examEndTime+(key.interval*60000);
             }
             return correctReviewDate;
         }
         else if(key.currentLevels == 2){
-//            nextInterval = 1440 + (8640‬ - 1440)*(1440+diff_Interval)/1440;
-//            return nextInterval;
-            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
-                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
-                return Long.MIN_VALUE;
-            }else{
-                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
-            }
+            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+
             if(diffInterval < 0) {
                 key.currentLevels++;
                 key.interval = (int)(8640 * relation);
-                return (long)(examEndTime+(key.interval*60000));
+                return examEndTime+(key.interval*60000);
             }
             return correctReviewDate;
         }
         else{
-            if(reviewList.isEmpty() || reviewDateList.isEmpty()){
-                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
-                return Long.MIN_VALUE;
-            }else{
-                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
-            }
+            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+
             if(diffInterval < 0) {
                 key.currentLevels++;
                 nextInterval = (int)(lastInterval * ef * relation);
@@ -817,7 +731,31 @@ public class ReviewActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(openFlag) {
+            ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.review_constraintLayout_popup);
+            final ScrollView scrollView = (ScrollView) findViewById(R.id.review_text_scroll);
+            final PhotoView photoView = (PhotoView) findViewById(R.id.review_photo_view);
+            final TextView textView = (TextView) findViewById(R.id.review_text_view);
+
+            constraintLayout.setVisibility(View.GONE);
+            photoView.setImageResource(0);
+            textView.setText("");
+
+            photoView.setVisibility(View.GONE);
+            scrollView.setVisibility(View.GONE);
+
+            openFlag = false;
+        }
+        else{
+            if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
+                super.onBackPressed();
+            }
+            else {
+                super.onBackPressed();
+                Intent intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 
     //설명을 적어서 맞추는 문제일 때 엔터키의 동작을 변경하는 이벤트 리스너
@@ -915,7 +853,11 @@ public class ReviewActivity extends AppCompatActivity{
 
             if(!reviewList.isEmpty() && !reviewDateList.isEmpty()){
                 int temp = reviewList.indexOf(key.id);
-                if(temp != -1){
+                if(temp == -1){ //-1은 해당 원소가 reviewList에 없을 때 반환된다
+                    reviewList.add(key.id);
+                    reviewDateList.add(nextReviewTime);
+                }
+                else{   //만약 있다면 해당 알림을 삭제하고 새로운 복습시간을 할당한다.
                     if(reviewDateList.get(temp) < examStartTime) {
                         reviewList.remove(temp);
                         reviewDateList.remove(temp);
@@ -923,51 +865,24 @@ public class ReviewActivity extends AppCompatActivity{
                         reviewDateList.add(nextReviewTime);
                     }
                 }
-                else{
-                    reviewList.add(key.id);
-                    reviewDateList.add(nextReviewTime);
-                }
             }
-            else{
+            else{   //만약 비었다면 새롭게 추가한다.
                 reviewList.add(key.id);
                 reviewDateList.add(nextReviewTime);
             }
 
-
-
             /** 객체 저장 **/
-            try{
-                FileOutputStream fileStream = new FileOutputStream(new File(getFilesDir(),"BrainAlarm.data"));
-                try {
-                    ObjectOutputStream os = new ObjectOutputStream(fileStream);
-
-                    os.writeObject(reviewList);
-                    os.writeObject(reviewDateList);
-                    os.close();
-                }
-                catch (Exception ioe){
-                    ioe.printStackTrace();
-                }
-                finally {
-                    try {
-                        fileStream.close();
-                    }
-                    catch (IOException ioee){
-                        ioee.printStackTrace();
-                    }
-                }
-            }
-            catch(FileNotFoundException e2){
-                e2.printStackTrace();
+            try {
+                BrainSerialDataIO.saveNextReivewTimeInfo(mContext, reviewList, reviewDateList);
+            } catch (BrainSerialDataIO.SaveFailException e) {
+                e.printStackTrace();
+            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                e.printStackTrace();
             }
 
-            Intent intent = new Intent(mContext, BroadcastD2.class);
-            intent.putExtra(BroadcastD2.EXTRAS_KEYS_ID, key.id);
-            intent.putExtra(BroadcastD2.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
+            Intent intent = new Intent(mContext, AlarmReceiver.class);
+            intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
             sendBroadcast(intent);
-
-
-
 
 
             BrainDBHandler dbHandler = new BrainDBHandler(ReviewActivity.this);
@@ -1030,6 +945,7 @@ public class ReviewActivity extends AppCompatActivity{
     private View.OnLongClickListener longClickListener = v -> {
         ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.review_constraintLayout_popup);
         constraintLayout.setVisibility(View.VISIBLE);
+        openFlag=true;
         if (v instanceof ImageView) {
             final PhotoView photoView = (PhotoView) findViewById(R.id.review_photo_view);
             photoView.setImageDrawable(((ImageView) v).getDrawable());
@@ -1038,18 +954,8 @@ public class ReviewActivity extends AppCompatActivity{
                 photoView.setImageResource(0);
                 photoView.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.GONE);
+                openFlag=false;
             });
-            //
-//            new AlertDialog.Builder(mContext)
-//                    .setCancelable(false)
-////                    .setTitle(getString(R.string.ReviewActivity_alertDialogOK))
-//                    .setView(imageView)
-//                    //.setView(((ConstraintLayout) v).getChildAt(i))
-//                    .setPositiveButton(getString(R.string.ReviewActivity_alertDialogOK),
-//                            (dialog, which) -> {
-//                                //TODO 할 내용들. 지금은 공백 나중에 채워넣을거 없으면 null로 변경
-//                            })
-//                    .show();
         } else if (v instanceof TextView) {
             final TextView textView = (TextView) findViewById(R.id.review_text_view);
             final ScrollView scrollView = (ScrollView) findViewById(R.id.review_text_scroll);
@@ -1059,18 +965,8 @@ public class ReviewActivity extends AppCompatActivity{
                 ((TextView)view).setText("");
                 scrollView.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.GONE);
+                openFlag=false;
             });
-
-//            new AlertDialog.Builder(mContext)
-//                    .setCancelable(false)
-////                    .setTitle(getString(R.string.ReviewActivity_alertDialogOK))
-//                    .setView(textView)
-//                    //.setView(((ConstraintLayout) v).getChildAt(i))
-//                    .setPositiveButton(getString(R.string.ReviewActivity_alertDialogOK),
-//                            (dialog, which) -> {
-//                                //TODO 할 내용들. 지금은 공백 나중에 채워넣을거 없으면 null로 변경
-//                            })
-//                    .show();
         }
         return true;
     };

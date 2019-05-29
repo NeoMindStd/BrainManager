@@ -20,7 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import std.neomind.brainmanager.utils.notification.Broadcast22;
+import std.neomind.brainmanager.utils.notification.NotificationReceiver;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -112,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         public void Alarm() {
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(SettingsActivity.this, Broadcast22.class);
+            Intent intent = new Intent(SettingsActivity.this, NotificationReceiver.class);
 
             PendingIntent sender = PendingIntent.getBroadcast(SettingsActivity.this, 0, intent, 0);
 

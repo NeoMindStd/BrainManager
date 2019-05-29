@@ -188,56 +188,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                             ArrayList<Integer> reviewList = new ArrayList<>();
                             ArrayList<Long> reviewDateList = new ArrayList<>();
 
-                            //TODO 사실 이런 부분들은 전부 메서드로 만들어야 깔끔하지만 시간 없어서 걍 복붙함
-                            try {
-                                FileInputStream fileStream = new FileInputStream(new File(mActivity.getFilesDir() ,"BrainAlarm.data"));
-                                try {
-                                    ObjectInputStream os = new ObjectInputStream(fileStream);
-
-                                    reviewList = (ArrayList<Integer>)os.readObject();
-                                    reviewDateList = (ArrayList<Long>) os.readObject();
-                                    //y
-                                    os.close();
-                                }
-                                catch (Exception ioe){
-                                    ioe.printStackTrace();
-                                }
-                                finally {
-                                    try {
-                                        fileStream.close();
-                                        try{
-                                            FileOutputStream fileStream2 = new FileOutputStream(new File(mActivity.getFilesDir(),"BrainAlarm.data"));
-                                            try {
-                                                ObjectOutputStream os2 = new ObjectOutputStream(fileStream2);
-                                                reviewDateList.remove(reviewList.indexOf(mKeywords.get(mPosition).id));
-                                                reviewList.remove(mKeywords.get(mPosition).id);
-
-                                                os2.writeObject(reviewList);
-                                                os2.writeObject(reviewDateList);
-                                                os2.close();
-                                            }
-                                            catch (Exception ioe){
-                                                ioe.printStackTrace();
-                                            }
-                                            finally {
-                                                try {
-                                                    fileStream2.close();
-                                                }
-                                                catch (IOException ioee){
-                                                    ioee.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                        catch(FileNotFoundException e2){
-                                            e2.printStackTrace();
-                                        }
-                                    }
-                                    catch (IOException ioee){
-                                        ioee.printStackTrace();
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
+                            try{
+                                BrainSerialDataIO.deleteOneNextReivewTimeInfo(mActivity, mKeywords.get(mPosition).id);
+                            }catch (Exception ex){
+                                ex.printStackTrace();
                             }
 
                         }catch (Exception e){

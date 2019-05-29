@@ -1,6 +1,7 @@
 package std.neomind.brainmanager.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
