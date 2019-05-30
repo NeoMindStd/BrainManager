@@ -207,7 +207,6 @@ public class KeywordActivity extends AppCompatActivity {
     }
 
     private void initDescriptionSpinner() {
-        //Log.d(TAG, "initDescriptionSpinner: test + mKeyword : " + mKeyword.toStringAbsolutely());
         if(mKeyword != null) mDescriptionSpinner.setAdapter(new ArrayAdapter<>(
                 this, R.layout.global_spinner_item, mKeyword.getDescriptions()));
     }
@@ -215,7 +214,7 @@ public class KeywordActivity extends AppCompatActivity {
     private View.OnClickListener mCategoryButtonClickListener = view -> {
         final EditText editText = new EditText(this);
         switch (view.getId()) {
-            case R.id.keyword_button_addDescription :
+            case R.id.keyword_button_addDescription:
                 new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.MainActivity_addCategory))
                         .setView(editText)
@@ -223,16 +222,20 @@ public class KeywordActivity extends AppCompatActivity {
                                 (dialog, which) -> {
                                     Description description = new Description();
                                     description.description = editText.getText().toString();
-                                    mBrainDBHandler.addDescription(description, keywordID);
-                                    mKeyword.setDescriptions(
-                                            mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                    if (keywordID != -1) {
+                                        mBrainDBHandler.addDescription(description, keywordID);
+                                        mKeyword.setDescriptions(
+                                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                    } else {
+                                        mKeyword.getDescriptions().add(description);
+                                    }
                                     initDescriptionSpinner();
                                 })
                         .setNeutralButton(getString(R.string.Global_negative), null)
                         .show();
                 break;
-            case R.id.keyword_button_updateDescription :
-                if(!mKeyword.getDescriptions().isEmpty()) {
+            case R.id.keyword_button_updateDescription:
+                if (!mKeyword.getDescriptions().isEmpty()) {
                     Description description = mKeyword.getDescriptions().
                             get(mDescriptionSpinner.getSelectedItemPosition());
                     editText.setText(description.toString());
@@ -243,22 +246,29 @@ public class KeywordActivity extends AppCompatActivity {
                             .setPositiveButton(getString(R.string.Global_confirm),
                                     (dialog, which) -> {
                                         description.description = editText.getText().toString();
-                                        mBrainDBHandler.updateDescription(description, keywordID);
-                                        mKeyword.setDescriptions(
-                                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        if (keywordID != -1) {
+                                            mBrainDBHandler.updateDescription(description, keywordID);
+                                            mKeyword.setDescriptions(
+                                                    mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        }
                                         initDescriptionSpinner();
                                     })
                             .setNeutralButton(getString(R.string.Global_negative), null)
                             .show();
                 }
                 break;
-            case R.id.keyword_button_deleteDescription :
-                if(!mKeyword.getDescriptions().isEmpty()) {
-                    mBrainDBHandler.removeDescription(
-                            mKeyword.getDescriptions().get(
-                                    mDescriptionSpinner.getSelectedItemPosition()).id);
-                    mKeyword.setDescriptions(
-                            mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+            case R.id.keyword_button_deleteDescription:
+                if (!mKeyword.getDescriptions().isEmpty()) {
+                    if (keywordID != -1) {
+                        mBrainDBHandler.removeDescription(
+                                mKeyword.getDescriptions().get(
+                                        mDescriptionSpinner.getSelectedItemPosition()).id);
+                        mKeyword.setDescriptions(
+                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                    } else {
+                        mKeyword.getDescriptions().remove(
+                                mDescriptionSpinner.getSelectedItemPosition());
+                    }
                     initDescriptionSpinner();
                 }
                 break;
