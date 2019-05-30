@@ -124,7 +124,7 @@ public class ReviewActivity extends AppCompatActivity{
             long now = System.currentTimeMillis();
             for(long date : reviewDateList) {
                 if (date < now) {
-                    listID.add(reviewDateList.indexOf(date));
+                    listID.add(reviewList.get(reviewDateList.indexOf(date)));
                 }
             }
         }
@@ -280,13 +280,20 @@ public class ReviewActivity extends AppCompatActivity{
                 //객관식 문제를 제출하기 위해 설명들의 갯수를 셈. 관련성도 여기에 구현되어야함.
                 int count = 0; //count가 될 수 있는 수는 2 3 4
                 for (Keyword tKey : allKeywords) {
-                    //count += tkey.name.size(); //설명의 총 갯수를 구합니다.
-                    if (!tKey.getDescriptions().isEmpty()) count++;
-                    if (!tKey.imagePath.isEmpty()) count++;
                     if (count > 4) {
                         count = 4;
                         break;
                     }
+                    //count += tkey.name.size(); //설명의 총 갯수를 구합니다.
+                    if (!tKey.getDescriptions().isEmpty()) {
+                        count++;
+                        continue;
+                    }
+                    if (!tKey.imagePath.isEmpty()) {
+                        count++;
+                        continue;
+                    }
+
                 }
                 if(count<2) {   //설명의 갯수가 총 2개가 안된다면 다시 r=2가 않게 while문을 돌림
                     r = randomGenerator.nextInt(2)+1;
@@ -305,14 +312,15 @@ public class ReviewActivity extends AppCompatActivity{
                 r = randomGenerator.nextInt(count);
                 answer = r; // 문제 정답 번호와 answer을 일치시킴
 
-                //랜덤한 count개의 정답이 아닌 보기 //TODO 관련성 기반으로 보기가 주어지는 경우도 정의해야함.
+                //랜덤한 count-1 개의 정답이 아닌 보기
                 int tempRandom[] = new int[count - 1];
                 Arrays.fill(tempRandom, -1);
 
-                ArrayList<Integer> relationList = mTargetKeywords.get(currentmKeyIndex).getRelationIds();
+                ArrayList<Integer> relationList = mTargetKeywords.get(currentmKeyIndex).getRelationIds(); //릴레이션 리스트는 id로만 이루어져 있다. 이것을 키워드 리스트 객체로 들고와야함.
+
 
                 ArrayList<Integer> relationIndexs = new ArrayList<>();
-                for(Keyword tKey : allKeywords){
+                for(Keyword tKey : allKeywords){    //전체 키워드 중에서 릴레이션 리스트 id를 들고와야한다.
                     for(int id : relationList){
                         if(id == tKey.id) {
                             relationIndexs.add(allKeywords.indexOf(tKey));
@@ -503,21 +511,22 @@ public class ReviewActivity extends AppCompatActivity{
                 ((TextView) keywordLayout.getChildAt(0)).setText(key.name);
 //                textExamScroll = findViewById(R.id.review_scroll_exam);
 
-                ArrayList<String> descriptionString = new ArrayList<String>();
+                ArrayList<String> descriptionString = new ArrayList<>();
                 for(Description s : key.getDescriptions()){
                     descriptionString.add(s.description);
-                }
+                }//하드카피
                 //descriptionString = descriptionString.substring(0, descriptionString.length()-1);
-                r = randomGenerator.nextInt(descriptionString.size());  //r이 재활용되어진다. 재반복되면주의
+                r = randomGenerator.nextInt(descriptionString.size());  //TODO r이 재활용되어진다. 재반복되면주의
+                //r중에 하나의 값을 쓴다.
 
                 TextView[] tempTextView = new TextView[descriptionString.size()];
-                for(int i=0; i<tempTextView.length; i++) {
+                for(int i=0; i<tempTextView.length; i++) {                         //length가 곧 descriptionString의 사이즈이다.
                     tempTextView[i] = new TextView(this);
-                    tempTextView[i].setText(descriptionString.remove(0));
+                    tempTextView[i].setText(descriptionString.remove(0));   //0이 계속 사라지면서 리스트가 하나씩 줄어든다.
                     tempTextView[i].setTextAppearance(R.style.textExamTheme);
                 }
 
-                String targetStr = tempTextView[r].getText().toString();
+                String targetStr = tempTextView[r].getText().toString();    //전체 설명 리스트중 어절빈칸을 만들 문자열 하나를 고른다.
 
 //                int cnt = 0;
 //                str = str.trim();               //앞뒤 빈칸 제거
@@ -532,22 +541,22 @@ public class ReviewActivity extends AppCompatActivity{
 //                cnt = checkEmpty ? cnt+1 : cnt;
                 String[] arrayStr = targetStr.split(" ");
                 final int arrayStrLength = arrayStr.length;
-                int r2 = randomGenerator.nextInt(arrayStr.length);
+                int r2 = randomGenerator.nextInt(arrayStrLength);   //r2는 어절을 비울 위치이다.
                 TextView tempTextView2;
                 tempTextView2 = new TextView(this);
                 answerString = arrayStr[r2];
 
                 String sumStr = "";
-                if(r2 == 0){
+                if(r2 == 0){    //만약 첫번째 위치인경우
                     for(int i = 1; i<arrayStrLength;  i++)
                         sumStr += arrayStr[i];
                     tempTextView[r].setText(sumStr);
-                } else if(r2 == arrayStrLength - 1){
+                } else if(r2 == arrayStrLength - 1){    //마지막에 위치한 경우
                     for(int i = 0; i<arrayStrLength - 1;  i++)
                         sumStr += arrayStr[i];
                     tempTextView[r].setText(sumStr);
                 }
-                else{
+                else{   //그 외 중간일 경우
                     for(int i = 0; i < r;  i++)
                         sumStr += arrayStr[i];
                     tempTextView[r].setText(sumStr);
@@ -557,28 +566,27 @@ public class ReviewActivity extends AppCompatActivity{
                     tempTextView2.setText(sumStr);
                     tempTextView2.setTextAppearance(R.style.textExamTheme);
                 }
-                TextView emptyText = new TextView(this);
 
                 textExamScroll.setVisibility(View.VISIBLE);
                 textExamLayout = findViewById(R.id.review_gridLayout_exam);
                 textExamLayout.setVisibility(View.VISIBLE);
 
-                examText = new EditText(this);
+                examText = new EditText(this);      //정답을 넣어야되는 에디트텍스트
                 examText.setTextAppearance(R.style.textExamTheme);
                 examText.setSingleLine(true);
                 examText.setLines(1);
                 examText.setOnKeyListener(onKeyEvent);
 
-                for(int i=0; i<tempTextView.length; i++){
+                for(int i=0; i<tempTextView.length; i++){   //설명의 개수(=tempTextView의 개수)만큼 반복된다.
                     if(i==r) {
                         if (r2 == 0) {
                             textExamLayout.addView(examText);
                             textExamLayout.addView(tempTextView[i]);
-                            textExamLayout.addView(emptyText);
+                            textExamLayout.addView(new TextView(this));
                         } else if (r2 == arrayStrLength - 1) {
                             textExamLayout.addView(tempTextView[i]);
                             textExamLayout.addView(examText);
-                            textExamLayout.addView(emptyText);
+                            textExamLayout.addView(new TextView(this));
                         } else {
                             textExamLayout.addView(tempTextView[i]);
                             textExamLayout.addView(examText);
@@ -587,8 +595,8 @@ public class ReviewActivity extends AppCompatActivity{
                         continue;
                     }
                     textExamLayout.addView(tempTextView[i]);
-                    textExamLayout.addView(emptyText);
-                    textExamLayout.addView(emptyText);
+                    textExamLayout.addView(new TextView(this));
+                    textExamLayout.addView(new TextView(this));  //어쨌든 3개를 채워야함.
                 }
                 examStartTime = System.currentTimeMillis(); //문제의 시작시간을 저장
                 return 3;
@@ -857,13 +865,14 @@ public class ReviewActivity extends AppCompatActivity{
                     reviewList.add(key.id);
                     reviewDateList.add(nextReviewTime);
                 }
-                else{   //만약 있다면 해당 알림을 삭제하고 새로운 복습시간을 할당한다.
+                else{   //만약 있다면 examStartTime보다 작을 경우 복습이 됐다는 의미이므로 리스트에 해당 알림시간을 삭제하고 새로운 복습시간을 할당한다.
                     if(reviewDateList.get(temp) < examStartTime) {
                         reviewList.remove(temp);
                         reviewDateList.remove(temp);
                         reviewList.add(key.id);
                         reviewDateList.add(nextReviewTime);
                     }
+                    //클경우엔 알림을 그대로 둔다.
                 }
             }
             else{   //만약 비었다면 새롭게 추가한다.
@@ -907,6 +916,9 @@ public class ReviewActivity extends AppCompatActivity{
         public void onClick(View v){
             AnswerButton.setOnClickListener(onAnswerViewClickEvent);
             nextButton.setOnClickListener(null);
+            //텍스트 시험 초기화
+            if(textExamLayout != null)
+                    textExamLayout.removeAllViews();
             if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(currentmKeyIndex));
             else{
                 finish();
