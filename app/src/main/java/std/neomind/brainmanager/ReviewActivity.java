@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +72,7 @@ public class ReviewActivity extends AppCompatActivity{
     private long examEndTime;
 
     private ScrollView textExamScroll;
-    private GridLayout textExamLayout;
+    private LinearLayout textExamLayout;
     private EditText examText;
 
     private ConstraintLayout keywordLayout;
@@ -255,7 +256,6 @@ public class ReviewActivity extends AppCompatActivity{
                         descriptionString += s.description + "\n";
                     }
                     descriptionString = descriptionString.substring(0, descriptionString.length()-1);
-
                     keywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
                     keywordLayout.getChildAt(1).setVisibility(View.GONE);
                     ((TextView)keywordLayout.getChildAt(0)).setText(descriptionString);
@@ -549,26 +549,26 @@ public class ReviewActivity extends AppCompatActivity{
                 String sumStr = "";
                 if(r2 == 0){    //만약 첫번째 위치인경우
                     for(int i = 1; i<arrayStrLength;  i++)
-                        sumStr += arrayStr[i];
+                        sumStr += arrayStr[i] + " ";
                     tempTextView[r].setText(sumStr);
                 } else if(r2 == arrayStrLength - 1){    //마지막에 위치한 경우
                     for(int i = 0; i<arrayStrLength - 1;  i++)
-                        sumStr += arrayStr[i];
+                        sumStr += arrayStr[i] + " ";
                     tempTextView[r].setText(sumStr);
                 }
                 else{   //그 외 중간일 경우
-                    for(int i = 0; i < r;  i++)
-                        sumStr += arrayStr[i];
+                    for(int i = 0; i < r2;  i++)
+                        sumStr += arrayStr[i] + " ";
                     tempTextView[r].setText(sumStr);
                     sumStr = "";
-                    for(int i = r + 1; i < arrayStrLength;  i++)
-                        sumStr += arrayStr[i];
+                    for(int i = r2 + 1; i < arrayStrLength;  i++)
+                        sumStr += arrayStr[i] + " ";
                     tempTextView2.setText(sumStr);
                     tempTextView2.setTextAppearance(R.style.textExamTheme);
                 }
 
                 textExamScroll.setVisibility(View.VISIBLE);
-                textExamLayout = findViewById(R.id.review_gridLayout_exam);
+                textExamLayout = findViewById(R.id.review_scroll_linear_layout);
                 textExamLayout.setVisibility(View.VISIBLE);
 
                 examText = new EditText(this);      //정답을 넣어야되는 에디트텍스트
@@ -577,26 +577,25 @@ public class ReviewActivity extends AppCompatActivity{
                 examText.setLines(1);
                 examText.setOnKeyListener(onKeyEvent);
 
-                for(int i=0; i<tempTextView.length; i++){   //설명의 개수(=tempTextView의 개수)만큼 반복된다.
+                for(int i=0; i<tempTextView.length; i++){   //설명의 개수(=Description, tempTextView의 개수)만큼 반복된다.
+                    LinearLayout tempLinearLayout = new LinearLayout(this);
+                    tempLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                     if(i==r) {
                         if (r2 == 0) {
-                            textExamLayout.addView(examText);
-                            textExamLayout.addView(tempTextView[i]);
-                            textExamLayout.addView(new TextView(this));
+                            tempLinearLayout.addView(examText);
+                            tempLinearLayout.addView(tempTextView[i]);
                         } else if (r2 == arrayStrLength - 1) {
-                            textExamLayout.addView(tempTextView[i]);
-                            textExamLayout.addView(examText);
-                            textExamLayout.addView(new TextView(this));
+                            tempLinearLayout.addView(tempTextView[i]);
+                            tempLinearLayout.addView(examText);
                         } else {
-                            textExamLayout.addView(tempTextView[i]);
-                            textExamLayout.addView(examText);
-                            textExamLayout.addView(tempTextView2);
+                            tempLinearLayout.addView(tempTextView[i]);
+                            tempLinearLayout.addView(examText);
+                            tempLinearLayout.addView(tempTextView2);
                         }
+                        textExamLayout.addView(tempLinearLayout);
                         continue;
                     }
                     textExamLayout.addView(tempTextView[i]);
-                    textExamLayout.addView(new TextView(this));
-                    textExamLayout.addView(new TextView(this));  //어쨌든 3개를 채워야함.
                 }
                 examStartTime = System.currentTimeMillis(); //문제의 시작시간을 저장
                 return 3;
@@ -971,10 +970,12 @@ public class ReviewActivity extends AppCompatActivity{
         } else if (v instanceof TextView) {
             final TextView textView = (TextView) findViewById(R.id.review_text_view);
             final ScrollView scrollView = (ScrollView) findViewById(R.id.review_text_scroll);
+            final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.review_linear_layout);
             textView.setText(((TextView) v).getText());
+            scrollView.setVisibility(View.VISIBLE);
 
-            textView.setOnClickListener(view -> {
-                ((TextView)view).setText("");
+            linearLayout.setOnClickListener(view -> {
+                textView.setText("");
                 scrollView.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.GONE);
                 openFlag=false;

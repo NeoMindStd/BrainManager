@@ -74,7 +74,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:maxLines="3"
+                android:ellipsize="end"
+                />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -106,7 +109,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:ignore="Autofill"
+                android:inputType="text" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -124,9 +129,7 @@
             android:id="@+id/review_layout_examAll"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_marginStart="18dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="18dp"
             android:layout_marginBottom="150dp"
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -138,8 +141,10 @@
                 android:id="@+id/review_layout_exam1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/review_relation_rounded"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/review_layout_exam3"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -154,7 +159,9 @@
                     android:gravity="center"
                     android:text=""
                     android:visibility="visible"
-                    app:layout_constraintHorizontal_chainStyle="spread" />
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -174,8 +181,8 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/review_relation_rounded"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/review_layout_exam3"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/review_layout_exam4"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/review_layout_exam1"
                 app:layout_constraintRight_toRightOf="parent"
@@ -190,7 +197,9 @@
                     android:text=""
                     android:visibility="visible"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintHorizontal_weight="1" />
+                    app:layout_constraintHorizontal_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -210,7 +219,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/review_relation_rounded"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -226,7 +235,9 @@
                     android:text=""
                     android:visibility="visible"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintHorizontal_weight="1" />
+                    app:layout_constraintHorizontal_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -245,13 +256,15 @@
                 android:id="@+id/review_layout_exam4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/review_relation_rounded"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/review_layout_exam3"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/review_layout_exam1"
+                app:layout_constraintTop_toBottomOf="@id/review_layout_exam2"
                 app:layout_constraintVertical_weight="1">
 
                 <TextView
@@ -262,7 +275,9 @@
                     android:text=""
                     android:visibility="visible"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintHorizontal_weight="1" />
+                    app:layout_constraintHorizontal_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -313,20 +328,26 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <androidx.gridlayout.widget.GridLayout
-                    android:id="@+id/review_gridLayout_exam"
-                    style="@style/textExamTheme"
+                <LinearLayout
+                    android:id="@+id/review_scroll_linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contextClickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    app:columnCount="3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"></androidx.gridlayout.widget.GridLayout>
+                    android:orientation="vertical">
+
+                </LinearLayout>
+                <!--<androidx.gridlayout.widget.GridLayout-->
+                    <!--android:id="@+id/review_gridLayout_exam"-->
+                    <!--style="@style/textExamTheme"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:contextClickable="true"-->
+                    <!--android:focusable="true"-->
+                    <!--android:focusableInTouchMode="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:visibility="visible"-->
+                    <!--app:columnCount="3"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/review_layout_keyword"/>-->
 
             </HorizontalScrollView>
 
