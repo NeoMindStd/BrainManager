@@ -172,7 +172,7 @@ public class ReviewActivity extends AppCompatActivity{
             ArrayList<Integer> relationList;
             int pos = 0;
             for(Keyword key : mTargetKeywords){
-                if(pos == mTargetKeywords.size()) break;
+                if(pos == mKeywordsSize) break;
                 ckList.add(key.id);
                 relationList = key.getRelationIds();
                 for(int rid : relationList){
@@ -273,7 +273,7 @@ public class ReviewActivity extends AppCompatActivity{
 
                 examStartTime = System.currentTimeMillis(); //문제의 시작시간을 저장
                 return 1;
-            } else if (r == 2 && mKeywordsSize > 1) {
+            } else if (r == 2 && allKeySize > 1) {
                 keywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
                 ((TextView) keywordLayout.getChildAt(0)).setText(key.name);
                 examAllLayout.setVisibility(View.VISIBLE);
