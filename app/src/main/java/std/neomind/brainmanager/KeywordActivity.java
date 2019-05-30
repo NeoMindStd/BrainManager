@@ -216,13 +216,13 @@ public class KeywordActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.keyword_button_addDescription:
                 new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.MainActivity_addCategory))
+                        .setTitle(getString(R.string.KeywordActivity_addDescription))
                         .setView(editText)
                         .setPositiveButton(getString(R.string.Global_confirm),
                                 (dialog, which) -> {
                                     Description description = new Description();
                                     description.description = editText.getText().toString();
-                                    if (keywordID != -1) {
+                                    if (keywordID != Keyword.NOT_REGISTERED) {
                                         mBrainDBHandler.addDescription(description, keywordID);
                                         mKeyword.setDescriptions(
                                                 mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
@@ -241,12 +241,12 @@ public class KeywordActivity extends AppCompatActivity {
                     editText.setText(description.toString());
                     editText.setSelection(description.toString().length());
                     new AlertDialog.Builder(this)
-                            .setTitle(getString(R.string.MainActivity_addCategory))
+                            .setTitle(getString(R.string.KeywordActivity_updateDescription))
                             .setView(editText)
                             .setPositiveButton(getString(R.string.Global_confirm),
                                     (dialog, which) -> {
                                         description.description = editText.getText().toString();
-                                        if (keywordID != -1) {
+                                        if (keywordID != Keyword.NOT_REGISTERED) {
                                             mBrainDBHandler.updateDescription(description, keywordID);
                                             mKeyword.setDescriptions(
                                                     mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
@@ -259,7 +259,7 @@ public class KeywordActivity extends AppCompatActivity {
                 break;
             case R.id.keyword_button_deleteDescription:
                 if (!mKeyword.getDescriptions().isEmpty()) {
-                    if (keywordID != -1) {
+                    if (keywordID != Keyword.NOT_REGISTERED) {
                         mBrainDBHandler.removeDescription(
                                 mKeyword.getDescriptions().get(
                                         mDescriptionSpinner.getSelectedItemPosition()).id);

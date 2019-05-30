@@ -1,35 +1,45 @@
 package std.neomind.brainmanager;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.BrainDBHandler;
-import std.neomind.brainmanager.utils.CategoryRecyclerAdapter;
 
 public class CategoryActivity extends AppCompatActivity {
     private static final String TAG = "CategoryActivity";
@@ -216,4 +226,125 @@ public class CategoryActivity extends AppCompatActivity {
         }
         return false;
     };
+
+    public static class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.KeywordViewHolder> {
+
+        private static final String TAG = "CategoryRecyclerAdapter";
+
+        private Activity mActivity;
+        private ArrayList<Keyword> mKeywords;
+
+        public CategoryRecyclerAdapter(Activity activity, ArrayList<Keyword> keywords) {
+            mActivity = activity;
+            mKeywords = keywords;
+        }
+
+        @NonNull
+        @Override
+        public KeywordViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            View view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.category_keyword_item, viewGroup, false);
+            KeywordViewHolder keywordViewHolder = new KeywordViewHolder(view);
+            return keywordViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull KeywordViewHolder keywordViewHolder, int i) {
+            keywordViewHolder.build(i);
+        }
+
+        @Override
+        public int getItemCount() {
+            try {
+                return mKeywords.size();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+
+        class KeywordViewHolder extends RecyclerView.ViewHolder implements AnimateViewHolder {
+            /**
+             * @param itemView is convertView
+             */
+
+            CircularImageView imageView;
+            TextView textView;
+
+            KeywordViewHolder(@NonNull View itemView) {
+                super(itemView);
+                Log.d(TAG, "KeywordViewHolder: itemView : " + itemView);
+                imageView = itemView.findViewById(R.id.category_item_circularImage_keyword);
+                textView = itemView.findViewById(R.id.category_item_textView_keyword);
+            }
+
+            public void build(int i) {
+                mKeywords.get(i).setCardView((CardView)itemView);
+
+                itemView.setOnClickListener(new ItemClickListener(i));
+
+                Glide.with(mActivity.getBaseContext())
+                        .load(mKeywords.get(i).imagePath)
+                        .into(imageView);
+                textView.setText(mKeywords.get(i).name);
+            }
+
+            public void removeItem() {
+                mKeywords.remove(getAdapterPosition());
+                notifyItemRemoved(getAdapterPosition());
+            }
+
+            public void removeItem(int i) {
+                mKeywords.remove(i);
+                notifyItemRemoved(i);
+            }
+
+            @Override
+            public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+                ViewCompat.setTranslationY(itemView, -itemView.getHeight() * 0.3f);
+                ViewCompat.setAlpha(itemView, 0f);
+            }
+
+            @Override
+            public void preAnimateRemoveImpl(RecyclerView.ViewHolder holder) {
+
+            }
+
+            @Override
+            public void animateAddImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+                ViewCompat.animate(itemView).
+                        translationY(0f)
+                        .alpha(1f)
+                        .setDuration(300)
+                        .setListener(listener)
+                        .start();
+            }
+
+            @Override
+            public void animateRemoveImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+                ViewCompat.animate(itemView).
+                        translationY(-itemView.getHeight() * 0.3f)
+                        .alpha(0f)
+                        .setDuration(300)
+                        .setListener(listener)
+                        .start();
+            }
+        }
+
+        private class ItemClickListener implements View.OnClickListener {
+            private int mPosition;
+
+            private ItemClickListener(int position) {
+                this.mPosition = position;
+            }
+
+            @Override
+            public void onClick(View v) {
+                Keyword keyword = mKeywords.get(mPosition);
+                keyword.setSelected(!keyword.isSelected());
+
+                keyword.getCardView().findViewById(R.id.imageViewSelectedMask).
+                        setVisibility(keyword.isSelected() ? View.VISIBLE : View.GONE);
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.utils.notification;
+package std.neomind.brainmanager.utils;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

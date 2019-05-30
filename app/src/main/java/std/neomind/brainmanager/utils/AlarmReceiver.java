@@ -1,4 +1,4 @@
-package std.neomind.brainmanager.utils.notification;
+package std.neomind.brainmanager.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import std.neomind.brainmanager.R;
-import std.neomind.brainmanager.utils.BrainSerialDataIO;
 
 public class AlarmReceiver extends BroadcastReceiver{
     static public final String TAG = "AlarmReceiver";

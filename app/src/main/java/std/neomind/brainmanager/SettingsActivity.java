@@ -20,7 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import std.neomind.brainmanager.utils.notification.NotificationReceiver;
+import std.neomind.brainmanager.utils.NotificationReceiver;
 
 public class SettingsActivity extends AppCompatActivity {
 

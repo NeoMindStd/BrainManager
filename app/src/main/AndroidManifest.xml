@@ -67,9 +67,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name=".utils.notification.NotificationReceiver">
+            android:name=".utils.NotificationReceiver">
         </receiver>
-        <receiver android:name=".utils.notification.AlarmReceiver"
+        <receiver android:name=".utils.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

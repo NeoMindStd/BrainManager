@@ -38,7 +38,7 @@ import com.google.android.material.snackbar.Snackbar;
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Test;
 import std.neomind.brainmanager.utils.BrainSerialDataIO;
-import std.neomind.brainmanager.utils.notification.AlarmReceiver;
+import std.neomind.brainmanager.utils.AlarmReceiver;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
