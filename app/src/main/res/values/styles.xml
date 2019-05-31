@@ -18,7 +18,7 @@
     </style>
 
     <style name="keywordTheme">
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">40sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/BLACK</item>
     </style>
