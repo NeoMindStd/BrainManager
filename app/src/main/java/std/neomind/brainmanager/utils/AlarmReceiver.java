@@ -64,6 +64,21 @@ public class AlarmReceiver extends BroadcastReceiver{
                 Log.d(TAG, "getExtras 에서 오류 발생");
                 return;
             }
+            long diffDate = date - System.currentTimeMillis()+1000;
+            long diffMinute = diffDate % (1000*60*60*24) / (1000*60);
+            long diffHour = diffDate % (1000*60*60*24) / (1000*60*60);
+            long diffDay = diffDate / (1000*60*60*24);
+
+            String tempDateText = "";
+            if(diffDay > 0)
+                tempDateText += diffDay + context.getString(R.string.Global_Day) + " ";
+            if(diffHour > 0)
+                tempDateText += diffHour + context.getString(R.string.Global_Hour) + " ";
+            if(diffMinute > 0)
+                tempDateText += diffMinute + context.getString(R.string.Global_Minute) + " ";
+
+            Toast.makeText(context.getApplicationContext(), String.format(context.getString(R.string.AlarmReceiver_date_toast), tempDateText), Toast.LENGTH_LONG).show();
+
             if(date != Long.MIN_VALUE) {
                 Intent localIntent = new Intent(context, NotificationReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, localIntent, 0);
