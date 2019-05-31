@@ -928,7 +928,7 @@ public class ReviewActivity extends AppCompatActivity{
             nextButton.setOnClickListener(null);
             //텍스트 시험 초기화
             if(textExamLayout != null)
-                    textExamLayout.removeAllViews();
+                textExamLayout.removeAllViews();
             if(++currentmKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(currentmKeyIndex));
             else{
                 finish();
