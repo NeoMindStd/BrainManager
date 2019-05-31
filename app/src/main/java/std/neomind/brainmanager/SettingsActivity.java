@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,6 +73,10 @@ public class SettingsActivity extends AppCompatActivity {
         LineData data = new LineData(dataSets);
 
         mChart.setData(data);
+
+        CheckBox checkBox = (CheckBox) findViewById(R.id.check1) ;
+
+        checkBox.setChecked(true) ;
 
         findViewById(R.id.settings_textView_privacyPolicy).setOnClickListener(view -> {
             Intent intent = new Intent(this, WebViewActivity.class);
