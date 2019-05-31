@@ -36,6 +36,7 @@ dependencies {
     // google support, androidx
     implementation 'androidx.cardview:cardview:1.0.0-beta01'
     implementation 'androidx.recyclerview:recyclerview:1.0.0-beta01'
+    implementation 'com.google.android:flexbox:1.1.0'
     // others
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'

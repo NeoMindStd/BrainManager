@@ -21,7 +21,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         final AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         /**
-         * 폰 재시작 할때 서비스 등록
+         * 폰 재시작 할때 브로드캐스트 등록
          */
         if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())){
             Log.i("RestartService" , "ACTION_BOOT_COMPLETED" );

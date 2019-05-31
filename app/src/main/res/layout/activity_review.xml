@@ -48,8 +48,6 @@
             android:id="@+id/review_text_scroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/review_relation_edge"
-            android:gravity="center"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_percent="0.9"
@@ -58,12 +56,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
             app:layout_constraintWidth_percent="0.9">
-
-            <TextView
-                android:id="@+id/review_text_view"
-                style="@style/textExamTheme"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:id="@+id/review_linear_layout"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
+                <TextView
+                    android:id="@+id/review_text_view"
+                    style="@style/textExamTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/review_relation_round_small" />
+            </LinearLayout>
+
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
