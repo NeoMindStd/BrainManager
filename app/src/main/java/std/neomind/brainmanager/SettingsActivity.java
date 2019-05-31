@@ -4,8 +4,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,16 +27,21 @@ import std.neomind.brainmanager.utils.NotificationReceiver;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private SharedPreferences mPref;
+
     private LineChart mChart;
-    RadioGroup rg = null;
+    private RadioGroup rg;
+    private CheckBox mNightModeCheckBox;
+    private CheckBox mDeleteModeCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        mPref = getSharedPreferences(getString(R.string.SharedPreferencesName), MODE_PRIVATE);
+
         rg = findViewById(R.id.radioGroup);
-        rg.setOnCheckedChangeListener(m);
 
         mChart = findViewById(R.id.settings_chart);
 
@@ -73,6 +81,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         mChart.setData(data);
 
+        mNightModeCheckBox = findViewById(R.id.settings_checkBox_nightMode) ;
+        mDeleteModeCheckBox = findViewById(R.id.settings_checkBox_deleteOriginalImage) ;
+
         findViewById(R.id.settings_textView_privacyPolicy).setOnClickListener(view -> {
             Intent intent = new Intent(this, WebViewActivity.class);
             String str = getResources().getString(R.string.SettingsActivity_privacyPolicy);
@@ -81,6 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
             intent.putExtra(WebViewActivity.EXTRAS_URL, getResources().getString(R.string.SettingsActivity_privacyPolicyURL));
             startActivity(intent);
         });
+
         findViewById(R.id.settings_textView_license).setOnClickListener(view -> {
             Intent intent = new Intent(this, WebViewActivity.class);
             String str = getResources().getString(R.string.SettingsActivity_openSourceLibraries);
@@ -90,10 +102,37 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-    RadioGroup.OnCheckedChangeListener m = (group, checkedId) -> {
-        switch (checkedId) {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadPref();
+    }
+
+    private void loadPref() {
+        rg.check(rg.getChildAt(mPref.getInt(getString(R.string.
+                SharedPreferences_learningType), 0)).getId());
+
+        mNightModeCheckBox.setChecked(mPref.getBoolean(getString(R.string.
+                SharedPreferences_nightMode), true)) ;
+        mDeleteModeCheckBox.setChecked(mPref.getBoolean(getString(R.string.
+                SharedPreferences_deleteOriginalImage), false));
+    }
+
+    @Override
+    protected void onPause() {
+        applyLearningType(rg.getCheckedRadioButtonId());
+
+        savePref();
+
+        super.onPause();
+    }
+
+    private void applyLearningType(int radioButtonId) {
+        switch(radioButtonId) {
             case R.id.settings_radioButton_banner:
-                new SettingsActivity.AlarmHATT(getApplicationContext()).Alarm();
+                new SettingsActivity.AlarmHATT().Alarm();
                 break;
 
             case R.id.settings_radioButton_notification:
@@ -101,14 +140,23 @@ public class SettingsActivity extends AppCompatActivity {
 //                    startActivity(intent2);
                 break;
         }
-    };
+    }
 
-    public class AlarmHATT {
-        private Context context;
+    private void savePref() {
+        SharedPreferences.Editor editor = mPref.edit();
 
-        public AlarmHATT(Context context) {
-            this.context = context;
-        }
+
+        editor.putInt(getString(R.string.
+                SharedPreferences_learningType), rg.indexOfChild(findViewById(rg.getCheckedRadioButtonId())));
+        editor.putBoolean(getString(R.string.
+                SharedPreferences_nightMode), mNightModeCheckBox.isChecked());
+        editor.putBoolean(getString(R.string.
+                SharedPreferences_deleteOriginalImage), mDeleteModeCheckBox.isChecked());
+
+        editor.apply();
+    }
+
+    private class AlarmHATT {
 
         public void Alarm() {
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

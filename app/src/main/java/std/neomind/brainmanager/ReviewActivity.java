@@ -660,9 +660,8 @@ public class ReviewActivity extends AppCompatActivity{
         if(answerTime < 10000 && passed) rating = 5;        //반응이 즉각적인 맞는 응답.
         else if(answerTime < 30000 && passed) rating = 4;   //반응이 느린 맞는 응답
         else if(passed) rating = 3;   //반응이 심각히 느린 맞는 응답
-        else if(answerTime > 5000 && answerTime < 10000 && !passed) rating = 2;             //빨리 풀었지만 오답. 너무 빨리풀었는데 오답인경우 그냥 찍은걸로 치부
-        else if(!passed) rating = 0;                                    //완전히 잊음
-        else rating = 0;
+        else if(answerTime > 5000 && answerTime < 10000) rating = 2;             //빨리 풀었지만 오답. 너무 빨리풀었는데 오답인경우 그냥 찍은걸로 치부
+        else rating = 0;    //완전히 잊음
 
 
 
@@ -690,17 +689,27 @@ public class ReviewActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
             key.currentLevels = 0;
         }
-        if(rating < 2)
+        if(rating < 3)
             key.currentLevels = 0;
         key.ef = ef;
 
         key.reviewTimes++;
         if(key.currentLevels == 0) {
+            if(key.reviewTimes > 0 && reviewList.indexOf(key.id) != -1) {
+                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
+                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+                if (diffInterval < 0) {
+                    key.currentLevels++;
+                    key.interval = (int) (20 * relation);
+                    return examEndTime + (key.interval * 60000);
+                }
+                return correctReviewDate;
+            }
             key.currentLevels++;
-            key.interval = (int)(20 * relation);
-            return (long)(examEndTime+(key.interval*60000));
+            key.interval = (int) (20 * relation);
+            return examEndTime + (key.interval * 60000);
         }
-        else if(key.currentLevels == 1) {
+        else if(key.currentLevels == 1 && reviewList.indexOf(key.id) != -1) {
             correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
             diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
 
@@ -711,7 +720,7 @@ public class ReviewActivity extends AppCompatActivity{
             }
             return correctReviewDate;
         }
-        else if(key.currentLevels == 2){
+        else if(key.currentLevels == 2 && reviewList.indexOf(key.id) != -1){
             correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
             diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
 
@@ -722,7 +731,7 @@ public class ReviewActivity extends AppCompatActivity{
             }
             return correctReviewDate;
         }
-        else{
+        else if(reviewList.indexOf(key.id) != -1){
             correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
             diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
 
@@ -733,6 +742,9 @@ public class ReviewActivity extends AppCompatActivity{
                 return examEndTime + nextInterval*60000;
             }
             return correctReviewDate;
+        }
+        else{   //오류 발생한거임. 의도치 않은 동작
+            return Long.MIN_VALUE;
         }
     }
 
@@ -858,40 +870,39 @@ public class ReviewActivity extends AppCompatActivity{
 
             long nextReviewTime = getReviewTime(key, answerTime, passed);
 
-            if(!reviewList.isEmpty() && !reviewDateList.isEmpty()){
-                int temp = reviewList.indexOf(key.id);
-                if(temp == -1){ //-1은 해당 원소가 reviewList에 없을 때 반환된다
+            if(nextReviewTime != Long.MIN_VALUE) {
+                if (!reviewList.isEmpty() && !reviewDateList.isEmpty()) {
+                    int temp = reviewList.indexOf(key.id);
+                    if (temp == -1) { //-1은 해당 원소가 reviewList에 없을 때 반환된다
+                        reviewList.add(key.id);
+                        reviewDateList.add(nextReviewTime);
+                    } else {   //만약 있다면 examStartTime보다 작을 경우 복습이 됐다는 의미이므로 리스트에 해당 알림시간을 삭제하고 새로운 복습시간을 할당한다.
+                        if (reviewDateList.get(temp) < examStartTime) {
+                            reviewList.remove(temp);
+                            reviewDateList.remove(temp);
+                            reviewList.add(key.id);
+                            reviewDateList.add(nextReviewTime);
+                        }
+                        //클경우엔 알림을 그대로 둔다.
+                    }
+                } else {   //만약 비었다면 새롭게 추가한다.
                     reviewList.add(key.id);
                     reviewDateList.add(nextReviewTime);
                 }
-                else{   //만약 있다면 examStartTime보다 작을 경우 복습이 됐다는 의미이므로 리스트에 해당 알림시간을 삭제하고 새로운 복습시간을 할당한다.
-                    if(reviewDateList.get(temp) < examStartTime) {
-                        reviewList.remove(temp);
-                        reviewDateList.remove(temp);
-                        reviewList.add(key.id);
-                        reviewDateList.add(nextReviewTime);
-                    }
-                    //클경우엔 알림을 그대로 둔다.
+                /** 객체 저장 **/
+                try {
+                    BrainSerialDataIO.saveNextReivewTimeInfo(mContext, reviewList, reviewDateList);
+                } catch (BrainSerialDataIO.SaveFailException e) {
+                    e.printStackTrace();
+                } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                    e.printStackTrace();
                 }
+                Intent intent = new Intent(mContext, AlarmReceiver.class);
+                intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
+                sendBroadcast(intent);
+            }else{
+                Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
             }
-            else{   //만약 비었다면 새롭게 추가한다.
-                reviewList.add(key.id);
-                reviewDateList.add(nextReviewTime);
-            }
-
-            /** 객체 저장 **/
-            try {
-                BrainSerialDataIO.saveNextReivewTimeInfo(mContext, reviewList, reviewDateList);
-            } catch (BrainSerialDataIO.SaveFailException e) {
-                e.printStackTrace();
-            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
-                e.printStackTrace();
-            }
-
-            Intent intent = new Intent(mContext, AlarmReceiver.class);
-            intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
-            sendBroadcast(intent);
-
 
             BrainDBHandler dbHandler = new BrainDBHandler(ReviewActivity.this);
             dbHandler.updateKeyword(key);

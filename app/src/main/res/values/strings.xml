@@ -12,6 +12,15 @@
     <string name="Global_updated">Keyword changed.</string>
     <string name="Global_canceled">Canceled</string>
     <string name="Global_OK">OK</string>
+    <string name="Global_Day">day</string>
+    <string name="Global_Hour">hour</string>
+    <string name="Global_Minute">minute</string>
+    <string name="Global_s">s</string>
+
+    <string name="SharedPreferencesName" translatable="false">BrainManagerSettings</string>
+    <string name="SharedPreferences_learningType" translatable="false">Learning Type</string>
+    <string name="SharedPreferences_nightMode" translatable="false">Night Mode</string>
+    <string name="SharedPreferences_deleteOriginalImage" translatable="false">Delete Original Image</string>
 
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
@@ -81,6 +90,7 @@
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
     <string name="AlarmReceiver_Error">Alarm setting: Error Occur</string>
+    <string name="AlarmReceiver_date_toast">Next Review Alarm : %1$slater.</string>
 
     <string name="Notification_title">Brain Manager</string>
     <string name="Notification_text">STUDY TIME</string>

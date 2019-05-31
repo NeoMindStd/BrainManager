@@ -12,6 +12,10 @@
     <string name="Global_updated">변경되었습니다.</string>
     <string name="Global_canceled">취소되었습니다.</string>
     <string name="Global_OK">확인</string>
+    <string name="Global_Day">일</string>
+    <string name="Global_Hour">시간</string>
+    <string name="Global_Minute">분</string>
+    <string name="Global_s" />
 
     <string name="Label_review">복습</string>
     <string name="Label_statistics">통계</string>
@@ -81,6 +85,7 @@
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
 
     <string name="AlarmReceiver_Error">알람 생성에 실패했습니다.</string>
+    <string name="AlarmReceiver_date_toast">다음 복습 알람을 %1$s뒤로 설정했습니다.</string>
 
     <string name="Notification_title">브레인 매니저</string>
     <string name="Notification_text">복습할 시간이에요</string>
