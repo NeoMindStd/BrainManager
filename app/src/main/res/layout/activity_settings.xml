@@ -89,10 +89,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/SettingsActivity_setNightMode"
-            android:layout_marginTop="5dp"/>/>
+            android:layout_marginTop="5dp"
+            android:text="@string/SettingsActivity_setNightMode" />/>
 
         <CheckBox
+            android:id="@+id/check1"
             android:layout_width="match_parent"
             android:layout_height="63dp"
             android:layout_weight="1"
@@ -100,21 +101,37 @@
             android:text="@string/SettingsActivity_nightModeDescription" />
 
 
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:layout_height="55dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="원본이미지 삭제" />/>
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/side_line"
+            android:text="선택시 원본이미지를 삭제합니다."/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
 
             <ImageView
@@ -127,6 +144,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/SettingsActivity_appInfo" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -138,13 +156,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_margin="10dp"
                 android:ems="10"
                 android:text="@string/SettingsActivity_privacyPolicy" />
 
             <TextView
                 android:id="@+id/settings_textView_license"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="362dp"
+                android:layout_height="99dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:text="@string/SettingsActivity_openSourceLibraries" />
