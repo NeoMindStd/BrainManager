@@ -17,6 +17,11 @@
     <string name="Global_Minute">minute</string>
     <string name="Global_s">s</string>
 
+    <string name="SharedPreferencesName" translatable="false">BrainManagerSettings</string>
+    <string name="SharedPreferences_learningType" translatable="false">Learning Type</string>
+    <string name="SharedPreferences_nightMode" translatable="false">Night Mode</string>
+    <string name="SharedPreferences_deleteOriginalImage" translatable="false">Delete Original Image</string>
+
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
     <string name="Label_relation">Set Relations</string>
