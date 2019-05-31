@@ -660,9 +660,8 @@ public class ReviewActivity extends AppCompatActivity{
         if(answerTime < 10000 && passed) rating = 5;        //반응이 즉각적인 맞는 응답.
         else if(answerTime < 30000 && passed) rating = 4;   //반응이 느린 맞는 응답
         else if(passed) rating = 3;   //반응이 심각히 느린 맞는 응답
-        else if(answerTime > 5000 && answerTime < 10000 && !passed) rating = 2;             //빨리 풀었지만 오답. 너무 빨리풀었는데 오답인경우 그냥 찍은걸로 치부
-        else if(!passed) rating = 0;                                    //완전히 잊음
-        else rating = 0;
+        else if(answerTime > 5000 && answerTime < 10000) rating = 2;             //빨리 풀었지만 오답. 너무 빨리풀었는데 오답인경우 그냥 찍은걸로 치부
+        else rating = 0;    //완전히 잊음
 
 
 
@@ -690,7 +689,7 @@ public class ReviewActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "errors occur", Toast.LENGTH_LONG).show();
             key.currentLevels = 0;
         }
-        if(rating < 2)
+        if(rating < 3)
             key.currentLevels = 0;
         key.ef = ef;
 

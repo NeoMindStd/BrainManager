@@ -65,8 +65,8 @@ public class AlarmReceiver extends BroadcastReceiver{
                 return;
             }
             long diffDate = date - System.currentTimeMillis()+1000;
-            long diffMinute = diffDate % (1000*60*60*24) / (1000*60);
-            long diffHour = diffDate % (1000*60*60*24) / (1000*60*60);
+            long diffMinute = diffDate % (1000*60*60*24) / (1000*60) % 60;
+            long diffHour = diffDate % (1000*60*60*24) / (1000*60*60) % 24;
             long diffDay = diffDate / (1000*60*60*24);
 
             String tempDateText = "";
