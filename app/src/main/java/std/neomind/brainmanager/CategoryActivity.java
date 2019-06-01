@@ -288,16 +288,6 @@ public class CategoryActivity extends AppCompatActivity {
                 textView.setText(mKeywords.get(i).name);
             }
 
-            public void removeItem() {
-                mKeywords.remove(getAdapterPosition());
-                notifyItemRemoved(getAdapterPosition());
-            }
-
-            public void removeItem(int i) {
-                mKeywords.remove(i);
-                notifyItemRemoved(i);
-            }
-
             @Override
             public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
                 ViewCompat.setTranslationY(itemView, -itemView.getHeight() * 0.3f);

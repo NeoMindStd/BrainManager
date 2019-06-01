@@ -15,7 +15,7 @@
     <string name="Global_Day">day</string>
     <string name="Global_Hour">hour</string>
     <string name="Global_Minute">minute</string>
-    <string name="Global_s">s</string>
+    <string name="Global_errorOccurred">Error occurred</string>
 
     <string name="SharedPreferencesName" translatable="false">BrainManagerSettings</string>
     <string name="SharedPreferences_learningType" translatable="false">Learning Type</string>
@@ -84,7 +84,7 @@
     <string name="ReviewActivity_noKeyword">There\'s no keywords</string>
     <string name="ReviewActivity_lastKeyword">Last Keyword of List</string>
     <string name="ReviewActivity_correct">Correct!!!</string>
-    <string name="ReviewActivity_wrong">Wrong\.\.\. Thats OK</string>
+    <string name="ReviewActivity_wrong">Wrong... That\'s OK</string>
 
     <string name="RelationActivity_error"> errors occurred</string>
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
@@ -95,17 +95,27 @@
     <string name="Notification_title">Brain Manager</string>
     <string name="Notification_text">STUDY TIME</string>
 
-    <string name="Statistics_forgettingCurve">Forgetting curve</string>
-
+    <string name="SettingsActivity_forgettingCurve">Forgetting curve</string>
     <string name="SettingsActivity_reviewType">Review type</string>
     <string name="SettingsActivity_push">Push notification</string>
     <string name="SettingsActivity_lockScreen">Lock screen</string>
     <string name="SettingsActivity_alarm">Alarm</string>
     <string name="SettingsActivity_setNightMode">Set night mode</string>
-    <string name="SettingsActivity_nightModeDescription">(sound off when 11:00pm~08:00am)</string>
+    <string name="SettingsActivity_nightModeDescription">sound off when 11:00pm~08:00am</string>
+    <string name="SettingsActivity_setDeleteOriginalMode">Delete original image</string>
+    <string name="SettingsActivity_deleteOriginalModeDescription">When registering images, delete the original image</string>
     <string name="SettingsActivity_appInfo">App Info</string>
     <string name="SettingsActivity_privacyPolicy"> Personal Information Processing Policy \n- Provides information about the personal information life cycle such as the type, utilization, sharing, and destruction of user\'s personal information modified by this application. \n</string>
     <string name="SettingsActivity_privacyPolicyURL" translatable="false">https://neomindstd.github.io/app_docs/privacy_policies/BrainManager</string>
     <string name="SettingsActivity_openSourceLibraries"> API License \n- Displays the license information of the API used in this application. \n</string>
     <string name="SettingsActivity_openSourceLibrariesURL" translatable="false">https://neomindstd.github.io/app_docs/opensrc_libraries/BrainManager</string>
+
+    <string name="StatisticsActivity_chooseOne">Choose One</string>
+    <string name="StatisticsActivity_recent15">Recent 15days</string>
+    <string name="StatisticsActivity_recent30">Recent 30days</string>
+    <string name="StatisticsActivity_label" translatable="false">goal</string>
+    <string name="StatisticsActivity_percentCorrect">Percent correct</string>
+    <string name="StatisticsActivity_problemSolvingSpeed">Problem solving speed</string>
+    <string name="StatisticsActivity_setTargetCorrectAnswerRate">Set target correct answer rate</string>
+    <string name="StatisticsActivity_setTargetTime">Set target time</string>
 </resources>

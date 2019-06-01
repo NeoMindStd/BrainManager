@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 import std.neomind.brainmanager.data.Category;
-import std.neomind.brainmanager.data.Test;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
@@ -69,10 +67,8 @@ public class RelationActivity extends AppCompatActivity
     private ArrayList<Keyword> tempKeywords;
 
     private TextView rKeywordText;
-    private int currentrKeyIndex = 0;
-    private int rKeywordsSize;
+    private int currentRKeyIndex = 0;
     private Keyword currentKeyword;
-    private Test currentTest;
 
     private Spinner rSpinner;
 
@@ -162,13 +158,13 @@ public class RelationActivity extends AppCompatActivity
 
             return compareResult;
         });
-        if(currentrKeyIndex == rTargetKeywords.size()){
+        if(currentRKeyIndex == rTargetKeywords.size()){
             finish();
             return;
         }
-        currentKeyword = rTargetKeywords.get(currentrKeyIndex);
+        currentKeyword = rTargetKeywords.get(currentRKeyIndex);
         while(currentKeyword.name.equals("")){
-            currentKeyword = rTargetKeywords.get(++currentrKeyIndex);
+            currentKeyword = rTargetKeywords.get(++currentRKeyIndex);
         }
     }
 
@@ -204,12 +200,8 @@ public class RelationActivity extends AppCompatActivity
                 Toast.makeText(this, exCount + getString(R.string.RelationActivity_error), Toast.LENGTH_LONG).show();
             }
             Snackbar.make(view, relationCount + getString(R.string.RelationActivity_relationAdd), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.Global_OK), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v){
-                        }
-                    }).show();
-            currentrKeyIndex++;
+                    .setAction(getString(R.string.Global_OK), v -> {}).show();
+            currentRKeyIndex++;
             generate_recycler();
         });
     }
@@ -221,29 +213,6 @@ public class RelationActivity extends AppCompatActivity
         refresh();
     }
 
-    /**
-     * Intent.putExtra 를 통해 정보를 얻으면 사용하면 됨
-     * 원래는 사용자가 키워드 하나만 얻어오는줄 알았는데 모든키워드 로드하네
-     * 필요없으면 지우삼삼
-     * @return 어떤 키워드를 선택했는지 id를 얻어 해당 키워드 얻은 후 리턴
-     */
-    private Keyword loadKeyword() {
-        Bundle intentBundle = getIntent().getExtras();
-        assert intentBundle != null;
-        int id = intentBundle.getInt(INTENT_KEYWORD_ID, Keyword.NOT_REGISTERED);
-        BrainDBHandler brainDBHandler = new BrainDBHandler(this);
-        Keyword loadedKeyword = null;
-        try {
-            loadedKeyword = brainDBHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, id);
-        } catch (BrainDBHandler.NoMatchingDataException e) {
-            e.printStackTrace();
-            onBackPressed();
-        }
-        return loadedKeyword;
-    }
-
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -254,7 +223,7 @@ public class RelationActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        currentrKeyIndex = 0;
+        currentRKeyIndex = 0;
         super.onBackPressed();
     }
 
@@ -275,19 +244,17 @@ public class RelationActivity extends AppCompatActivity
 
         MenuItem switchItem = menu.findItem(R.id.relation_action_switch);
         Switch switchWiget = switchItem.getActionView().findViewById(R.id.switchForActionBar);
-        switchWiget.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
-                if(isChecked){
-                    rGridRecyclerView.setVisibility(View.GONE);
-                    rListRecyclerView.setVisibility(View.VISIBLE);
+        switchWiget.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                rGridRecyclerView.setVisibility(View.GONE);
+                rListRecyclerView.setVisibility(View.VISIBLE);
 
-                }else{
-                    rGridRecyclerView.setVisibility(View.VISIBLE);
-                    rListRecyclerView.setVisibility(View.GONE);
-                }
-                setTargetKeywords();
-                initRecyclerView();
+            } else{
+                rGridRecyclerView.setVisibility(View.VISIBLE);
+                rListRecyclerView.setVisibility(View.GONE);
             }
+            setTargetKeywords();
+            initRecyclerView();
         });
         return true;
     }
@@ -297,28 +264,6 @@ public class RelationActivity extends AppCompatActivity
         Log.d(TAG, "onMenuItemClick: textView :" + item);
         return false;
     }
-
-    private static Keyword mRequestImageReceiver;
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        try {
-//            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && null != data) {
-//                ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
-//                String[] imagePath = new String[images.size()];
-//                for (int i = 0; i < images.size(); i++) imagePath[i] = images.get(i).getPath();
-//
-//                if (imagePath.length > 0) {
-//                    mRequestImageReceiver.imagePath = imagePath[0];
-//                    mBrainDBHandler.updateKeyword(mRequestImageReceiver);
-//                    refresh();
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 
     private void loadPref() {
 
@@ -479,7 +424,8 @@ public class RelationActivity extends AppCompatActivity
         //    }
         @Override
         public RelationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.review_relation_keyword_list, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).
+                    inflate(R.layout.review_relation_keyword_list, viewGroup, false);
 
             RelationViewHolder viewHolder = new RelationViewHolder(view);
 
@@ -511,13 +457,16 @@ public class RelationActivity extends AppCompatActivity
                 }
                 if (ck_rel) {
                     currentItemKey.setSelected(true);
-                    viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_blue_edge));
+                    viewHolder.textView.setBackground(ContextCompat.
+                            getDrawable(rContext, R.drawable.review_relation_blue_edge));
                 } else {
-                    viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
+                    viewHolder.textView.setBackground(ContextCompat.
+                            getDrawable(rContext, R.drawable.review_relation_edge));
                 }
             }
             else{
-                viewHolder.textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_gray_edge));
+                viewHolder.textView.setBackground(ContextCompat.
+                        getDrawable(rContext, R.drawable.review_relation_gray_edge));
             }
         }
         @Override
@@ -719,16 +668,6 @@ public class RelationActivity extends AppCompatActivity
                 textView.setText(mKeywords.get(i).name);
             }
 
-            public void removeItem() {
-                mKeywords.remove(getAdapterPosition());
-                notifyItemRemoved(getAdapterPosition());
-            }
-
-            public void removeItem(int i) {
-                mKeywords.remove(i);
-                notifyItemRemoved(i);
-            }
-
             @Override
             public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
                 ViewCompat.setTranslationY(itemView, -itemView.getHeight() * 0.3f);
@@ -781,7 +720,8 @@ public class RelationActivity extends AppCompatActivity
                         dbHandler.addRelation(mSelectK.id, mKeywords.get(mPosition).id);
                     }
                     catch(BrainDBHandler.DataDuplicationException e){
-                        Toast.makeText(mActivity, "오류가 발생했습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mActivity, mActivity.
+                                getString(R.string.Global_errorOccurred), Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                     v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));

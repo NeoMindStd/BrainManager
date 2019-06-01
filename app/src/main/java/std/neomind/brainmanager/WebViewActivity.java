@@ -30,13 +30,13 @@ public class WebViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         // Toolbar
-        toolbarPrivacyPolicy = findViewById(R.id.toolbarWebView);
+        toolbarPrivacyPolicy = findViewById(R.id.webView_toolbar);
         setSupportActionBar(toolbarPrivacyPolicy);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(intent.getStringExtra(EXTRAS_TITLE));
 
         // Web View
-        webView = findViewById(R.id.webView);
+        webView = findViewById(R.id.webView_webView);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(intent.getStringExtra(EXTRAS_URL));
     }
