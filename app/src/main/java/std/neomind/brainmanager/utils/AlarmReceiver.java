@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import std.neomind.brainmanager.R;
 
@@ -16,6 +17,7 @@ public final class AlarmReceiver extends BroadcastReceiver{
     private static final String TAG = "AlarmReceiver";
 
     public static final String EXTRAS_KEY_REVIEW_DATE = "keywordReviewDate";
+    public static final String EXTRAS_MODE = "mode";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -55,12 +57,18 @@ public final class AlarmReceiver extends BroadcastReceiver{
         else {  /** 폰 재시작할 경우가 아닌경우 **/
             long date;
             Log.i(TAG , "ACTION_ALARM_RECEIVER_COMPLETED");
-            try {
-                date = intent.getExtras().getLong(EXTRAS_KEY_REVIEW_DATE);
-            }catch (NullPointerException ex){
-                Toast.makeText(context.getApplicationContext(), context.getString(R.string.AlarmReceiver_Error), Toast.LENGTH_LONG).show();
-                Log.d(TAG, "getExtras 에서 오류 발생");
-                return;
+            if(intent.getStringExtra(EXTRAS_MODE) == null){
+                try {
+                    date = intent.getExtras().getLong(EXTRAS_KEY_REVIEW_DATE);
+                } catch (NullPointerException ex) {
+                    Toast.makeText(context.getApplicationContext(), context.getString(R.string.AlarmReceiver_error), Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "getExtras 에서 오류 발생");
+                    return;
+                }
+            } else{
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MINUTE, 30);
+                date = cal.getTimeInMillis();
             }
             long diffDate = date - System.currentTimeMillis()+1000;
             long diffMinute = diffDate % (1000*60*60*24) / (1000*60) % 60;
@@ -69,11 +77,11 @@ public final class AlarmReceiver extends BroadcastReceiver{
 
             String tempDateText = "";
             if(diffDay > 0)
-                tempDateText += diffDay + context.getString(R.string.Global_Day) + " ";
+                tempDateText += diffDay + context.getString(R.string.Global_Day) + context.getString(R.string.Global_plural) + " ";
             if(diffHour > 0)
-                tempDateText += diffHour + context.getString(R.string.Global_Hour) + " ";
+                tempDateText += diffHour + context.getString(R.string.Global_Hour) + context.getString(R.string.Global_plural) + " ";
             if(diffMinute > 0)
-                tempDateText += diffMinute + context.getString(R.string.Global_Minute) + " ";
+                tempDateText += diffMinute + context.getString(R.string.Global_Minute) + context.getString(R.string.Global_plural) + " ";
 
             Toast.makeText(context.getApplicationContext(), String.format(context.getString(R.string.AlarmReceiver_date_toast), tempDateText), Toast.LENGTH_LONG).show();
 

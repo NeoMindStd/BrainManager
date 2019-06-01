@@ -15,6 +15,7 @@
     <string name="Global_Day">day</string>
     <string name="Global_Hour">hour</string>
     <string name="Global_Minute">minute</string>
+    <string name="Global_plural">s</string>
     <string name="Global_errorOccurred">Error occurred</string>
 
     <string name="SharedPreferencesName" translatable="false">BrainManagerSettings</string>
@@ -89,11 +90,12 @@
     <string name="RelationActivity_error"> errors occurred</string>
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
-    <string name="AlarmReceiver_Error">Alarm setting: Error Occur</string>
+    <string name="AlarmReceiver_error">Alarm setting: Error Occur</string>
     <string name="AlarmReceiver_date_toast">Next Review Alarm : %1$slater.</string>
 
     <string name="Notification_title">Brain Manager</string>
-    <string name="Notification_text">STUDY TIME</string>
+    <string name="Notification_text">&#160;need a review.</string>
+    <string name="Notification_keyword">&#160;keyword</string>
 
     <string name="SettingsActivity_forgettingCurve">Forgetting curve</string>
     <string name="SettingsActivity_reviewType">Review type</string>
