@@ -1,6 +1,7 @@
 package std.neomind.brainmanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.BrainDBHandler;
+import std.neomind.brainmanager.utils.FileManager;
 
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +32,8 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.io.File;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -52,6 +56,7 @@ public class KeywordActivity extends AppCompatActivity {
 
     private ArrayList<Category> mCategories;
     private Keyword mKeyword;
+    private String beforeImagePath;
 
     private PhotoView mPhotoView;
     private View mDivider;
@@ -108,6 +113,27 @@ public class KeywordActivity extends AppCompatActivity {
                 mKeyword = new Keyword.Builder().build();
                 break;
 
+            case INTENT_MODE_UPDATE:
+                getSupportActionBar().setTitle(R.string.KeywordActivity_titleUpdate);
+
+                Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
+
+                if(!mKeyword.imagePath.isEmpty()) {
+                    Glide.with(this)
+                            .load(mKeyword.imagePath)
+                            .into(mPhotoView);
+                    mAddImageButton.setText(getString(R.string.KeywordActivity_updateImage));
+                }
+
+                mNameEditText.setText(mKeyword.name);
+
+                for(int i = 0; i < mCategories.size(); i++) {
+                    if(mCategories.get(i).id == mKeyword.cid) {
+                        mCategorySpinner.setSelection(i);
+                    }
+                }
+                break;
+
             case INTENT_MODE_VIEW :
                 getSupportActionBar().setTitle(R.string.KeywordActivity_titleView);
 
@@ -142,27 +168,6 @@ public class KeywordActivity extends AppCompatActivity {
                 mCategorySpinner.setEnabled(false);
                 mCategorySpinner.setBackground(null);
                 break;
-
-            case INTENT_MODE_UPDATE:
-                getSupportActionBar().setTitle(R.string.KeywordActivity_titleUpdate);
-
-                Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
-
-                if(!mKeyword.imagePath.isEmpty()) {
-                    Glide.with(this)
-                            .load(mKeyword.imagePath)
-                            .into(mPhotoView);
-                    mAddImageButton.setText(getString(R.string.KeywordActivity_updateImage));
-                }
-
-                mNameEditText.setText(mKeyword.name);
-
-                for(int i = 0; i < mCategories.size(); i++) {
-                    if(mCategories.get(i).id == mKeyword.cid) {
-                        mCategorySpinner.setSelection(i);
-                    }
-                }
-                break;
         }
     }
 
@@ -178,6 +183,8 @@ public class KeywordActivity extends AppCompatActivity {
         Keyword keyword = null;
         try {
             keyword = mBrainDBHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, id);
+            beforeImagePath = keyword.imagePath;
+            Log.i(TAG, "loadKeywordFromDB: loaded keyword - " + keyword.toStringAbsolutely());
         } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
         mBrainDBHandler.close();
 
@@ -296,6 +303,9 @@ public class KeywordActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.keyword_app_bar, menu);
 
+        if(currentMode == INTENT_MODE_VIEW) menu.findItem(R.id.keyword_action_done).setVisible(false);
+        else menu.findItem(R.id.keyword_action_done).setVisible(true);
+
         return true;
     }
 
@@ -310,21 +320,42 @@ public class KeywordActivity extends AppCompatActivity {
                 mKeyword.name = mNameEditText.getText().toString();
                 mKeyword.cid = mCategories.get(mCategorySpinner.getSelectedItemPosition()).id;
 
-                String toastString = "";
+                File origin = new File(mKeyword.imagePath);
+                File target = new File(getFilesDir(), System.currentTimeMillis() + "." + FileManager.getExtension(origin));
 
+                boolean deleteFlag = getSharedPreferences(getString(R.string.
+                        SharedPreferencesName), MODE_PRIVATE).getBoolean(getString(
+                        R.string.SharedPreferences_deleteOriginalImage), false);
+
+                Log.i(TAG, "onOptionsItemSelected: deleteFlag - " + deleteFlag);
+                // 기본적으로 내부 저장소로 기프티콘을 복사하되, [원본 기프티콘 삭제] 옵션이 활성화되있을경우 원본 기프티콘을 삭제한다.
+                if (FileManager.moveFile(origin, target, deleteFlag)) {
+                    mKeyword.imagePath = target.toString();
+                    FileManager.refreshGallery(this, origin.toString());
+                    Log.i(TAG, "onOptionsItemSelected: original image path - " + origin.toString());
+                    Log.i(TAG, "onOptionsItemSelected: moved image path - " + mKeyword.imagePath);
+                }
+
+                // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
+                if(FileManager.isInternalStorageFile(this, beforeImagePath))
+                    Log.i(TAG, "onOptionsItemSelected: delete before image result - " +
+                            FileManager.deleteFile(new File(beforeImagePath)));
+
+                String infoHead = "";
                 switch (currentMode) {
                     case INTENT_MODE_REGISTER :
                         mBrainDBHandler.addKeyword(mKeyword);
-                        toastString = getString(R.string.Global_added);
+                        infoHead = getString(R.string.Global_added);
                         break;
 
                     case INTENT_MODE_UPDATE:
                         mBrainDBHandler.updateKeyword(mKeyword);
-                        toastString = getString(R.string.Global_updated);
+                        infoHead = getString(R.string.Global_updated);
                         break;
                 }
+                Log.d(TAG, "onOptionsItemSelected: " + infoHead + "- " + mKeyword.toStringAbsolutely());
+                Toast.makeText(this, infoHead, Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(this, toastString, Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

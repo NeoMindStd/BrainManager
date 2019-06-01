@@ -2,8 +2,8 @@ package std.neomind.brainmanager.data;
 
 // 구글의 권고사항에 따른 데이터 직접접근 (setter/getter 지양)
 public class Category {
+    private static final String EMPTY_STRINGS = "";
     public static final int NOT_REGISTERED = -1;
-
     public static final int CATEGORY_ALL = 0;
 
     public int id;
@@ -35,7 +35,7 @@ public class Category {
 
         public Builder() {
             id = NOT_REGISTERED;
-            name = "";
+            name = EMPTY_STRINGS;
         }
 
         public Builder setId(int id) {

@@ -1,7 +1,5 @@
 package std.neomind.brainmanager.data;
 
-import android.widget.ArrayAdapter;
-
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -9,6 +7,7 @@ import androidx.cardview.widget.CardView;
 
 // 구글의 권고사항에 따른 데이터 직접접근 (setter/getter 지양)
 public class Keyword {
+    public static final String EMPTY_STRINGS = "";
     public static final int NOT_REGISTERED = -1;
     public static final int ZERO_INIT = 0;
 
@@ -99,9 +98,9 @@ public class Keyword {
             cardView = null;
             id = NOT_REGISTERED;
             cid = NOT_REGISTERED;
-            name = "";
+            name = EMPTY_STRINGS;
             descriptions = new ArrayList<>();
-            imagePath = "";
+            imagePath = EMPTY_STRINGS;
             currentLevels = ZERO_INIT;
             reviewTimes = ZERO_INIT;
             registrationDate = System.currentTimeMillis();

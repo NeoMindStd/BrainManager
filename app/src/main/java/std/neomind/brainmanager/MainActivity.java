@@ -32,6 +32,7 @@ import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.BrainSerialDataIO;
+import std.neomind.brainmanager.utils.FileManager;
 import std.neomind.brainmanager.utils.PermissionManager;
 
 import android.util.Log;
@@ -49,6 +50,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -530,11 +532,12 @@ public class MainActivity extends AppCompatActivity
                         case R.id.item_remove:
                             try {
                                 BrainDBHandler dbHandler = new BrainDBHandler(mActivity.getBaseContext());
+                                // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
+                                if(FileManager.isInternalStorageFile(mActivity, mKeywords.get(mPosition).imagePath))
+                                    Log.i(TAG, "onLongClick: delete before image result - " +
+                                            FileManager.deleteFile(new File(mKeywords.get(mPosition).imagePath)));
                                 dbHandler.removeKeyword(mKeywords.get(mPosition).id);       // db 삭제
                                 mKeywordViewHolder.removeItem();                            // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
-
-                                ArrayList<Integer> reviewList = new ArrayList<>();
-                                ArrayList<Long> reviewDateList = new ArrayList<>();
 
                                 //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
                                 try{
