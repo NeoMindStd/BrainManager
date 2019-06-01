@@ -437,8 +437,8 @@ public class MainActivity extends AppCompatActivity
             public void build(int i) {
                 mKeywords.get(i).setCardView((CardView)itemView);
 
-                itemView.setOnClickListener(new ItemClickListener(i));
-                itemView.setOnLongClickListener(new ItemLongClickListener(i, this));
+                itemView.setOnClickListener(new ItemClickListener());
+                itemView.setOnLongClickListener(new ItemLongClickListener(this));
 
                 Glide.with(mActivity.getBaseContext())
                         .load(mKeywords.get(i).imagePath)
@@ -486,75 +486,70 @@ public class MainActivity extends AppCompatActivity
                         .setListener(listener)
                         .start();
             }
-        }
 
-        private class ItemClickListener implements View.OnClickListener {
-            private int mPosition;
-
-            private ItemClickListener(int position) {
-                this.mPosition = position;
+            private class ItemClickListener implements View.OnClickListener {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, KeywordActivity.class);
+                    intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_VIEW);
+                    intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(getAdapterPosition()).id);
+                    mActivity.startActivity(intent);
+                }
             }
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, KeywordActivity.class);
-                intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_VIEW);
-                intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
-                mActivity.startActivity(intent);
-            }
-        }
+            private class ItemLongClickListener implements View.OnLongClickListener {
+                private KeywordViewHolder mKeywordViewHolder;
 
-        private class ItemLongClickListener implements View.OnLongClickListener {
-            private int mPosition;
-            private KeywordViewHolder mKeywordViewHolder;
+                private ItemLongClickListener(KeywordViewHolder keywordViewHolder) {
+                    mKeywordViewHolder = keywordViewHolder;
+                }
 
-            private ItemLongClickListener(int position, KeywordViewHolder keywordViewHolder) {
-                mPosition = position;
-                mKeywordViewHolder = keywordViewHolder;
-            }
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(mActivity, v);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    Menu menu = popupMenu.getMenu();
+                    inflater.inflate(R.menu.main_context_keyword, menu);
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
 
-            @Override
-            public boolean onLongClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(mActivity, v);
-                MenuInflater inflater = popupMenu.getMenuInflater();
-                Menu menu = popupMenu.getMenu();
-                inflater.inflate(R.menu.main_context_keyword, menu);
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
+                            case R.id.item_edit:
+                                Intent intent = new Intent(mActivity, KeywordActivity.class);
+                                intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_UPDATE);
+                                intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(getAdapterPosition()).id);
+                                mActivity.startActivity(intent);
+                                break;
 
-                        case R.id.item_edit:
-                            Intent intent = new Intent(mActivity, KeywordActivity.class);
-                            intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_UPDATE);
-                            intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, mKeywords.get(mPosition).id);
-                            mActivity.startActivity(intent);
-                            break;
+                            case R.id.item_remove:
+                                try {
+                                    BrainDBHandler dbHandler = new BrainDBHandler(mActivity);
 
-                        case R.id.item_remove:
-                            try {
-                                BrainDBHandler dbHandler = new BrainDBHandler(mActivity.getBaseContext());
-                                // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
-                                if(FileManager.isInternalStorageFile(mActivity, mKeywords.get(mPosition).imagePath))
-                                    Log.i(TAG, "onLongClick: delete before image result - " +
-                                            FileManager.deleteFile(new File(mKeywords.get(mPosition).imagePath)));
-                                dbHandler.removeKeyword(mKeywords.get(mPosition).id);       // db 삭제
-                                mKeywordViewHolder.removeItem();                            // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
+                                    dbHandler.removeKeyword(mKeywords.get(getAdapterPosition()).id);       // db 삭제
 
-                                //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
-                                try{
-                                    BrainSerialDataIO.deleteOneNextReivewTimeInfo(mActivity, mKeywords.get(mPosition).id);
-                                }catch (Exception ex){
-                                    ex.printStackTrace();
+                                    // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
+                                    if(FileManager.isInternalStorageFile(mActivity, mKeywords.get(getAdapterPosition()).imagePath))
+                                        Log.i(TAG, "onLongClick: delete before image result - " +
+                                                FileManager.deleteFile(new File(mKeywords.get(getAdapterPosition()).imagePath)));
+
+                                    mKeywordViewHolder.removeItem();                   // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
+
+                                    //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
+                                    try{
+                                        BrainSerialDataIO.deleteOneNextReivewTimeInfo(mActivity, mKeywords.get(getAdapterPosition()).id);
+                                    }catch (Exception ex){
+                                        ex.printStackTrace();
+                                    }
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
-
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            break;
-                    }
+                                break;
+                        }
+                        return true;
+                    });
+                    popupMenu.show();
                     return true;
-                });
-                popupMenu.show();
-                return true;
+                }
             }
         }
     }
