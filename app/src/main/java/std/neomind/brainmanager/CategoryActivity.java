@@ -280,7 +280,7 @@ public class CategoryActivity extends AppCompatActivity {
             public void build(int i) {
                 mKeywords.get(i).setCardView((CardView)itemView);
 
-                itemView.setOnClickListener(new ItemClickListener(i));
+                itemView.setOnClickListener(new ItemClickListener());
 
                 Glide.with(mActivity.getBaseContext())
                         .load(mKeywords.get(i).imagePath)
@@ -318,22 +318,17 @@ public class CategoryActivity extends AppCompatActivity {
                         .setListener(listener)
                         .start();
             }
-        }
 
-        private class ItemClickListener implements View.OnClickListener {
-            private int mPosition;
+            private class ItemClickListener implements View.OnClickListener {
 
-            private ItemClickListener(int position) {
-                this.mPosition = position;
-            }
+                @Override
+                public void onClick(View v) {
+                    Keyword keyword = mKeywords.get(getAdapterPosition());
+                    keyword.setSelected(!keyword.isSelected());
 
-            @Override
-            public void onClick(View v) {
-                Keyword keyword = mKeywords.get(mPosition);
-                keyword.setSelected(!keyword.isSelected());
-
-                keyword.getCardView().findViewById(R.id.imageViewSelectedMask).
-                        setVisibility(keyword.isSelected() ? View.VISIBLE : View.GONE);
+                    keyword.getCardView().findViewById(R.id.imageViewSelectedMask).
+                            setVisibility(keyword.isSelected() ? View.VISIBLE : View.GONE);
+                }
             }
         }
     }

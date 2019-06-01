@@ -164,7 +164,11 @@ public class RelationActivity extends AppCompatActivity
         }
         currentKeyword = rTargetKeywords.get(currentRKeyIndex);
         while(currentKeyword.name.equals("")){
-            currentKeyword = rTargetKeywords.get(++currentRKeyIndex);
+            if(++currentRKeyIndex == rTargetKeywords.size()){
+                finish();
+                return;
+            }
+            currentKeyword = rTargetKeywords.get(currentRKeyIndex);
         }
     }
 
@@ -655,7 +659,7 @@ public class RelationActivity extends AppCompatActivity
                     } else {
                         itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
                     }
-                    itemView.setOnClickListener(new ItemClickListener(i));
+                    itemView.setOnClickListener(new ItemClickListener());
                 }
                 else{
                     itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_gray_edge));
@@ -698,33 +702,28 @@ public class RelationActivity extends AppCompatActivity
                         .setListener(listener)
                         .start();
             }
-        }
 
-        private class ItemClickListener implements View.OnClickListener {
-            private int mPosition;
+            private class ItemClickListener implements View.OnClickListener {
 
-            private ItemClickListener(int position) {
-                this.mPosition = position;
-            }
-
-            @Override
-            public void onClick(View v) {
-                BrainDBHandler dbHandler = new BrainDBHandler(mActivity);
-                if (mKeywords.get(mPosition).isSelected()) {
-                    mKeywords.get(mPosition).setSelected(false);
-                    dbHandler.removeRelation(mSelectK.id, mKeywords.get(mPosition).id);
-                    v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
-                } else {
-                    mKeywords.get(mPosition).setSelected(true);
-                    try {
-                        dbHandler.addRelation(mSelectK.id, mKeywords.get(mPosition).id);
+                @Override
+                public void onClick(View v) {
+                    BrainDBHandler dbHandler = new BrainDBHandler(mActivity);
+                    if (mKeywords.get(getAdapterPosition()).isSelected()) {
+                        mKeywords.get(getAdapterPosition()).setSelected(false);
+                        dbHandler.removeRelation(mSelectK.id, mKeywords.get(getAdapterPosition()).id);
+                        v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
+                    } else {
+                        mKeywords.get(getAdapterPosition()).setSelected(true);
+                        try {
+                            dbHandler.addRelation(mSelectK.id, mKeywords.get(getAdapterPosition()).id);
+                        }
+                        catch(BrainDBHandler.DataDuplicationException e){
+                            Toast.makeText(mActivity, mActivity.
+                                    getString(R.string.Global_errorOccurred), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+                        v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));
                     }
-                    catch(BrainDBHandler.DataDuplicationException e){
-                        Toast.makeText(mActivity, mActivity.
-                                getString(R.string.Global_errorOccurred), Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
-                    v.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_blue_edge));
                 }
             }
         }
