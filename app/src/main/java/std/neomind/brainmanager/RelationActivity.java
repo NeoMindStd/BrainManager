@@ -164,7 +164,11 @@ public class RelationActivity extends AppCompatActivity
         }
         currentKeyword = rTargetKeywords.get(currentRKeyIndex);
         while(currentKeyword.name.equals("")){
-            currentKeyword = rTargetKeywords.get(++currentRKeyIndex);
+            if(++currentRKeyIndex == rTargetKeywords.size()){
+                finish();
+                return;
+            }
+            currentKeyword = rTargetKeywords.get(currentRKeyIndex);
         }
     }
 

@@ -54,6 +54,7 @@ public final class AlarmReceiver extends BroadcastReceiver{
         }
         else {  /** 폰 재시작할 경우가 아닌경우 **/
             long date;
+            Log.i(TAG , "ACTION_ALARM_RECEIVER_COMPLETED");
             try {
                 date = intent.getExtras().getLong(EXTRAS_KEY_REVIEW_DATE);
             }catch (NullPointerException ex){
