@@ -524,46 +524,46 @@ public class RelationActivity extends AppCompatActivity
         public int getItemCount() { return (null != rKeywords) ? rKeywords.size() : 0; }
 
         ///재사용 되어질지도 모르는 코드는 일단 주석처리
-    //    public Object getItem(int index) {
-    //        return (null != rKeywords) ? rKeywords.get(index) : 0;
-    //    }
-    //    public long getItemId(int position) {
-    //        return position;
-    //
-    //    }
-    //    //////////////////////////
-    //
-    //
-    //    public View getView(int index, View convertView, ViewGroup parent) {
-    //        TextView textView = null;
-    //        String keytxt =rKeywords.get(index).text;
-    //
-    //        if (keytxt != "") {
-    //            if (null != convertView)
-    //                textView = (TextView) convertView;
-    //            else {
-    //                textView = new TextView(rContext);
-    //                textView.setText(keytxt);
-    //
-    //                // 클릭을 처리하는 KeyGridClickListener 객체를 정의
-    //                // 그리고 그것을 textView 클릭 리스너로 설정합니다.
-    //                KeyGridClickListener keyGridClickListener
-    //                        = new KeyGridClickListener(rContext, rKeywords.get(index), textView);
-    //                textView.setOnClickListener(keyGridClickListener);
-    //                textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
-    //                textView.setHeight(300);
-    //                textView.setGravity(Gravity.CENTER);
-    //            }
-    //        }
-    //        else
-    //        {
-    //                textView = new TextView(rContext);
-    //                // TODO change
-    //                //textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.gray_full_edge));
-    //                textView.setHeight(300);
-    //        }
-    //        return textView;
-    //    }
+        //    public Object getItem(int index) {
+        //        return (null != rKeywords) ? rKeywords.get(index) : 0;
+        //    }
+        //    public long getItemId(int position) {
+        //        return position;
+        //
+        //    }
+        //    //////////////////////////
+        //
+        //
+        //    public View getView(int index, View convertView, ViewGroup parent) {
+        //        TextView textView = null;
+        //        String keytxt =rKeywords.get(index).text;
+        //
+        //        if (keytxt != "") {
+        //            if (null != convertView)
+        //                textView = (TextView) convertView;
+        //            else {
+        //                textView = new TextView(rContext);
+        //                textView.setText(keytxt);
+        //
+        //                // 클릭을 처리하는 KeyGridClickListener 객체를 정의
+        //                // 그리고 그것을 textView 클릭 리스너로 설정합니다.
+        //                KeyGridClickListener keyGridClickListener
+        //                        = new KeyGridClickListener(rContext, rKeywords.get(index), textView);
+        //                textView.setOnClickListener(keyGridClickListener);
+        //                textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.review_relation_edge));
+        //                textView.setHeight(300);
+        //                textView.setGravity(Gravity.CENTER);
+        //            }
+        //        }
+        //        else
+        //        {
+        //                textView = new TextView(rContext);
+        //                // TODO change
+        //                //textView.setBackground(ContextCompat.getDrawable(rContext, R.drawable.gray_full_edge));
+        //                textView.setHeight(300);
+        //        }
+        //        return textView;
+        //    }
 
         class RelationViewHolder extends RecyclerView.ViewHolder implements AnimateViewHolder {
             TextView textView;

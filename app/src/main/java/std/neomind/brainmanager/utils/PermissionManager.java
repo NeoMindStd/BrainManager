@@ -70,10 +70,6 @@ public final class PermissionManager {
         return true;    // SDK M 이하에서는 설치 시 퍼미션 허용
     }
 
-    private void requestPermission(final String permission) {
-        requestPermissions(permission);
-    }
-
     private void requestPermissions(String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mActivity.requestPermissions(permissions, mActivity.getResources().getInteger(
