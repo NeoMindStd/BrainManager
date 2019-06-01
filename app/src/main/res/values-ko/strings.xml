@@ -15,6 +15,7 @@
     <string name="Global_Day">일</string>
     <string name="Global_Hour">시간</string>
     <string name="Global_Minute">분</string>
+    <string name="Global_plural" />
     <string name="Global_errorOccurred">에러가 발생하였습니다.</string>
 
     <string name="Label_review">복습</string>
@@ -84,11 +85,12 @@
     <string name="RelationActivity_error">개의 오류가 발생했습니다</string>
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
 
-    <string name="AlarmReceiver_Error">알람 생성에 실패했습니다.</string>
+    <string name="AlarmReceiver_error">알람 생성에 실패했습니다.</string>
     <string name="AlarmReceiver_date_toast">다음 복습 알람을 %1$s뒤로 설정했습니다.</string>
 
     <string name="Notification_title">브레인 매니저</string>
-    <string name="Notification_text">복습할 시간이에요</string>
+    <string name="Notification_text">&#160;복습이 필요해요</string>
+    <string name="Notification_keyword">개 키워드가</string>
 
     <string name="SettingsActivity_forgettingCurve">망각 곡선</string>
     <string name="SettingsActivity_reviewType">학습형태</string>

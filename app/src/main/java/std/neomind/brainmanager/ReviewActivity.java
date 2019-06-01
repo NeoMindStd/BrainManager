@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -43,6 +44,7 @@ import std.neomind.brainmanager.utils.BrainDBHandler;
 import std.neomind.brainmanager.data.Keyword;
 
 public class ReviewActivity extends AppCompatActivity{
+    private static final String TAG = "ReviewActivity";
     private static final int EXAM_LAYOUT_COUNT = 4;
 
     public static final String EXTRAS_KEYWORD = "keyword";
@@ -882,8 +884,10 @@ public class ReviewActivity extends AppCompatActivity{
                 try {
                     BrainSerialDataIO.saveNextReviewTimeInfo(mContext, reviewList, reviewDateList);
                 } catch (BrainSerialDataIO.SaveFailException e) {
+                    Log.d(TAG, "객체저장에서 에러 발생");
                     e.printStackTrace();
                 } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                    Log.d(TAG, "객체저장에서 에러 발생");
                     e.printStackTrace();
                 }
                 Intent intent = new Intent(mContext, AlarmReceiver.class);
