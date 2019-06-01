@@ -7,7 +7,7 @@
     tools:context=".WebViewActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarWebView"
+        android:id="@+id/webView_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -16,7 +16,7 @@
         android:theme="?attr/actionBarTheme" />
 
     <WebView
-        android:id="@+id/webView"
+        android:id="@+id/webView_webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

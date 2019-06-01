@@ -19,12 +19,12 @@
         app:layout_constraintVertical_weight="0.3"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/empty_layout"
+        app:layout_constraintBottom_toTopOf="@id/relation_layout_empty"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/empty_layout"
+        android:id="@+id/relation_layout_empty"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"

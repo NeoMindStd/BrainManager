@@ -1,7 +1,6 @@
 package std.neomind.brainmanager;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -33,7 +32,6 @@ import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -152,7 +150,7 @@ public class KeywordActivity extends AppCompatActivity {
                 mDescriptionUpdateButton.setVisibility(View.GONE);
                 mDescriptionDeleteButton.setVisibility(View.GONE);
 
-                findViewById(R.id.layoutKeywordcontentsFields).
+                findViewById(R.id.layoutKeywordContentsFields).
                         setFocusableInTouchMode(false); // mNameEditText's label 강조하기 위함
                 mNameEditText.setText(mKeyword.name);
                 mNameEditText.setInputType(0x00000000); // 0x00000000 = none
@@ -328,7 +326,7 @@ public class KeywordActivity extends AppCompatActivity {
                         R.string.SharedPreferences_deleteOriginalImage), false);
 
                 Log.i(TAG, "onOptionsItemSelected: deleteFlag - " + deleteFlag);
-                // 기본적으로 내부 저장소로 기프티콘을 복사하되, [원본 기프티콘 삭제] 옵션이 활성화되있을경우 원본 기프티콘을 삭제한다.
+                // 기본적으로 내부 저장소로 사진을 복사하되, 원본 이미지 삭제가 체크되면 이미지를 삭제한다.
                 if (FileManager.moveFile(origin, target, deleteFlag)) {
                     mKeyword.imagePath = target.toString();
                     FileManager.refreshGallery(this, origin.toString());

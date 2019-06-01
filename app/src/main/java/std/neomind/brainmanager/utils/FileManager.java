@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import std.neomind.brainmanager.data.Keyword;
-
 public final class FileManager {
 
     public static boolean moveFile(File origin, File target, boolean isOriginDelete) {

@@ -19,13 +19,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="망각곡선" />
+            android:text="@string/SettingsActivity_forgettingCurve" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/settings_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/side_line" />
+            android:background="@drawable/settings_side_line" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,10 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="@drawable/side_line" >
+            android:background="@drawable/settings_side_line" >
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/settings_radioGroup"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -60,7 +60,6 @@
                     android:text="@string/SettingsActivity_push"/>
 
                 <RadioButton
-                    android:id="@+id/settings_radioButton_lockScreen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -97,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="63dp"
             android:layout_weight="1"
-            android:background="@drawable/side_line"
+            android:background="@drawable/settings_side_line"
             android:text="@string/SettingsActivity_nightModeDescription" />
 
     </LinearLayout>
@@ -111,15 +110,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="원본이미지 삭제" />/>
+            android:text="@string/SettingsActivity_setDeleteOriginalMode" />
 
         <CheckBox
             android:id="@+id/settings_checkBox_deleteOriginalImage"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_weight="1"
-            android:background="@drawable/side_line"
-            android:text="선택시 원본이미지를 삭제합니다."/>
+            android:background="@drawable/settings_side_line"
+            android:text="@string/SettingsActivity_deleteOriginalModeDescription"/>
     </LinearLayout>
 
     <LinearLayout
@@ -134,11 +133,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-
             <ImageView
                 android:layout_width="27dp"
                 android:layout_height="21dp"
-                app:srcCompat="@drawable/info_icon" />
+                app:srcCompat="@drawable/ic_settings_info" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -149,7 +147,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/side_line"
+            android:background="@drawable/settings_side_line"
             android:orientation="vertical">
 
             <TextView

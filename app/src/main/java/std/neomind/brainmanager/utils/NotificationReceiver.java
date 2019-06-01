@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.ReviewActivity;
-import std.neomind.brainmanager.utils.BrainSerialDataIO;
 
-public class NotificationReceiver extends BroadcastReceiver {
-    static private final String TAG = "NotificationReceiver";
-    static private final String channel= "BrainNotificationChannel";
+public final class NotificationReceiver extends BroadcastReceiver {
+    private static final String TAG = "NotificationReceiver";
+    private static final String CHANNEL = "BrainNotificationChannel";
+    private static final String DEFAULT_CHANNEL= "기본 채널";
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -30,13 +30,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         //han
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationmanager.createNotificationChannel(new NotificationChannel(channel, "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
+            notificationmanager.createNotificationChannel(new NotificationChannel(CHANNEL, DEFAULT_CHANNEL, NotificationManager.IMPORTANCE_DEFAULT));
         }
 
         //배너 눌렀을 때 전해줄 intent
-        Intent newintent = new Intent(context, ReviewActivity.class);
-        newintent.putExtra(ReviewActivity.EXTRAS_MODE, "bannermode");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newintent, PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent newIntent = new Intent(context, ReviewActivity.class);
+        newIntent.putExtra(ReviewActivity.EXTRAS_MODE, ReviewActivity.BANNER_MODE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         ArrayList<Integer> idList = new ArrayList<>();
         ArrayList<Long> dateList = new ArrayList<>();
@@ -44,10 +44,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         try {
             BrainSerialDataIO.getNextReviewTimeInfo(context, idList, dateList);
         } catch (BrainSerialDataIO.LoadFailException e) {
-            e.printStackTrace();
-            Log.d(TAG, "시리얼 저장된 객체 불러오기 실패.");
-            return;
-        } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
             e.printStackTrace();
             Log.d(TAG, "시리얼 저장된 객체 불러오기 실패.");
             return;
@@ -75,7 +71,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_round))
                     .setNumber(showNum).setContentTitle(context.getString(R.string.Notification_title)).setContentText(context.getString(R.string.Notification_text))
                     .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingIntent).setAutoCancel(true)
-                    .setChannelId(channel);
+                    .setChannelId(CHANNEL);
         }else{
             builder.setSmallIcon(R.mipmap.ic_launcher).setTicker("Notification.Builder").setWhen(System.currentTimeMillis())
                     .setNumber(showNum).setContentTitle(context.getString(R.string.Notification_title)).setContentText(context.getString(R.string.Notification_text))

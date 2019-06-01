@@ -8,18 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
-import std.neomind.brainmanager.utils.fifteenDaysChart;
-import std.neomind.brainmanager.utils.oneMonthDaysChart;
 
 import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
-
-    private static final String TAG = "StatisticsActivity";
-
-    Spinner spinner;
-    ArrayList<String> arrayList;
-    ArrayAdapter<String> arrayAdapter;
+    private Spinner spinner;
+    private ArrayList<String> arrayList;
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +22,26 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
         arrayList= new ArrayList<>();
-        arrayList.add("선택하시오");
-        arrayList.add("최근한달");
-        arrayList.add("최근15일");
+        arrayList.add(getString(R.string.StatisticsActivity_chooseOne));
+        arrayList.add(getString(R.string.StatisticsActivity_recent30));
+        arrayList.add(getString(R.string.StatisticsActivity_recent15));
 
         arrayAdapter= new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 arrayList);
 
-        spinner = (Spinner)findViewById(R.id.spinnerSelectPeriod);
+        spinner = findViewById(R.id.spinnerSelectPeriod);
         spinner.setAdapter(arrayAdapter);
         spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(arrayList.get(i)=="최근한달") {
-                    Intent intent = new Intent(getApplicationContext(), oneMonthDaysChart.class);
+                if(arrayList.get(i) == getString(R.string.StatisticsActivity_recent30)) {
+                    Intent intent = new Intent(getApplicationContext(), OneMonthDaysChartActivity.class);
                     startActivity(intent);
                 }
-                else if(arrayList.get(i)=="최근15일"){
-                    Intent intent = new Intent(getApplicationContext(), fifteenDaysChart.class);
+                else if(arrayList.get(i) == getString(R.string.StatisticsActivity_recent15)){
+                    Intent intent = new Intent(getApplicationContext(), FifteenDaysChartActivity.class);
                     startActivity(intent);
                 }
             }
@@ -56,5 +51,4 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
     }
-
 }

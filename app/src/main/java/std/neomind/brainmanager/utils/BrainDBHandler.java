@@ -16,7 +16,7 @@ import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.data.Test;
 
-public class BrainDBHandler extends SQLiteOpenHelper {
+public final class BrainDBHandler extends SQLiteOpenHelper {
 
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "BrainManager.db";
@@ -111,7 +111,7 @@ public class BrainDBHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TESTS_TABLE);
     }
 
-    // TODO 만약 db 구조를 변경한다면, 이전 db 내용을 복사하고 기존 db를 삭제한 후 새로운 양식대로 만드는 루틴 필요
+    // TODO 만약 db 구조를 변경한다면, 이전 db 내용을 복사하고 기존 db를 삭제한 후 새로운 스키마대로 만드는 루틴 필요
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 

@@ -7,24 +7,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import std.neomind.brainmanager.MainActivity;
+public final class BrainSerialDataIO {
+    private static final String TAG = "BrainSerialDataIO";
+    private static final String FILE_BRAIN_ALARM = "BrainAlarm.data";
 
-public class BrainSerialDataIO {
-    private static final  String TAG = "BrainSerialDataIO";
-
-    public static void saveNextReivewTimeInfo(Context context,ArrayList<Integer> idList, ArrayList<Long> dateList) throws SaveFailException, ListNotEqualSizeException{
+    public static void saveNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws SaveFailException, ListNotEqualSizeException{
         if(idList.size() != dateList.size()) {
             Log.d(TAG, "시리얼 IO 저장 양 리스트 사이즈가 다름");
             throw new ListNotEqualSizeException();
         }
         try{
             Log.d(TAG, "시리얼 IO 저장 시작");
-            FileOutputStream fileStream = new FileOutputStream(new File(context.getFilesDir(),"BrainAlarm.data"));
+            FileOutputStream fileStream = new FileOutputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
             try {
                 ObjectOutputStream os = new ObjectOutputStream(fileStream);
                 os.writeObject(idList);
@@ -43,10 +41,10 @@ public class BrainSerialDataIO {
             throw new SaveFailException();
         }
     }
-    public static void getNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws LoadFailException, ListNotEqualSizeException{
+    public static void getNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws LoadFailException{
         try {
             Log.d(TAG, "시리얼 IO 불러오기 시작");
-            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir(), "BrainAlarm.data"));
+            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
             try {
                 ObjectInputStream os = new ObjectInputStream(fileStream);
 
@@ -72,11 +70,11 @@ public class BrainSerialDataIO {
         }
     }
 
-    public static void deleteOneNextReivewTimeInfo(Context context, int id) throws SaveFailException, ListNotEqualSizeException{
+    public static void deleteOneNextReivewTimeInfo(Context context, int id) throws SaveFailException{
         ArrayList<Integer> idList;
         ArrayList<Long> dateList;
         try {
-            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir() ,"BrainAlarm.data"));
+            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir() , FILE_BRAIN_ALARM));
             try {
                 ObjectInputStream os = new ObjectInputStream(fileStream);
 
@@ -90,7 +88,7 @@ public class BrainSerialDataIO {
                     throw new ListNotEqualSizeException();
                 }
                 try {
-                    FileOutputStream fileStream2 = new FileOutputStream(new File(context.getFilesDir(), "BrainAlarm.data"));
+                    FileOutputStream fileStream2 = new FileOutputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
                     try {
                         ObjectOutputStream os2 = new ObjectOutputStream(fileStream2);
 

@@ -12,9 +12,10 @@ import java.util.ArrayList;
 
 import std.neomind.brainmanager.R;
 
-public class AlarmReceiver extends BroadcastReceiver{
-    static public final String TAG = "AlarmReceiver";
-    static public final String EXTRAS_KEY_REVIEW_DATE = "keywordReviewDate";
+public final class AlarmReceiver extends BroadcastReceiver{
+    private static final String TAG = "AlarmReceiver";
+
+    public static final String EXTRAS_KEY_REVIEW_DATE = "keywordReviewDate";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,17 +25,13 @@ public class AlarmReceiver extends BroadcastReceiver{
          * 폰 재시작 할때 브로드캐스트 등록
          */
         if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())){
-            Log.i("RestartService" , "ACTION_BOOT_COMPLETED" );
+            Log.i(TAG , "ACTION_BOOT_COMPLETED");
 
             ArrayList<Integer> idList = new ArrayList<>();
             ArrayList<Long> DateList = new ArrayList<>();
             try {
                 BrainSerialDataIO.getNextReviewTimeInfo(context, idList, DateList);
             } catch (BrainSerialDataIO.LoadFailException e) {
-                e.printStackTrace();
-                Log.d(TAG, "시리얼 파일 불러오기 실패");
-                return;
-            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
                 e.printStackTrace();
                 Log.d(TAG, "시리얼 파일 불러오기 실패");
                 return;

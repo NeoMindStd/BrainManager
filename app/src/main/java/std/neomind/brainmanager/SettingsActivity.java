@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mPref = getSharedPreferences(getString(R.string.SharedPreferencesName), MODE_PRIVATE);
 
-        rg = findViewById(R.id.radioGroup);
+        rg = findViewById(R.id.settings_radioGroup);
 
         mChart = findViewById(R.id.settings_chart);
 
@@ -65,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         yValues.add(new Entry(3, 5f));
         yValues.add(new Entry(4, 25f));
         yValues.add(new Entry(5, 30f));
-        LineDataSet set1 = new LineDataSet(yValues, getString(R.string.Statistics_forgettingCurve));
+        LineDataSet set1 = new LineDataSet(yValues, getString(R.string.SettingsActivity_forgettingCurve));
 
         set1.setFillAlpha(110);
 

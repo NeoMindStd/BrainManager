@@ -76,8 +76,7 @@
                 android:gravity="center"
                 android:visibility="visible"
                 android:maxLines="3"
-                android:ellipsize="end"
-                />
+                android:ellipsize="end" />
 
             <ImageView
                 android:layout_width="match_parent"

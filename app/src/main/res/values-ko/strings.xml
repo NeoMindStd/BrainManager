@@ -15,7 +15,7 @@
     <string name="Global_Day">일</string>
     <string name="Global_Hour">시간</string>
     <string name="Global_Minute">분</string>
-    <string name="Global_s" />
+    <string name="Global_errorOccurred">에러가 발생하였습니다.</string>
 
     <string name="Label_review">복습</string>
     <string name="Label_statistics">통계</string>
@@ -79,7 +79,7 @@
     <string name="ReviewActivity_noKeyword">키워드가 없습니다</string>
     <string name="ReviewActivity_lastKeyword">마지막 키워드입니다</string>
     <string name="ReviewActivity_correct">정답!!!</string>
-    <string name="ReviewActivity_wrong">틀렸네요\.\.\. 괜찮아요</string>
+    <string name="ReviewActivity_wrong">틀렸네요... 괜찮아요</string>
 
     <string name="RelationActivity_error">개의 오류가 발생했습니다</string>
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
@@ -90,15 +90,24 @@
     <string name="Notification_title">브레인 매니저</string>
     <string name="Notification_text">복습할 시간이에요</string>
 
-    <string name="Statistics_forgettingCurve">망각 곡선</string>
-
+    <string name="SettingsActivity_forgettingCurve">망각 곡선</string>
     <string name="SettingsActivity_reviewType">학습형태</string>
     <string name="SettingsActivity_push">푸시알림</string>
     <string name="SettingsActivity_lockScreen">잠금화면</string>
     <string name="SettingsActivity_alarm">알람</string>
     <string name="SettingsActivity_setNightMode">야간모드 설정</string>
-    <string name="SettingsActivity_nightModeDescription">(야간모드 설정 시 11:00pm~08:00am 동안 소리를 끕니다)</string>
+    <string name="SettingsActivity_nightModeDescription">야간모드 설정 시 11:00pm~08:00am 동안 소리를 끕니다</string>
+    <string name="SettingsActivity_setDeleteOriginalMode">원본 이미지 삭제</string>
+    <string name="SettingsActivity_deleteOriginalModeDescription">이미지 등록 시 원본 이미지를 삭제합니다</string>
     <string name="SettingsActivity_appInfo">애플리케이션 정보</string>
     <string name="SettingsActivity_privacyPolicy"> 개인정보 처리방침\n-본 어플리케이션에서 수정하는 이용자 개인 정보의 종류, 활용, 공유, 파기 등 개인정보 라이프 사이클에 대한 정보를 제공합니다.\n</string>
     <string name="SettingsActivity_openSourceLibraries"> API 라이선스\n-본 어플리케이션에서 사용한 API의 라이센스 정보를 표시합니다.\n</string>
+
+    <string name="StatisticsActivity_chooseOne">기간 선택</string>
+    <string name="StatisticsActivity_recent15">최근 15일</string>
+    <string name="StatisticsActivity_recent30">최근 30일</string>
+    <string name="StatisticsActivity_percentCorrect">정답률</string>
+    <string name="StatisticsActivity_problemSolvingSpeed">문제풀이 속도</string>
+    <string name="StatisticsActivity_setTargetCorrectAnswerRate">목표 정답률 설정</string>
+    <string name="StatisticsActivity_setTargetTime">목표 시간 설정</string>
 </resources>
