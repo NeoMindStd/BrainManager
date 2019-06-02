@@ -288,7 +288,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getKeywordsFromDB() {
-        mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(mSpinner.getSelectedItemPosition());
+        int cid = mCategories.get(mSpinner.getSelectedItemPosition()).id;
+        if(cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED) mKeywords = mBrainDBHandler.getAllKeywords();
+        else mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(cid);
         mBrainDBHandler.close();
 
         // Sort
