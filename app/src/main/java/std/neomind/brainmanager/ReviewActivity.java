@@ -368,50 +368,57 @@ public class ReviewActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
 
-                int originCategoryKeywordSize = categoryKeywordList.size();
-                for(int j=0, ct=0; j<tempRandom.length; j++) {
-                    int i = randomGenerator.nextInt(tempRandom.length);
-                    if(ct == originCategoryKeywordSize - 1) break;
-                    if(tempRandom[i] > -1) {
-                        j--;
-                        continue;
+                boolean fullCk = true;
+                for(int i=0; i<tempRandom.length; i++){
+                    if(tempRandom[i] == -1) {
+                        fullCk = false;
+                        break;
                     }
-                    if(originCategoryKeywordSize - categoryKeywordList.size() > 3) break;
-                    int randIndex = randomGenerator.nextInt(categoryKeywordList.size());
-                    Keyword tKey = categoryKeywordList.get(randIndex);
-                    int index = -1;
-                    for(Keyword tempKey : mAllKeywords) {
-                        if(tempKey.id == tKey.id) {
-                            index = mAllKeywords.indexOf(tempKey);
-                            break;
-                        }
-                    }
-                    if(index == -1) {   //만약 알 수 없는 이유로 전체 리스트에서 찾을 수 없다면
-                        categoryKeywordList.remove(randIndex);  //카테리스트에서 그 값 remove
-                        j--;    //j 1감소
-                        continue;   //다음 반복 실행
-                    }
-                    if(index == keyIndex){  //만약 정답이랑 같은 인덱스 값이라면
-                        categoryKeywordList.remove(randIndex);
-                        j--;
-                        continue;
-                    }
-                    tempRandom[i] = index;  //대입
-                    categoryKeywordList.remove(randIndex);
-                    boolean flag = true;
-                    for(int k=0; k<tempRandom.length; k++){
-                        if(k == i) continue;
-                        if(tempRandom[i] == tempRandom[k]) {//만약 같은 값이 있다면
-                            tempRandom[i] = -1;   // -1 대입
-                            j--;    //j 1감소
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if(flag) ct++;
                 }
-
-
+                if(!fullCk) {
+                    int originCategoryKeywordSize = categoryKeywordList.size();
+                    for (int j = 0, ct = 0; j < tempRandom.length; j++) {
+                        int i = randomGenerator.nextInt(tempRandom.length);
+                        if (ct == originCategoryKeywordSize - 1) break;
+                        if (tempRandom[i] > -1) {
+                            j--;
+                            continue;
+                        }
+                        if (originCategoryKeywordSize - categoryKeywordList.size() > 3) break;
+                        int randIndex = randomGenerator.nextInt(categoryKeywordList.size());
+                        Keyword tKey = categoryKeywordList.get(randIndex);
+                        int index = -1;
+                        for (Keyword tempKey : mAllKeywords) {
+                            if (tempKey.id == tKey.id) {
+                                index = mAllKeywords.indexOf(tempKey);
+                                break;
+                            }
+                        }
+                        if (index == -1) {   //만약 알 수 없는 이유로 전체 리스트에서 찾을 수 없다면
+                            categoryKeywordList.remove(randIndex);  //카테리스트에서 그 값 remove
+                            j--;    //j 1감소
+                            continue;   //다음 반복 실행
+                        }
+                        if (index == keyIndex) {  //만약 정답이랑 같은 인덱스 값이라면
+                            categoryKeywordList.remove(randIndex);
+                            j--;
+                            continue;
+                        }
+                        tempRandom[i] = index;  //대입
+                        categoryKeywordList.remove(randIndex);
+                        boolean flag = true;
+                        for (int k = 0; k < tempRandom.length; k++) {
+                            if (k == i) continue;
+                            if (tempRandom[i] == tempRandom[k]) {//만약 같은 값이 있다면
+                                tempRandom[i] = -1;   // -1 대입
+                                j--;    //j 1감소
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) ct++;
+                    }
+                }
 
                 for(int i=0; i<tempRandom.length; i++) {
                     while (true) {
