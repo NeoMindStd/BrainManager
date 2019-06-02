@@ -41,6 +41,7 @@
     <string name="MainActivity_search">검색</string>
     <string name="MainActivity_addCategory">카테고리 추가</string>
     <string name="MainActivity_review">복습하기</string>
+    <string name="MainActivity_expired_review">밀린 복습하기!!!</string>
     <string name="MainActivity_statistics">통계</string>
     <string name="MainActivity_setRelations">관계성 설정</string>
     <string name="MainActivity_settings">환경 설정</string>
@@ -80,13 +81,16 @@
     <string name="ReviewActivity_noKeyword">키워드가 없습니다</string>
     <string name="ReviewActivity_lastKeyword">마지막 키워드입니다</string>
     <string name="ReviewActivity_correct">정답!!!</string>
-    <string name="ReviewActivity_wrong">틀렸네요... 괜찮아요</string>
+    <string name="ReviewActivity_wrong">틀렸네요&#8230; 괜찮아요</string>
+    <string name="ReviewActivity_remainReview">
+        만기된 복습이 남아있어요.\n만약 종료하신다면 20분 뒤에 알림을 설정할게요!</string>>
 
     <string name="RelationActivity_error">개의 오류가 발생했습니다</string>
     <string name="RelationActivity_relationAdd">개의 관계성이 추가되었습니다.</string>
 
     <string name="AlarmReceiver_error">알람 생성에 실패했습니다.</string>
-    <string name="AlarmReceiver_date_toast">다음 복습 알람을 %1$s뒤로 설정했습니다.</string>
+    <string name="AlarmReceiver_date_toast">다음 복습 알람을 %1$s뒤로 설정했어요.</string>
+    <string name="AlarmReceiver_cancel">만약 만기된 복습이 없으면 알람은 안떠요.\n</string>
 
     <string name="Notification_title">브레인 매니저</string>
     <string name="Notification_text">&#160;복습이 필요해요</string>

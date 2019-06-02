@@ -46,6 +46,7 @@
     <string name="MainActivity_search">Search</string>
     <string name="MainActivity_addCategory">New Category</string>
     <string name="MainActivity_review">Review</string>
+    <string name="MainActivity_expired_review">There is a review to do!!!</string>
     <string name="MainActivity_statistics">Statistics</string>
     <string name="MainActivity_setRelations">Set relations</string>
     <string name="MainActivity_settings">Settings</string>
@@ -85,13 +86,16 @@
     <string name="ReviewActivity_noKeyword">There\'s no keywords</string>
     <string name="ReviewActivity_lastKeyword">Last Keyword of List</string>
     <string name="ReviewActivity_correct">Correct!!!</string>
-    <string name="ReviewActivity_wrong">Wrong... That\'s OK</string>
+    <string name="ReviewActivity_wrong">Wrong&#8230; That\'s OK</string>
+    <string name="ReviewActivity_remainReview">
+        Expired review remains.\nIf you cancel, you will be notified after 20 minutes.</string>
 
     <string name="RelationActivity_error"> errors occurred</string>
     <string name="RelationActivity_relationAdd"> relationship have been added.</string>
 
     <string name="AlarmReceiver_error">Alarm setting: Error Occur</string>
     <string name="AlarmReceiver_date_toast">Next Review Alarm : %1$slater.</string>
+    <string name="AlarmReceiver_cancel">If you complete expired review, Alarm\'s not showing~\n</string>
 
     <string name="Notification_title">Brain Manager</string>
     <string name="Notification_text">&#160;need a review.</string>
@@ -120,4 +124,5 @@
     <string name="StatisticsActivity_problemSolvingSpeed">Problem solving speed</string>
     <string name="StatisticsActivity_setTargetCorrectAnswerRate">Set target correct answer rate</string>
     <string name="StatisticsActivity_setTargetTime">Set target time</string>
+
 </resources>

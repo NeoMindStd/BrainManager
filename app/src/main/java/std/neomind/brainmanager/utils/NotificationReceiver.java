@@ -1,6 +1,5 @@
 package std.neomind.brainmanager.utils;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,6 +22,7 @@ import std.neomind.brainmanager.R;
 import std.neomind.brainmanager.ReviewActivity;
 
 public final class NotificationReceiver extends BroadcastReceiver {
+    //chan
     private static final String TAG = "NotificationReceiver";
     private static final String CHANNEL = "BrainNotificationChannel";
     private static final String DEFAULT_CHANNEL= "기본 채널";
@@ -42,11 +42,6 @@ public final class NotificationReceiver extends BroadcastReceiver {
                 soundFlag = false;
             }
         }
-
-        //배너 눌렀을 때 전해줄 intent
-        Intent newIntent = new Intent(context, ReviewActivity.class);
-        newIntent.putExtra(ReviewActivity.EXTRAS_MODE, ReviewActivity.BANNER_MODE);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         ArrayList<Integer> idList = new ArrayList<>();
         ArrayList<Long> dateList = new ArrayList<>();
@@ -73,19 +68,19 @@ public final class NotificationReceiver extends BroadcastReceiver {
             return;
         }
 
-        NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        //han
+        //배너 눌렀을 때 전해줄 intent
+        Intent newIntent = new Intent(context, ReviewActivity.class);
+        newIntent.putExtra(ReviewActivity.EXTRAS_MODE, ReviewActivity.EXPIRED_MODE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        //노티피케이션 빌더 초기화
-
-//        builder.setSmallIcon(R.mipmap.ic_launcher).setTicker("Notification.Builder").setWhen(System.currentTimeMillis())
-//                .setNumber(1).setContentTitle(context.getString(R.string.Notification_title)).setContentText(context.getString(R.string.Notification_text))
-//                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingIntent).setAutoCancel(true);
-
+        //만약 알림을 취소하면 넘길 펜딩인텐트
         Intent intentCancel = new Intent(context, AlarmReceiver.class);
-        intentCancel.putExtra(AlarmReceiver.EXTRAS_MODE, "cancelmode");
+        intentCancel.putExtra(AlarmReceiver.EXTRAS_MODE, AlarmReceiver.MODE_CANCEL_BANNER);
         PendingIntent pendingCancelIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intentCancel, 0);
 
+        NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //노티피케이션 빌더 초기화
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
             NotificationChannel mChannel;
