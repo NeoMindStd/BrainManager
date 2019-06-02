@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -36,6 +37,7 @@ import androidx.core.content.ContextCompat;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.snackbar.Snackbar;
 
+import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Test;
 import std.neomind.brainmanager.utils.BrainSerialDataIO;
@@ -49,7 +51,7 @@ public class ReviewActivity extends AppCompatActivity{
 
     public static final String EXTRAS_KEYWORD = "keyword";
     public static final String EXTRAS_MODE = "mode";
-    public static final String BANNER_MODE= "bannerMode";
+    public static final String EXPIRED_MODE = "expiredMode";
 
     private int currentExamType;    // 0이면 오류 1이면 기본문제. 2면 객관식문제 3이면 설명빈칸입력문제
     private Context mContext;
@@ -58,34 +60,34 @@ public class ReviewActivity extends AppCompatActivity{
     private int mCurrentKeyIndex;
     private int mKeywordsSize;
 
-    private ArrayList<Keyword> allKeywords;
-    private int allKeySize;
+    private ArrayList<Keyword> mAllKeywords;
+    private int mAllKeySize;
 
-    private ConstraintLayout examAllLayout;
-    private ConstraintLayout[] examLayoutArray;
+    private ConstraintLayout mExamAllLayout;
+    private ConstraintLayout[] mExamLayoutArray;
     //    private int tMargin, lrMargin, bMargin, width, height, keyTextSize, desTextSize;
 //    Point device_size;
-    private ArrayList<Integer> reviewList;
-    private ArrayList<Long> reviewDateList;
+    private ArrayList<Integer> mReviewList;
+    private ArrayList<Long> mReviewDateList;
 
-    private int selectedExam;   // -1일 때는 선택x상태
-    private int answer;
-    private String answerString;
-    private long examStartTime;
+    private int mSelectedExam;   // -1일 때는 선택x상태
+    private int mAnswer;
+    private String mAnswerString;
+    private long mExamStartTime;
     private long examEndTime;
 
-    private ScrollView textExamScroll;
-    private LinearLayout textExamLayout;
-    private EditText examText;
+    private ScrollView mTextExamScroll;
+    private LinearLayout mTextExamLayout;
+    private EditText mExamText;
 
-    private ConstraintLayout keywordLayout;
-    private ConstraintLayout descriptionLayout;
+    private ConstraintLayout mKeywordLayout;
+    private ConstraintLayout mDescriptionLayout;
 
-    private Button nextButton;
-    private Button AnswerButton;
+    private Button mNextButton;
+    private Button mAnswerButton;
 
-    private boolean openFlag = false;
-
+    private boolean mOpenFlag = false;
+    private BrainDBHandler mBrainDBHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,36 +95,39 @@ public class ReviewActivity extends AppCompatActivity{
         setContentView(R.layout.activity_review);
 
         mContext = this;
-        examAllLayout = findViewById(R.id.review_layout_examAll);
-        descriptionLayout = findViewById(R.id.review_layout_description);
-        textExamScroll = findViewById(R.id.review_scroll_exam);
+        mBrainDBHandler = new BrainDBHandler(mContext);
+        mExamAllLayout = findViewById(R.id.review_layout_examAll);
+        mDescriptionLayout = findViewById(R.id.review_layout_description);
+        mTextExamScroll = findViewById(R.id.review_scroll_exam);
 //
-        reviewList = new ArrayList<>();
-        reviewDateList = new ArrayList<>();
+        mReviewList = new ArrayList<>();
+        mReviewDateList = new ArrayList<>();
         ArrayList<Integer> listID = new ArrayList<>();
         /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
         if(getIntent().getStringExtra(EXTRAS_MODE) == null){
             listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
             try {
-                BrainSerialDataIO.getNextReviewTimeInfo(mContext, reviewList, reviewDateList);
+                BrainSerialDataIO.getNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
             } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
-                reviewList = new ArrayList<>();
-                reviewDateList = new ArrayList<>();
+                mReviewList = new ArrayList<>();
+                mReviewDateList = new ArrayList<>();
                 e.printStackTrace();
             }
         }
         else{
-            /**알람 배너를 눌렸을 때 표시될 저장된 객체 불러오기 **/
+            /**알람 배너를 눌렸을 때, 혹은 만기복습을 해야할 때, 표시될 저장된 객체 불러오기 **/
             try {
-                BrainSerialDataIO.getNextReviewTimeInfo(mContext, reviewList, reviewDateList);
+                BrainSerialDataIO.getNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
             } catch (BrainSerialDataIO.LoadFailException e) {
+                mReviewList = new ArrayList<>();
+                mReviewDateList = new ArrayList<>();
                 e.printStackTrace();
             }
             /** 저장된 객체들 중 알림 시간이 넘은 것들을 불러옴 **/
             long now = System.currentTimeMillis();
-            for(long date : reviewDateList) {
+            for(long date : mReviewDateList) {
                 if (date < now) {
-                    listID.add(reviewList.get(reviewDateList.indexOf(date)));
+                    listID.add(mReviewList.get(mReviewDateList.indexOf(date)));
                 }
             }
         }
@@ -135,22 +140,21 @@ public class ReviewActivity extends AppCompatActivity{
         }
         else {
             // 리스트 연성.
-            BrainDBHandler brainDBHandler = new BrainDBHandler(mContext);
             try {
-                allKeywords = brainDBHandler.getAllKeywords();
-                brainDBHandler.close();
+                mAllKeywords = mBrainDBHandler.getAllKeywords();
+                mBrainDBHandler.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             mTargetKeywords = new ArrayList<Keyword>();
-            for(Keyword key : allKeywords){
+            for(Keyword key : mAllKeywords){
                 if(listID.contains(key.id))
                     mTargetKeywords.add(key);
             }
             // 임시 리스트 제거
             listID.clear();
 
-            allKeySize = allKeywords.size();
+            mAllKeySize = mAllKeywords.size();
             mKeywordsSize = mTargetKeywords.size();
 
             // 연성된 리스트 정렬
@@ -188,9 +192,9 @@ public class ReviewActivity extends AppCompatActivity{
             // 임시 리스트 제거
             ckList.clear();
 
-            nextButton = findViewById(R.id.review_button_nextExam);
-            AnswerButton = findViewById(R.id.review_button_showAnswer);
-            AnswerButton.setOnClickListener(onAnswerViewClickEvent);
+            mNextButton = findViewById(R.id.review_button_nextExam);
+            mAnswerButton = findViewById(R.id.review_button_showAnswer);
+            mAnswerButton.setOnClickListener(onAnswerViewClickEvent);
 
             Toolbar toolbar = findViewById(R.id.main_toolbar);
             setSupportActionBar(toolbar);
@@ -200,35 +204,35 @@ public class ReviewActivity extends AppCompatActivity{
     }
     // examType 은 0,1,2가 있다. 0.오류 1.기본형, 2.객관식문제형, 3.텍스트문제형
     private int generate_view(Keyword key){
-        selectedExam = -1;
+        mSelectedExam = -1;
         Random randomGenerator = new Random();
         int r = randomGenerator.nextInt(3)+1;
         // 테스트
-        int keyIndex = allKeywords.indexOf(key);
+        int keyIndex = mAllKeywords.indexOf(key);
 
         // 레이아웃 참조를 가져올 지역변수.
 
 
-        keywordLayout = findViewById(R.id.review_layout_keyword);
-        for(int i=0; i<keywordLayout.getChildCount(); i++) {
-            keywordLayout.getChildAt(i).setVisibility(View.GONE);
-            keywordLayout.getChildAt(i).setOnLongClickListener(null);
+        mKeywordLayout = findViewById(R.id.review_layout_keyword);
+        for(int i = 0; i< mKeywordLayout.getChildCount(); i++) {
+            mKeywordLayout.getChildAt(i).setVisibility(View.GONE);
+            mKeywordLayout.getChildAt(i).setOnLongClickListener(null);
         }
 
         // VISIBLE 초기화
 
-        examAllLayout.setVisibility(View.GONE);
-        descriptionLayout.setVisibility(View.GONE);
-        textExamScroll.setVisibility(View.GONE);
-        ((EditText) descriptionLayout.getChildAt(0)).setTextAppearance(R.style.keywordTheme);
-        descriptionLayout.getChildAt(0).setEnabled(true);
-        descriptionLayout.getChildAt(0).setClickable(true);
-        descriptionLayout.getChildAt(0).setFocusable(true);
-        descriptionLayout.getChildAt(0).setFocusableInTouchMode(true);
-        ((EditText) descriptionLayout.getChildAt(0)).setCursorVisible(true);
-        descriptionLayout.getChildAt(0).requestFocus();
-        descriptionLayout.getChildAt(0).invalidate();
-        ((EditText) descriptionLayout.getChildAt(0)).setText("");
+        mExamAllLayout.setVisibility(View.GONE);
+        mDescriptionLayout.setVisibility(View.GONE);
+        mTextExamScroll.setVisibility(View.GONE);
+        ((EditText) mDescriptionLayout.getChildAt(0)).setTextAppearance(R.style.keywordTheme);
+        mDescriptionLayout.getChildAt(0).setEnabled(true);
+        mDescriptionLayout.getChildAt(0).setClickable(true);
+        mDescriptionLayout.getChildAt(0).setFocusable(true);
+        mDescriptionLayout.getChildAt(0).setFocusableInTouchMode(true);
+        ((EditText) mDescriptionLayout.getChildAt(0)).setCursorVisible(true);
+        mDescriptionLayout.getChildAt(0).requestFocus();
+        mDescriptionLayout.getChildAt(0).invalidate();
+        ((EditText) mDescriptionLayout.getChildAt(0)).setText("");
 
 
         // keysize = key.name.size()
@@ -243,39 +247,39 @@ public class ReviewActivity extends AppCompatActivity{
         }
         while(true) {
             if (r == 1) {
-                answerString = key.name;
+                mAnswerString = key.name;
 
-                descriptionLayout.setVisibility(View.VISIBLE);
-                if (key.imagePath.isEmpty()) {
+                mDescriptionLayout.setVisibility(View.VISIBLE);
+                if (key.imagePath.isEmpty() || (!key.getDescriptions().isEmpty() && randomGenerator.nextInt(2) == 0)) {
                     String descriptionString ="";
                     for(Description s : key.getDescriptions()){
                         descriptionString += s.description + "\n";
                     }
                     descriptionString = descriptionString.substring(0, descriptionString.length()-1);
-                    keywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
-                    keywordLayout.getChildAt(1).setVisibility(View.GONE);
-                    ((TextView)keywordLayout.getChildAt(0)).setText(descriptionString);
-                    // keywordLayout.setOnLongClickListener();
-                    keywordLayout.getChildAt(0).setOnLongClickListener(longClickListener);
+                    mKeywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
+                    mKeywordLayout.getChildAt(1).setVisibility(View.GONE);
+                    ((TextView) mKeywordLayout.getChildAt(0)).setText(descriptionString);
+                    // mKeywordLayout.setOnLongClickListener();
+                    mKeywordLayout.getChildAt(0).setOnLongClickListener(longClickListener);
                 }else{
-                    keywordLayout.getChildAt(0).setVisibility(View.GONE);
-                    keywordLayout.getChildAt(1).setVisibility(View.VISIBLE);
-                    ((ImageView) keywordLayout.getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+                    mKeywordLayout.getChildAt(0).setVisibility(View.GONE);
+                    mKeywordLayout.getChildAt(1).setVisibility(View.VISIBLE);
+                    ((ImageView) mKeywordLayout.getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                     // descriptionImage 객체 내용지정(이미지파일)
-                    keywordLayout.getChildAt(1).setOnLongClickListener(longClickListener);
+                    mKeywordLayout.getChildAt(1).setOnLongClickListener(longClickListener);
                 }
-                descriptionLayout.getChildAt(0).setVisibility(View.VISIBLE);
-                descriptionLayout.getChildAt(0).setOnKeyListener(onKeyEvent);
+                mDescriptionLayout.getChildAt(0).setVisibility(View.VISIBLE);
+                mDescriptionLayout.getChildAt(0).setOnKeyListener(onKeyEvent);
 
-                examStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
+                mExamStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
                 return 1;
-            } else if (r == 2 && allKeySize > 1) {
-                keywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
-                ((TextView) keywordLayout.getChildAt(0)).setText(key.name);
-                examAllLayout.setVisibility(View.VISIBLE);
+            } else if (r == 2 && mAllKeySize > 1) {
+                mKeywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
+                ((TextView) mKeywordLayout.getChildAt(0)).setText(key.name);
+                mExamAllLayout.setVisibility(View.VISIBLE);
                 // 객관식 문제를 제출하기 위해 설명들의 갯수를 셈. 관련성도 여기에 구현되어야함.
                 int count = 0; // count가 될 수 있는 수는 2 3 4
-                for (Keyword tKey : allKeywords) {
+                for (Keyword tKey : mAllKeywords) {
                     if (count > 4) {
                         count = 4;
                         break;
@@ -298,15 +302,15 @@ public class ReviewActivity extends AppCompatActivity{
                 }
                 // 객관식 문제 초기화. TODO examAllLayout이 한번밖에 안쓰인다면 이를 짧게 수정해야됨. 혹은 확장성을 위해 그대로 두거나
 
-                examLayoutArray = new ConstraintLayout[EXAM_LAYOUT_COUNT];
+                mExamLayoutArray = new ConstraintLayout[EXAM_LAYOUT_COUNT];
 //                for (int i = 0; i < EXAM_LAYOUT_COUNT; i++) {
-//                    examLayoutArray[i] = (ConstraintLayout) examAllLayout.getChildAt(i);
-//                    examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+//                    mExamLayoutArray[i] = (ConstraintLayout) mExamAllLayout.getChildAt(i);
+//                    mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
 //                }
                 // 객관식 문제 제출 총 4개 답안중에 하나 선택해서 정답을 골라야함.
                 // case는 문제 갯수를 뜻하는 것이다. case 2,3만을 조건으로 잡고 default를 쓸 수 있겠지만 혹시모른 에러를 잡기위해 case 4 활용
                 r = randomGenerator.nextInt(count);
-                answer = r; // 문제 정답 번호와 answer을 일치시킴
+                mAnswer = r; // 문제 정답 번호와 answer을 일치시킴
 
                 // 랜덤한 count-1 개의 정답이 아닌 보기
                 int tempRandom[] = new int[count - 1];
@@ -316,10 +320,10 @@ public class ReviewActivity extends AppCompatActivity{
 
 
                 ArrayList<Integer> relationIndexs = new ArrayList<>();
-                for(Keyword tKey : allKeywords){    // 전체 키워드 중에서 릴레이션 리스트 id를 들고와야한다.
+                for(Keyword tKey : mAllKeywords){    // 전체 키워드 중에서 릴레이션 리스트 id를 들고와야한다.
                     for(int id : relationList){
                         if(id == tKey.id) {
-                            relationIndexs.add(allKeywords.indexOf(tKey));
+                            relationIndexs.add(mAllKeywords.indexOf(tKey));
                             break;
                         }
                     }
@@ -327,7 +331,7 @@ public class ReviewActivity extends AppCompatActivity{
                 relationList.clear();
                 // 관계성중에 비어있는 관계성 삭제
                 for(int index : relationIndexs){
-                    if(allKeywords.get(index).imagePath.isEmpty() && allKeywords.get(index).getDescriptions().isEmpty())
+                    if(mAllKeywords.get(index).imagePath.isEmpty() && mAllKeywords.get(index).getDescriptions().isEmpty())
                         relationIndexs.remove((Integer)index);
                 }
 
@@ -335,35 +339,90 @@ public class ReviewActivity extends AppCompatActivity{
                 int tempRandomRel[] = new int[tempRandom.length];
 
 
-
-                for(int i=0; i<tempRandomRel.length; i++){
+                for(int i=0; i<tempRandom.length; i++){
                     tempRandomRel[i] = randomGenerator.nextInt(tempRandom.length);
                     for(int j=0; j<i; j++) {
                         if(tempRandomRel[i] == tempRandomRel[j]) i--;
                     }
                 }// 랜덤하게 인덱스를 3개 만드는거임.
                 // 크기에 맞춰서 사이즈를 제작.
-                int temp_size = relationIndexs.size() > 3 ? 4 : relationIndexs.size();
-                temp_size = temp_size > tempRandom.length ? tempRandom.length : temp_size;
+                int tempSize = relationIndexs.size() > 3 ? 4 : relationIndexs.size();
+                tempSize = tempSize > tempRandom.length ? tempRandom.length : tempSize;
 
-                for(int i=0; i<temp_size; i++) {
+                for(int i=0; i<tempSize; i++) {
                     tempRandom[tempRandomRel[i]] = relationIndexs.get(randomGenerator.nextInt(relationIndexs.size()));
-                    for(int j=0; j<temp_size; j++) {
+                    for(int j=0; j<tempSize; j++) {
                         if(j != tempRandomRel[i])
                             if(tempRandom[tempRandomRel[i]] == tempRandom[j]) i--;
                     }
-                }// 관계성들 갯수에 맞게 랜덤 인덱스를 생성시켜 allkeywrds에서의 인덱스를 저장시킴
+                }// 관계성들 갯수에 맞게 랜덤 인덱스를 생성시켜 allkeywords에서의 인덱스를 저장시킴
+
+
+                //관계성에 맞게 채워넣었으니 이제 카테고리의 allkeywords에서의 인덱스를 저장시켜야됨.
+                ArrayList<Keyword> categoryKeywordList;
+                try {
+                    categoryKeywordList = mBrainDBHandler.getAllKeywordsOfTheCategory(key.cid);
+                    mBrainDBHandler.close();
+                } catch (Exception e) {
+                    categoryKeywordList = new ArrayList<>();
+                    e.printStackTrace();
+                }
+
+                int originCategoryKeywordSize = categoryKeywordList.size();
+                for(int j=0, ct=0; j<tempRandom.length; j++) {
+                    int i = randomGenerator.nextInt(tempRandom.length);
+                    if(ct == originCategoryKeywordSize - 1) break;
+                    if(tempRandom[i] > -1) {
+                        j--;
+                        continue;
+                    }
+                    if(originCategoryKeywordSize - categoryKeywordList.size() > 3) break;
+                    int randIndex = randomGenerator.nextInt(categoryKeywordList.size());
+                    Keyword tKey = categoryKeywordList.get(randIndex);
+                    int index = -1;
+                    for(Keyword tempKey : mAllKeywords) {
+                        if(tempKey.id == tKey.id) {
+                            index = mAllKeywords.indexOf(tempKey);
+                            break;
+                        }
+                    }
+                    if(index == -1) {   //만약 알 수 없는 이유로 전체 리스트에서 찾을 수 없다면
+                        categoryKeywordList.remove(randIndex);  //카테리스트에서 그 값 remove
+                        j--;    //j 1감소
+                        continue;   //다음 반복 실행
+                    }
+                    if(index == keyIndex){  //만약 정답이랑 같은 인덱스 값이라면
+                        categoryKeywordList.remove(randIndex);
+                        j--;
+                        continue;
+                    }
+                    tempRandom[i] = index;  //대입
+                    categoryKeywordList.remove(randIndex);
+                    boolean flag = true;
+                    for(int k=0; k<tempRandom.length; k++){
+                        if(k == i) continue;
+                        if(tempRandom[i] == tempRandom[k]) {//만약 같은 값이 있다면
+                            tempRandom[i] = -1;   // -1 대입
+                            j--;    //j 1감소
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if(flag) ct++;
+                }
+
+
 
                 for(int i=0; i<tempRandom.length; i++) {
                     while (true) {
                         if(tempRandom[i] > -1) break;   // 이미 값이 채워져 있으면 패스
                         boolean ck = true;
-                        tempRandom[i] = randomGenerator.nextInt(allKeySize);
+                        tempRandom[i] = randomGenerator.nextInt(mAllKeySize);
                         if(tempRandom[i] == keyIndex){
                             tempRandom[i] = -1;
                             continue;
                         } // 정답인 키 인덱스와 값이 같으면 안됨.
-                        Keyword tKey = allKeywords.get(tempRandom[i]);
+                        Keyword tKey = mAllKeywords.get(tempRandom[i]);
                         if(tKey.getDescriptions().isEmpty() && tKey.imagePath.isEmpty()) {
                             tempRandom[i] = -1;
                             continue;
@@ -381,58 +440,58 @@ public class ReviewActivity extends AppCompatActivity{
                 }
 
                 for(int i = 0, j = 0; i< EXAM_LAYOUT_COUNT; i++) {
-                    examLayoutArray[i] = (ConstraintLayout) examAllLayout.getChildAt(i);
-                    examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
-                    examLayoutArray[i].setVisibility(View.VISIBLE);
-                    examLayoutArray[i].getChildAt(0).setOnClickListener(null);
-                    examLayoutArray[i].getChildAt(1).setOnClickListener(null);
+                    mExamLayoutArray[i] = (ConstraintLayout) mExamAllLayout.getChildAt(i);
+                    mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                    mExamLayoutArray[i].setVisibility(View.VISIBLE);
+                    mExamLayoutArray[i].getChildAt(0).setOnClickListener(null);
+                    mExamLayoutArray[i].getChildAt(1).setOnClickListener(null);
 
                     if(count-1 < i) {   // 사용가능한 문제 개수-1 보다 i가 클경우
-//                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_gray_rounded));
+//                        mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_gray_rounded));
                         continue;
                     }
                     if(r==i) {
-                        if (key.imagePath.isEmpty()) {
+                        if (key.imagePath.isEmpty() || (!key.getDescriptions().isEmpty() && randomGenerator.nextInt(2) == 0)) {
                             String descriptionString ="";
                             for(Description s : key.getDescriptions()){
                                 descriptionString += s.description + "\n";
                             }
                             descriptionString = descriptionString.substring(0, descriptionString.length()-1);
-                            examLayoutArray[i].getChildAt(0).setVisibility(View.VISIBLE);
-                            examLayoutArray[i].getChildAt(1).setVisibility(View.GONE);
-                            ((TextView) examLayoutArray[i].getChildAt(0)).setText(descriptionString);
-                            examLayoutArray[i].getChildAt(0).setOnLongClickListener(longClickListener);
+                            mExamLayoutArray[i].getChildAt(0).setVisibility(View.VISIBLE);
+                            mExamLayoutArray[i].getChildAt(1).setVisibility(View.GONE);
+                            ((TextView) mExamLayoutArray[i].getChildAt(0)).setText(descriptionString);
+                            mExamLayoutArray[i].getChildAt(0).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
-                            examLayoutArray[i].getChildAt(0).setOnClickListener(examClickEvent);
+                            mExamLayoutArray[i].getChildAt(0).setOnClickListener(examClickEvent);
                         } else {
-                            examLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
-                            examLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
-                            ((ImageView) examLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
-                            examLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
+                            mExamLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
+                            mExamLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
+                            ((ImageView) mExamLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+                            mExamLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
-                            examLayoutArray[i].getChildAt(1).setOnClickListener(examClickEvent);
+                            mExamLayoutArray[i].getChildAt(1).setOnClickListener(examClickEvent);
                         }
                     }else{
-                        Keyword examTemp = allKeywords.get(tempRandom[j++]);
-                        if (examTemp.imagePath.isEmpty()) {
+                        Keyword examTemp = mAllKeywords.get(tempRandom[j++]);
+                        if (examTemp.imagePath.isEmpty() || (!examTemp.getDescriptions().isEmpty() && randomGenerator.nextInt(2) == 0)) {
                             String descriptionString ="";
                             for(Description s : examTemp.getDescriptions()){
                                 descriptionString += s.description + "\n";
                             }
                             descriptionString = descriptionString.substring(0, descriptionString.length()-1);
-                            examLayoutArray[i].getChildAt(0).setVisibility(View.VISIBLE);
-                            examLayoutArray[i].getChildAt(1).setVisibility(View.GONE);
-                            ((TextView) examLayoutArray[i].getChildAt(0)).setText(descriptionString);
-                            examLayoutArray[i].getChildAt(0).setOnLongClickListener(longClickListener);
+                            mExamLayoutArray[i].getChildAt(0).setVisibility(View.VISIBLE);
+                            mExamLayoutArray[i].getChildAt(1).setVisibility(View.GONE);
+                            ((TextView) mExamLayoutArray[i].getChildAt(0)).setText(descriptionString);
+                            mExamLayoutArray[i].getChildAt(0).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
-                            examLayoutArray[i].getChildAt(0).setOnClickListener(examClickEvent);
+                            mExamLayoutArray[i].getChildAt(0).setOnClickListener(examClickEvent);
                         } else {
-                            examLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
-                            examLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
-                            ((ImageView) examLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(examTemp.imagePath));
-                            examLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
+                            mExamLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
+                            mExamLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
+                            ((ImageView) mExamLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(examTemp.imagePath));
+                            mExamLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
-                            examLayoutArray[i].getChildAt(1).setOnClickListener(examClickEvent);
+                            mExamLayoutArray[i].getChildAt(1).setOnClickListener(examClickEvent);
                         }
                     }
                 }
@@ -443,16 +502,16 @@ public class ReviewActivity extends AppCompatActivity{
 //                        r = randomGenerator.nextInt(2);
 //                        if (r == 1) r++;
 //                        for (int j = 0; j < 3; j += 2) {
-//                            examLayoutArray[j].setVisibility(View.VISIBLE);
+//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
 //                            for (int i = 0; i < 2; i++) {
-//                                examLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
 //                            }
 //                            if (key.imagePath.isEmpty()) {
-//                                examLayoutArray[j].getChildAt(0).setVisibility(View.VISIBLE);
-//                                if(r==j) ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
+//                                mExamLayoutArray[j].getChildAt(0).setVisibility(View.VISIBLE);
+//                                if(r==j) ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
 //                            } else {
-//                                examLayoutArray[j].getChildAt(1).setVisibility(View.VISIBLE);
-//                                if(r==j) ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+//                                mExamLayoutArray[j].getChildAt(1).setVisibility(View.VISIBLE);
+//                                if(r==j) ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
 //                            }
 //                        }
 //
@@ -460,34 +519,34 @@ public class ReviewActivity extends AppCompatActivity{
 //                        break;
 //                    case 3:
 //                        for (int j = 0; j < 3; j++) {
-//                            examLayoutArray[j].setVisibility(View.VISIBLE);
+//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
 //                            for (int i = 0; i < 2; i++) {
-//                                examLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
 //                            }
 //                        }
 //                        r = randomGenerator.nextInt(3);
 //                        if (key.imagePath.isEmpty()) {
-//                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
+//                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
 //                        } else
-//                            ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+//                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
 //                        break;
 //                    case 4:
 //                        for (int j = 0; j < 4; j++) {
-//                            examLayoutArray[j].setVisibility(View.VISIBLE);
+//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
 //                            for (int i = 0; i < 2; i++) {
-//                                examLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
 //                            }
 //                        }
 //                        r = randomGenerator.nextInt(4);
 //                        if (key.imagePath.isEmpty()) {
-//                            ((TextView) examLayoutArray[r].getChildAt(0)).setText(key.name);
+//                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
 //                        } else
-//                            ((ImageView) examLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+//                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
 //                        break;
 //                    default:
 //                        break;
 //                }
-                examStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
+                mExamStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
                 return 2;
             }
             // 만약 r=2라도 사용자가 작성한 키워드의 갯수가 1개보다 작거나 같으면 r값을 바꿔 while문을 다시 시도한다.
@@ -503,9 +562,9 @@ public class ReviewActivity extends AppCompatActivity{
             }
             else {  // r=3일 때를 뜻함.
                 // TODO 설명부를 랜덤한 부분을 빈칸으로 만드는 코드 필요
-                keywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
-                ((TextView) keywordLayout.getChildAt(0)).setText(key.name);
-//                textExamScroll = findViewById(R.id.review_scroll_exam);
+                mKeywordLayout.getChildAt(0).setVisibility(View.VISIBLE);
+                ((TextView) mKeywordLayout.getChildAt(0)).setText(key.name);
+//                mTextExamScroll = findViewById(R.id.review_scroll_exam);
 
                 ArrayList<String> descriptionString = new ArrayList<>();
                 for(Description s : key.getDescriptions()){
@@ -540,7 +599,7 @@ public class ReviewActivity extends AppCompatActivity{
                 int r2 = randomGenerator.nextInt(arrayStrLength);   // r2는 어절을 비울 위치이다.
                 TextView tempTextView2;
                 tempTextView2 = new TextView(this);
-                answerString = arrayStr[r2];
+                mAnswerString = arrayStr[r2];
 
                 String sumStr = "";
                 if(r2 == 0){    // 만약 첫번째 위치인경우
@@ -563,37 +622,37 @@ public class ReviewActivity extends AppCompatActivity{
                     tempTextView2.setTextAppearance(R.style.textExamTheme);
                 }
 
-                textExamScroll.setVisibility(View.VISIBLE);
-                textExamLayout = findViewById(R.id.review_scroll_linear_layout);
-                textExamLayout.setVisibility(View.VISIBLE);
+                mTextExamScroll.setVisibility(View.VISIBLE);
+                mTextExamLayout = findViewById(R.id.review_scroll_linear_layout);
+                mTextExamLayout.setVisibility(View.VISIBLE);
 
-                examText = new EditText(this);      // 정답을 넣어야되는 에디트텍스트
-                examText.setTextAppearance(R.style.textExamTheme);
-                examText.setSingleLine(true);
-                examText.setLines(1);
-                examText.setOnKeyListener(onKeyEvent);
+                mExamText = new EditText(this);      // 정답을 넣어야되는 에디트텍스트
+                mExamText.setTextAppearance(R.style.textExamTheme);
+                mExamText.setSingleLine(true);
+                mExamText.setLines(1);
+                mExamText.setOnKeyListener(onKeyEvent);
 
                 for(int i=0; i<tempTextView.length; i++){   // 설명의 개수(=Description, tempTextView의 개수)만큼 반복된다.
                     LinearLayout tempLinearLayout = new LinearLayout(this);
                     tempLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                     if(i==r) {
                         if (r2 == 0) {
-                            tempLinearLayout.addView(examText);
+                            tempLinearLayout.addView(mExamText);
                             tempLinearLayout.addView(tempTextView[i]);
                         } else if (r2 == arrayStrLength - 1) {
                             tempLinearLayout.addView(tempTextView[i]);
-                            tempLinearLayout.addView(examText);
+                            tempLinearLayout.addView(mExamText);
                         } else {
                             tempLinearLayout.addView(tempTextView[i]);
-                            tempLinearLayout.addView(examText);
+                            tempLinearLayout.addView(mExamText);
                             tempLinearLayout.addView(tempTextView2);
                         }
-                        textExamLayout.addView(tempLinearLayout);
+                        mTextExamLayout.addView(tempLinearLayout);
                         continue;
                     }
-                    textExamLayout.addView(tempTextView[i]);
+                    mTextExamLayout.addView(tempTextView[i]);
                 }
-                examStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
+                mExamStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
                 return 3;
             }
         }
@@ -602,7 +661,7 @@ public class ReviewActivity extends AppCompatActivity{
         // keywordText.setLayoutParams(param);
 
 
-        // ConstraintLayout.LayoutParams param2 = (ConstraintLayout.LayoutParams) descriptionLayout.getLayoutParams();
+        // ConstraintLayout.LayoutParams param2 = (ConstraintLayout.LayoutParams) mDescriptionLayout.getLayoutParams();
         // param2.setMargins(0, 0, 0, bMargin);
     }
     // 분단위로 다음 복습시간을 반환함.
@@ -622,23 +681,22 @@ public class ReviewActivity extends AppCompatActivity{
             }
         }
         if(currentExamType == 2){
-            BrainDBHandler dbHandler = new BrainDBHandler(this);
             Keyword k;
             int i = 0;
             for(Integer relID : keyRelList) {
                 try {
-                    k = dbHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, relID);
+                    k = mBrainDBHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, relID);
                     if(!k.imagePath.isEmpty() || k.getDescriptions() != null) {
                         relCount++;
                         i++;
                     }
+                    mBrainDBHandler.close();
                 }
                 catch(BrainDBHandler.NoMatchingDataException e){
                     e.printStackTrace();
                 }
                 if(i == 4) break;
             }
-            dbHandler.close();
         }
         int rating;
         int lastInterval = key.interval;
@@ -680,7 +738,7 @@ public class ReviewActivity extends AppCompatActivity{
         //
         // 만약 첫복습이 아닌데 불구하고 reviewList와 reviewDateList의 크기가 0이거나 key.id의 인덱스를 찾을 수 없는 경우 에러값을 반환한다.
         // => 에러값이 아닌 currentLevels를 0으로 바꾸자
-        if(key.currentLevels > 0 && (reviewList.isEmpty() || reviewDateList.isEmpty() || reviewList.indexOf(key.id) == -1)){
+        if(key.currentLevels > 0 && (mReviewList.isEmpty() || mReviewDateList.isEmpty() || mReviewList.indexOf(key.id) == -1)){
             Toast.makeText(getApplicationContext(), getString(R.string.
                     Global_errorOccurred), Toast.LENGTH_LONG).show();
             key.currentLevels = 0;
@@ -691,9 +749,9 @@ public class ReviewActivity extends AppCompatActivity{
 
         key.reviewTimes++;
         if(key.currentLevels == 0) {
-            if(key.reviewTimes > 0 && reviewList.indexOf(key.id) != -1) {
-                correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-                diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+            if(key.reviewTimes > 0 && mReviewList.indexOf(key.id) != -1) {
+                correctReviewDate = mReviewDateList.get(mReviewList.indexOf(key.id));
+                diffInterval = (int) ((correctReviewDate - examEndTime) / 60000);
                 if (diffInterval < 0) {
                     key.currentLevels++;
                     key.interval = (int) (20 * relation);
@@ -705,9 +763,9 @@ public class ReviewActivity extends AppCompatActivity{
             key.interval = (int) (20 * relation);
             return examEndTime + (key.interval * 60000);
         }
-        else if(key.currentLevels == 1 && reviewList.indexOf(key.id) != -1) {
-            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+        else if(key.currentLevels == 1 && mReviewList.indexOf(key.id) != -1) {
+            correctReviewDate = mReviewDateList.get(mReviewList.indexOf(key.id));
+            diffInterval = (int) ((correctReviewDate - examEndTime) / 60000);
 
             if(diffInterval < 0) {
                 key.currentLevels++;
@@ -716,9 +774,9 @@ public class ReviewActivity extends AppCompatActivity{
             }
             return correctReviewDate;
         }
-        else if(key.currentLevels == 2 && reviewList.indexOf(key.id) != -1){
-            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+        else if(key.currentLevels == 2 && mReviewList.indexOf(key.id) != -1){
+            correctReviewDate = mReviewDateList.get(mReviewList.indexOf(key.id));
+            diffInterval = (int)((correctReviewDate - examEndTime) / 60000);
 
             if(diffInterval < 0) {
                 key.currentLevels++;
@@ -727,9 +785,9 @@ public class ReviewActivity extends AppCompatActivity{
             }
             return correctReviewDate;
         }
-        else if(reviewList.indexOf(key.id) != -1){
-            correctReviewDate = reviewDateList.get(reviewList.indexOf(key.id));
-            diffInterval = (int) (correctReviewDate - examEndTime) / 60000;
+        else if(mReviewList.indexOf(key.id) != -1){
+            correctReviewDate = mReviewDateList.get(mReviewList.indexOf(key.id));
+            diffInterval = (int) ((correctReviewDate - examEndTime) / 60000);
 
             if(diffInterval < 0) {
                 key.currentLevels++;
@@ -746,7 +804,8 @@ public class ReviewActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        if(openFlag) {
+
+        if(mOpenFlag) {
             ConstraintLayout constraintLayout = findViewById(R.id.review_constraintLayout_popup);
             final ScrollView scrollView = findViewById(R.id.review_text_scroll);
             final PhotoView photoView = findViewById(R.id.review_photo_view);
@@ -759,18 +818,53 @@ public class ReviewActivity extends AppCompatActivity{
             photoView.setVisibility(View.GONE);
             scrollView.setVisibility(View.GONE);
 
-            openFlag = false;
+            mOpenFlag = false;
         }
         else{
-            if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
-                super.onBackPressed();
+            boolean tempFlag = false;
+            if(mReviewDateList != null && mReviewDateList.size() > 0 && mReviewDateList.size() == mReviewList.size()) {
+                //현재 복습하고 있는 키워드들 중에서 복습간격이 만기된 알림이 있으면 플래그를 true로 만듬
+                for (Keyword key : mTargetKeywords) {
+                    if (mReviewList.contains(key.id)) {
+                        if (mReviewDateList.get(mReviewList.indexOf(key.id)) < mExamStartTime) {
+                            tempFlag = true;
+                            break;
+                        }
+                    }
+                }
             }
-            else {
-                super.onBackPressed();
-                Intent intent = new Intent(mContext, MainActivity.class);
-                startActivity(intent);
+            //상수화
+            final boolean showFlag = tempFlag;
+            //복습하기 화면을 나가려고 할 때 나타나는 AlertDialog
+            //showFlag가 true라면 cancelmoe로 알람리시버를 동작시킴.
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.AlertDialog_askReallyCancel))
+                .setPositiveButton(getString(R.string.AlertDialog_button_yes),
+                        (dialog, which) -> {
+                            if(showFlag) {
+                                Intent intent = new Intent(mContext, AlarmReceiver.class);
+                                intent.putExtra(AlarmReceiver.EXTRAS_MODE, AlarmReceiver.MODE_CANCEL_REVIEW);
+                                sendBroadcast(intent);
+                            }
+                            else {
+                                Toast.makeText(this, getString(R.string.Global_canceled), Toast.LENGTH_SHORT).show();
+                            }
+                            if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
+                                super.onBackPressed();
+                            }
+                            else {
+                                super.onBackPressed();
+                                Intent intent = new Intent(mContext, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                .setNegativeButton(getString(R.string.AlertDialog_button_no), null);
+            if(showFlag) {
+                builder.setMessage((getString(R.string.ReviewActivity_remainReview)));
             }
+            builder.show();
         }
+
     }
 
     // 설명을 적어서 맞추는 문제일 때 엔터키의 동작을 변경하는 이벤트 리스너
@@ -788,7 +882,7 @@ public class ReviewActivity extends AppCompatActivity{
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             return true;
         }
-        return (keyCode == KeyEvent.KEYCODE_ENTER);
+        return false;
     };
 
     private View.OnClickListener onAnswerViewClickEvent = new View.OnClickListener(){
@@ -800,51 +894,51 @@ public class ReviewActivity extends AppCompatActivity{
             // Date nowDate = new Date(examEndTime); 추후 Date 저장으로 바뀌면 이걸로 사용
 
             boolean passed = false;
-            int answerTime = (int)(examEndTime - examStartTime);    // int형으로 형변환
+            int answerTime = (int)(examEndTime - mExamStartTime);    // int형으로 형변환
 
             switch(currentExamType){
                 case 1:
-                    if(answerString.replaceAll("\\p{Z}", "").
-                            equals(((EditText) descriptionLayout.getChildAt(0)).
+                    if(mAnswerString.replaceAll("\\p{Z}", "").
+                            equals(((EditText) mDescriptionLayout.getChildAt(0)).
                                     getText().toString().
                                     replaceAll("\\p{Z}", ""))){
                         passed = true;
                     }
-                    ((EditText) descriptionLayout.getChildAt(0)).setText(answerString);
-                    ((EditText) descriptionLayout.getChildAt(0)).setTextAppearance(R.style.answerKeywordTheme);
-                    ((EditText) descriptionLayout.getChildAt(0)).setCursorVisible(false);
-                    descriptionLayout.getChildAt(0).setEnabled(false);
-                    descriptionLayout.getChildAt(0).setClickable(false);
-                    descriptionLayout.getChildAt(0).setFocusable(false);
-                    descriptionLayout.getChildAt(0).setFocusableInTouchMode(false);
+                    ((EditText) mDescriptionLayout.getChildAt(0)).setText(mAnswerString);
+                    ((EditText) mDescriptionLayout.getChildAt(0)).setTextAppearance(R.style.answerKeywordTheme);
+                    ((EditText) mDescriptionLayout.getChildAt(0)).setCursorVisible(false);
+                    mDescriptionLayout.getChildAt(0).setEnabled(false);
+                    mDescriptionLayout.getChildAt(0).setClickable(false);
+                    mDescriptionLayout.getChildAt(0).setFocusable(false);
+                    mDescriptionLayout.getChildAt(0).setFocusableInTouchMode(false);
                     break;
                 case 2:
-                    examLayoutArray[answer].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_green_rounded));
+                    mExamLayoutArray[mAnswer].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_green_rounded));
                     for(int i = 0; i < EXAM_LAYOUT_COUNT; i++){
-                        examLayoutArray[i].getChildAt(0).setOnClickListener(null);
-                        examLayoutArray[i].getChildAt(1).setOnClickListener(null);
+                        mExamLayoutArray[i].getChildAt(0).setOnClickListener(null);
+                        mExamLayoutArray[i].getChildAt(1).setOnClickListener(null);
                     }
-                    if(answer == selectedExam){
+                    if(mAnswer == mSelectedExam){
                         passed = true;
                     }
                     else{
-                        if(!(selectedExam == -1))
-                            examLayoutArray[selectedExam].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_red_rounded));
+                        if(!(mSelectedExam == -1))
+                            mExamLayoutArray[mSelectedExam].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_red_rounded));
                     }
                     break;
                 case 3:
-                    if(answerString.replaceAll("\\p{Z}", "").
-                            equals(examText.getText().toString().
+                    if(mAnswerString.replaceAll("\\p{Z}", "").
+                            equals(mExamText.getText().toString().
                                     replaceAll("\\p{Z}", ""))) {
                         passed = true;
                     }
-                    examText.setText(answerString);
-                    examText.setTextAppearance(R.style.answerTextExamTheme);
-                    examText.setCursorVisible(false);
-                    examText.setEnabled(false);
-                    examText.setClickable(false);
-                    examText.setFocusable(false);
-                    examText.setFocusableInTouchMode(false);
+                    mExamText.setText(mAnswerString);
+                    mExamText.setTextAppearance(R.style.answerTextExamTheme);
+                    mExamText.setCursorVisible(false);
+                    mExamText.setEnabled(false);
+                    mExamText.setClickable(false);
+                    mExamText.setFocusable(false);
+                    mExamText.setFocusableInTouchMode(false);
                     break;
                 default:
                     return; // 오류
@@ -862,27 +956,27 @@ public class ReviewActivity extends AppCompatActivity{
             long nextReviewTime = getReviewTime(key, answerTime, passed);
 
             if(nextReviewTime != Long.MIN_VALUE) {
-                if (!reviewList.isEmpty() && !reviewDateList.isEmpty()) {
-                    int temp = reviewList.indexOf(key.id);
+                if (!mReviewList.isEmpty() && !mReviewDateList.isEmpty()) {
+                    int temp = mReviewList.indexOf(key.id);
                     if (temp == -1) { // -1은 해당 원소가 reviewList에 없을 때 반환된다
-                        reviewList.add(key.id);
-                        reviewDateList.add(nextReviewTime);
+                        mReviewList.add(key.id);
+                        mReviewDateList.add(nextReviewTime);
                     } else {   // 만약 있다면 examStartTime보다 작을 경우 복습이 됐다는 의미이므로 리스트에 해당 알림시간을 삭제하고 새로운 복습시간을 할당한다.
-                        if (reviewDateList.get(temp) < examStartTime) {
-                            reviewList.remove(temp);
-                            reviewDateList.remove(temp);
-                            reviewList.add(key.id);
-                            reviewDateList.add(nextReviewTime);
+                        if (mReviewDateList.get(temp) < mExamStartTime) {
+                            mReviewList.remove(temp);
+                            mReviewDateList.remove(temp);
+                            mReviewList.add(key.id);
+                            mReviewDateList.add(nextReviewTime);
                         }
                         // 클경우엔 알림을 그대로 둔다.
                     }
                 } else {   // 만약 비었다면 새롭게 추가한다.
-                    reviewList.add(key.id);
-                    reviewDateList.add(nextReviewTime);
+                    mReviewList.add(key.id);
+                    mReviewDateList.add(nextReviewTime);
                 }
                 /** 객체 저장 **/
                 try {
-                    BrainSerialDataIO.saveNextReviewTimeInfo(mContext, reviewList, reviewDateList);
+                    BrainSerialDataIO.saveNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
                 } catch (BrainSerialDataIO.SaveFailException e) {
                     Log.d(TAG, "객체저장에서 에러 발생");
                     e.printStackTrace();
@@ -890,6 +984,7 @@ public class ReviewActivity extends AppCompatActivity{
                     Log.d(TAG, "객체저장에서 에러 발생");
                     e.printStackTrace();
                 }
+                //알람 리시버에 발신
                 Intent intent = new Intent(mContext, AlarmReceiver.class);
                 intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, nextReviewTime);
                 sendBroadcast(intent);
@@ -898,8 +993,7 @@ public class ReviewActivity extends AppCompatActivity{
                         Global_errorOccurred), Toast.LENGTH_LONG).show();
             }
 
-            BrainDBHandler dbHandler = new BrainDBHandler(ReviewActivity.this);
-            dbHandler.updateKeyword(key);
+            mBrainDBHandler.updateKeyword(key);
             Test resultTest = new Test.Builder()
                     .setCid(key.cid)
                     .setKid(key.id)
@@ -908,21 +1002,22 @@ public class ReviewActivity extends AppCompatActivity{
                     .setTestedDate(examEndTime)
                     .setType(currentExamType)
                     .build();
-            dbHandler.addTest(resultTest);
+            mBrainDBHandler.addTest(resultTest);
+            mBrainDBHandler.close();
 
-            AnswerButton.setOnClickListener(null);
-            nextButton.setOnClickListener(onNextClickEvent);
+            mAnswerButton.setOnClickListener(null);
+            mNextButton.setOnClickListener(onNextClickEvent);
         }
     };
 
     private  View.OnClickListener onNextClickEvent = new View.OnClickListener(){
         @Override
         public void onClick(View v){
-            AnswerButton.setOnClickListener(onAnswerViewClickEvent);
-            nextButton.setOnClickListener(null);
+            mAnswerButton.setOnClickListener(onAnswerViewClickEvent);
+            mNextButton.setOnClickListener(null);
             // 텍스트 시험 초기화
-            if(textExamLayout != null)
-                textExamLayout.removeAllViews();
+            if(mTextExamLayout != null)
+                mTextExamLayout.removeAllViews();
             if(++mCurrentKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(mCurrentKeyIndex));
             else{
                 finish();
@@ -945,16 +1040,16 @@ public class ReviewActivity extends AppCompatActivity{
 
             for(int i=0; i<EXAM_LAYOUT_COUNT; i++) {
                 if(i==selected) {
-                    if (selectedExam == selected) {
-                        selectedExam = -1;
-                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                    if (mSelectedExam == selected) {
+                        mSelectedExam = -1;
+                        mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
                     } else {
-                        selectedExam = selected;
-                        examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_blue_rounded));
+                        mSelectedExam = selected;
+                        mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_blue_rounded));
                     }
                     continue;
                 }
-                examLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
             }
         }
     }
@@ -962,7 +1057,7 @@ public class ReviewActivity extends AppCompatActivity{
     private View.OnLongClickListener longClickListener = v -> {
         ConstraintLayout constraintLayout = findViewById(R.id.review_constraintLayout_popup);
         constraintLayout.setVisibility(View.VISIBLE);
-        openFlag=true;
+        mOpenFlag =true;
         if (v instanceof ImageView) {
             final PhotoView photoView = findViewById(R.id.review_photo_view);
             photoView.setImageDrawable(((ImageView) v).getDrawable());
@@ -971,7 +1066,7 @@ public class ReviewActivity extends AppCompatActivity{
                 photoView.setImageResource(0);
                 photoView.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.GONE);
-                openFlag=false;
+                mOpenFlag =false;
             });
         } else if (v instanceof TextView) {
             final TextView textView = findViewById(R.id.review_text_view);
@@ -984,7 +1079,7 @@ public class ReviewActivity extends AppCompatActivity{
                 textView.setText("");
                 scrollView.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.GONE);
-                openFlag=false;
+                mOpenFlag =false;
             });
         }
         return true;

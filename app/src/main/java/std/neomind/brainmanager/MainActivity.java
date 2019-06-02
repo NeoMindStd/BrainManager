@@ -109,8 +109,41 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         loadDB();
+
+        ArrayList<Integer> reviewList = new ArrayList<>();
+        ArrayList<Long> reviewDateList = new ArrayList<>();
+        try {
+            BrainSerialDataIO.getNextReviewTimeInfo(this, reviewList, reviewDateList);
+        } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
+            reviewList = new ArrayList<>();
+            reviewDateList = new ArrayList<>();
+            e.printStackTrace();
+        }
+        boolean tempFlag = false;
+        if(reviewDateList.size() > 0 && reviewDateList.size() == reviewList.size()) {
+            ArrayList<Keyword> allKeywords;
+            try {
+                allKeywords = mBrainDBHandler.getAllKeywords();
+                mBrainDBHandler.close();
+            } catch (Exception e) {
+                allKeywords = new ArrayList<>();
+                e.printStackTrace();
+            }
+            //전체 키워드들 중에서 복습간격이 만기된 알림이 있으면 플래그를 true로 만듬
+            for (Keyword key : allKeywords) {
+                if (reviewList.contains(key.id)) {
+                    if (reviewDateList.get(reviewList.indexOf(key.id)) < System.currentTimeMillis()) {
+                        tempFlag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        NavigationView navigationView = findViewById(R.id.main_navView);
+        Menu menu = navigationView.getMenu();
+        MenuItem expired_item = menu.findItem(R.id.nav_expired_review);
+        expired_item.setVisible(tempFlag);
     }
 
     @Override
@@ -180,6 +213,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_review:
                 intent = new Intent(this, ReviewActivity.class);
                 intent.putExtra(ReviewActivity.EXTRAS_KEYWORD, list);
+                break;
+            case R.id.nav_expired_review:
+                intent = new Intent(this, ReviewActivity.class);
+                intent.putExtra(ReviewActivity.EXTRAS_MODE, ReviewActivity.EXPIRED_MODE);
                 break;
             case R.id.nav_statistics:
                 intent = new Intent(this, StatisticsActivity.class);

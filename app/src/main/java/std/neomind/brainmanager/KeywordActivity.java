@@ -10,7 +10,9 @@ import androidx.appcompat.widget.Toolbar;
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;
 import std.neomind.brainmanager.data.Keyword;
+import std.neomind.brainmanager.utils.AlarmReceiver;
 import std.neomind.brainmanager.utils.BrainDBHandler;
+import std.neomind.brainmanager.utils.BrainSerialDataIO;
 import std.neomind.brainmanager.utils.FileManager;
 
 import android.util.Log;
@@ -344,6 +346,38 @@ public class KeywordActivity extends AppCompatActivity {
                     case INTENT_MODE_REGISTER :
                         mBrainDBHandler.addKeyword(mKeyword);
                         infoHead = getString(R.string.Global_added);
+
+                        //복습조건이 갖춰져 있으면 알람을 띄움
+                        if(!mKeyword.name.isEmpty() && !(mKeyword.getDescriptions().isEmpty() && mKeyword.imagePath.isEmpty())) {
+                            ArrayList<Integer> reviewList = new ArrayList<>();
+                            ArrayList<Long> reviewDateList = new ArrayList<>();
+                            /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
+                            try {
+                                BrainSerialDataIO.getNextReviewTimeInfo(this, reviewList, reviewDateList);
+                            } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
+                                reviewList = new ArrayList<>();
+                                reviewDateList = new ArrayList<>();
+                                e.printStackTrace();
+                            }
+                            long date = System.currentTimeMillis() + 1000 * 60 * 20;
+                            reviewList.add(mKeyword.id);
+                            reviewDateList.add(date);
+                            /** 객체 저장 **/
+                            try {
+                                BrainSerialDataIO.saveNextReviewTimeInfo(this, reviewList, reviewDateList);
+                            } catch (BrainSerialDataIO.SaveFailException e) {
+                                Log.d(TAG, "객체저장에서 에러 발생");
+                                e.printStackTrace();
+                            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                                Log.d(TAG, "객체저장에서 에러 발생");
+                                e.printStackTrace();
+                            }
+                            //알람 리시버에 발신
+                            Intent intent = new Intent(this, AlarmReceiver.class);
+                            //키워드 등록 20분 후에 알람 설정.
+                            intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, date);
+                            sendBroadcast(intent);
+                        }
                         break;
 
                     case INTENT_MODE_UPDATE:

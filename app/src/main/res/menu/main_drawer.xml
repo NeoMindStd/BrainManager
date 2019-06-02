@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_main_study"
             android:title="@string/MainActivity_review" />
         <item
+            android:id="@+id/nav_expired_review"
+            android:icon="@drawable/ic_main_study"
+            android:visible="false"
+            android:title="@string/MainActivity_expired_review" />
+        <item
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_chart"
             android:title="@string/MainActivity_statistics" />
