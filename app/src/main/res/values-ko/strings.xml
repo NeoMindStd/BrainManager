@@ -17,6 +17,9 @@
     <string name="Global_Minute">분</string>
     <string name="Global_plural" />
     <string name="Global_errorOccurred">에러가 발생하였습니다.</string>
+    <string name="Global_exceptionESKeyword">이름이 공백인 키워드는 등록이 불가능 합니다</string>
+    <string name="Global_exceptionESCategory">이름이 공백인 카테고리는 등록이 불가능 합니다</string>
+    <string name="Global_exceptionESDescription">공백 설명은 등록이 불가능 합니다</string>
 
     <string name="Label_review">복습</string>
     <string name="Label_statistics">통계</string>
