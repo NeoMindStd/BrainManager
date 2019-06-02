@@ -189,11 +189,15 @@ public class CategoryActivity extends AppCompatActivity {
             case R.id.category_action_done:
                 mCategory.name = mNameEditText.getText().toString();
 
-                mBrainDBHandler.updateCategory(mCategory);
-                for(Keyword keyword : mUpdatedKeywords) mBrainDBHandler.updateKeyword(keyword);
+                if(mCategory.name.isEmpty()) {
+                    Toast.makeText(this, getString(R.string.Global_exceptionESCategory), Toast.LENGTH_SHORT).show();
+                } else {
+                    mBrainDBHandler.updateCategory(mCategory);
+                    for (Keyword keyword : mUpdatedKeywords) mBrainDBHandler.updateKeyword(keyword);
 
-                Toast.makeText(this, getString(R.string.Global_updated), Toast.LENGTH_SHORT).show();
-                finish();
+                    Toast.makeText(this, getString(R.string.Global_updated), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
                 break;
         }
 

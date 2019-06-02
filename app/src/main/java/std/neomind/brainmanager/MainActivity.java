@@ -288,7 +288,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getKeywordsFromDB() {
-        mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(mSpinner.getSelectedItemPosition());
+        int cid = mCategories.get(mSpinner.getSelectedItemPosition()).id;
+        if(cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED) mKeywords = mBrainDBHandler.getAllKeywords();
+        else mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(cid);
         mBrainDBHandler.close();
 
         // Sort
@@ -368,21 +370,27 @@ public class MainActivity extends AppCompatActivity
                                     Category resultCategory = new Category.Builder().
                                             setName(editText.getText().toString())
                                             .build();
-                                    mBrainDBHandler.addCategory(resultCategory);
-                                    try {
-                                        resultCategory = mBrainDBHandler.findLastCategory();
-                                        for(int i = 1; i < mCategories.size(); i++) {
-                                            if(i ==  mCategories.size()-1) {
-                                                mCategories.add(resultCategory);
-                                                break;
-                                            } else if(resultCategory.name.
-                                                    compareToIgnoreCase(mCategories.get(i).name) < 0) {
-                                                mCategories.add(i, resultCategory);
-                                                break;
+                                    if(resultCategory.name.isEmpty()) {
+                                        Toast.makeText(this, getString(R.string.Global_exceptionESCategory), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        mBrainDBHandler.addCategory(resultCategory);
+                                        try {
+                                            resultCategory = mBrainDBHandler.findLastCategory();
+                                            for (int i = 1; i < mCategories.size(); i++) {
+                                                if (i == mCategories.size() - 1) {
+                                                    mCategories.add(resultCategory);
+                                                    break;
+                                                } else if (resultCategory.name.
+                                                        compareToIgnoreCase(mCategories.get(i).name) < 0) {
+                                                    mCategories.add(i, resultCategory);
+                                                    break;
+                                                }
                                             }
+                                            initSpinner();
+                                        } catch (BrainDBHandler.NoMatchingDataException e) {
+                                            e.printStackTrace();
                                         }
-                                        initSpinner();
-                                    } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
+                                    }
                                 })
                         .setNeutralButton(getString(R.string.Global_negative), null)
                         .show();

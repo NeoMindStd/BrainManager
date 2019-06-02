@@ -17,6 +17,9 @@
     <string name="Global_Minute">minute</string>
     <string name="Global_plural">s</string>
     <string name="Global_errorOccurred">Error occurred</string>
+    <string name="Global_exceptionESKeyword">A keyword with blank names can not be registered</string>
+    <string name="Global_exceptionESCategory">A Category with blank names can not be registered</string>
+    <string name="Global_exceptionESDescription">Blank description can not be registered</string>
 
     <string name="SharedPreferencesName" translatable="false">BrainManagerSettings</string>
     <string name="SharedPreferences_learningType" translatable="false">Learning Type</string>

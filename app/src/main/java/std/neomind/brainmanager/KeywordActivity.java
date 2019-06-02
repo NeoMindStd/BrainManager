@@ -229,14 +229,18 @@ public class KeywordActivity extends AppCompatActivity {
                                 (dialog, which) -> {
                                     Description description = new Description();
                                     description.description = editText.getText().toString();
-                                    if (keywordID != Keyword.NOT_REGISTERED) {
-                                        mBrainDBHandler.addDescription(description, keywordID);
-                                        mKeyword.setDescriptions(
-                                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                    if(description.description.isEmpty()) {
+                                        Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
                                     } else {
-                                        mKeyword.getDescriptions().add(description);
+                                        if (keywordID != Keyword.NOT_REGISTERED) {
+                                            mBrainDBHandler.addDescription(description, keywordID);
+                                            mKeyword.setDescriptions(
+                                                    mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        } else {
+                                            mKeyword.getDescriptions().add(description);
+                                        }
+                                        initDescriptionSpinner();
                                     }
-                                    initDescriptionSpinner();
                                 })
                         .setNeutralButton(getString(R.string.Global_negative), null)
                         .show();
@@ -252,13 +256,18 @@ public class KeywordActivity extends AppCompatActivity {
                             .setView(editText)
                             .setPositiveButton(getString(R.string.Global_confirm),
                                     (dialog, which) -> {
-                                        description.description = editText.getText().toString();
-                                        if (keywordID != Keyword.NOT_REGISTERED) {
-                                            mBrainDBHandler.updateDescription(description, keywordID);
-                                            mKeyword.setDescriptions(
-                                                    mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        String tmp = editText.getText().toString();
+                                        if(tmp.isEmpty()) {
+                                            Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            description.description = tmp;
+                                            if (keywordID != Keyword.NOT_REGISTERED) {
+                                                mBrainDBHandler.updateDescription(description, keywordID);
+                                                mKeyword.setDescriptions(
+                                                        mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                            }
+                                            initDescriptionSpinner();
                                         }
-                                        initDescriptionSpinner();
                                     })
                             .setNeutralButton(getString(R.string.Global_negative), null)
                             .show();
@@ -318,77 +327,81 @@ public class KeywordActivity extends AppCompatActivity {
 
             case R.id.keyword_action_done:
                 mKeyword.name = mNameEditText.getText().toString();
-                mKeyword.cid = mCategories.get(mCategorySpinner.getSelectedItemPosition()).id;
+                if(mKeyword.name.isEmpty()) {
+                    Toast.makeText(this, getString(R.string.Global_exceptionESKeyword), Toast.LENGTH_SHORT).show();
+                } else {
+                    mKeyword.cid = mCategories.get(mCategorySpinner.getSelectedItemPosition()).id;
 
-                File origin = new File(mKeyword.imagePath);
-                File target = new File(getFilesDir(), System.currentTimeMillis() + "." + FileManager.getExtension(origin));
+                    File origin = new File(mKeyword.imagePath);
+                    File target = new File(getFilesDir(), System.currentTimeMillis() + "." + FileManager.getExtension(origin));
 
-                boolean deleteFlag = getSharedPreferences(getString(R.string.
-                        SharedPreferencesName), MODE_PRIVATE).getBoolean(getString(
-                        R.string.SharedPreferences_deleteOriginalImage), false);
+                    boolean deleteFlag = getSharedPreferences(getString(R.string.
+                            SharedPreferencesName), MODE_PRIVATE).getBoolean(getString(
+                            R.string.SharedPreferences_deleteOriginalImage), false);
 
-                Log.i(TAG, "onOptionsItemSelected: deleteFlag - " + deleteFlag);
-                // 기본적으로 내부 저장소로 사진을 복사하되, 원본 이미지 삭제가 체크되면 이미지를 삭제한다.
-                if (FileManager.moveFile(origin, target, deleteFlag)) {
-                    mKeyword.imagePath = target.toString();
-                    FileManager.refreshGallery(this, origin.toString());
-                    Log.i(TAG, "onOptionsItemSelected: original image path - " + origin.toString());
-                    Log.i(TAG, "onOptionsItemSelected: moved image path - " + mKeyword.imagePath);
-                }
+                    Log.i(TAG, "onOptionsItemSelected: deleteFlag - " + deleteFlag);
+                    // 기본적으로 내부 저장소로 사진을 복사하되, 원본 이미지 삭제가 체크되면 이미지를 삭제한다.
+                    if (FileManager.moveFile(origin, target, deleteFlag)) {
+                        mKeyword.imagePath = target.toString();
+                        FileManager.refreshGallery(this, origin.toString());
+                        Log.i(TAG, "onOptionsItemSelected: original image path - " + origin.toString());
+                        Log.i(TAG, "onOptionsItemSelected: moved image path - " + mKeyword.imagePath);
+                    }
 
-                // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
-                if(FileManager.isInternalStorageFile(this, beforeImagePath))
-                    Log.i(TAG, "onOptionsItemSelected: delete before image result - " +
-                            FileManager.deleteFile(new File(beforeImagePath)));
+                    // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
+                    if (FileManager.isInternalStorageFile(this, beforeImagePath))
+                        Log.i(TAG, "onOptionsItemSelected: delete before image result - " +
+                                FileManager.deleteFile(new File(beforeImagePath)));
 
-                String infoHead = "";
-                switch (currentMode) {
-                    case INTENT_MODE_REGISTER :
-                        mBrainDBHandler.addKeyword(mKeyword);
-                        infoHead = getString(R.string.Global_added);
+                    String infoHead = "";
+                    switch (currentMode) {
+                        case INTENT_MODE_REGISTER:
+                            mBrainDBHandler.addKeyword(mKeyword);
+                            infoHead = getString(R.string.Global_added);
 
-                        //복습조건이 갖춰져 있으면 알람을 띄움
-                        if(!mKeyword.name.isEmpty() && !(mKeyword.getDescriptions().isEmpty() && mKeyword.imagePath.isEmpty())) {
-                            ArrayList<Integer> reviewList = new ArrayList<>();
-                            ArrayList<Long> reviewDateList = new ArrayList<>();
-                            /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
-                            try {
-                                BrainSerialDataIO.getNextReviewTimeInfo(this, reviewList, reviewDateList);
-                            } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
-                                reviewList = new ArrayList<>();
-                                reviewDateList = new ArrayList<>();
-                                e.printStackTrace();
+                            //복습조건이 갖춰져 있으면 알람을 띄움
+                            if (!mKeyword.name.isEmpty() && !(mKeyword.getDescriptions().isEmpty() && mKeyword.imagePath.isEmpty())) {
+                                ArrayList<Integer> reviewList = new ArrayList<>();
+                                ArrayList<Long> reviewDateList = new ArrayList<>();
+                                /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
+                                try {
+                                    BrainSerialDataIO.getNextReviewTimeInfo(this, reviewList, reviewDateList);
+                                } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
+                                    reviewList = new ArrayList<>();
+                                    reviewDateList = new ArrayList<>();
+                                    e.printStackTrace();
+                                }
+                                long date = System.currentTimeMillis() + 1000 * 60 * 20;
+                                reviewList.add(mKeyword.id);
+                                reviewDateList.add(date);
+                                /** 객체 저장 **/
+                                try {
+                                    BrainSerialDataIO.saveNextReviewTimeInfo(this, reviewList, reviewDateList);
+                                } catch (BrainSerialDataIO.SaveFailException e) {
+                                    Log.d(TAG, "객체저장에서 에러 발생");
+                                    e.printStackTrace();
+                                } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
+                                    Log.d(TAG, "객체저장에서 에러 발생");
+                                    e.printStackTrace();
+                                }
+                                //알람 리시버에 발신
+                                Intent intent = new Intent(this, AlarmReceiver.class);
+                                //키워드 등록 20분 후에 알람 설정.
+                                intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, date);
+                                sendBroadcast(intent);
                             }
-                            long date = System.currentTimeMillis() + 1000 * 60 * 20;
-                            reviewList.add(mKeyword.id);
-                            reviewDateList.add(date);
-                            /** 객체 저장 **/
-                            try {
-                                BrainSerialDataIO.saveNextReviewTimeInfo(this, reviewList, reviewDateList);
-                            } catch (BrainSerialDataIO.SaveFailException e) {
-                                Log.d(TAG, "객체저장에서 에러 발생");
-                                e.printStackTrace();
-                            } catch (BrainSerialDataIO.ListNotEqualSizeException e) {
-                                Log.d(TAG, "객체저장에서 에러 발생");
-                                e.printStackTrace();
-                            }
-                            //알람 리시버에 발신
-                            Intent intent = new Intent(this, AlarmReceiver.class);
-                            //키워드 등록 20분 후에 알람 설정.
-                            intent.putExtra(AlarmReceiver.EXTRAS_KEY_REVIEW_DATE, date);
-                            sendBroadcast(intent);
-                        }
-                        break;
+                            break;
 
-                    case INTENT_MODE_UPDATE:
-                        mBrainDBHandler.updateKeyword(mKeyword);
-                        infoHead = getString(R.string.Global_updated);
-                        break;
+                        case INTENT_MODE_UPDATE:
+                            mBrainDBHandler.updateKeyword(mKeyword);
+                            infoHead = getString(R.string.Global_updated);
+                            break;
+                    }
+                    Log.d(TAG, "onOptionsItemSelected: " + infoHead + "- " + mKeyword.toStringAbsolutely());
+                    Toast.makeText(this, infoHead, Toast.LENGTH_SHORT).show();
+
+                    finish();
                 }
-                Log.d(TAG, "onOptionsItemSelected: " + infoHead + "- " + mKeyword.toStringAbsolutely());
-                Toast.makeText(this, infoHead, Toast.LENGTH_SHORT).show();
-
-                finish();
                 break;
         }
 
