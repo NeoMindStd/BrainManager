@@ -575,15 +575,13 @@ public class MainActivity extends AppCompatActivity
                                     if(FileManager.isInternalStorageFile(mActivity, mKeywords.get(getAdapterPosition()).imagePath))
                                         Log.i(TAG, "onLongClick: delete before image result - " +
                                                 FileManager.deleteFile(new File(mKeywords.get(getAdapterPosition()).imagePath)));
-
-                                    mKeywordViewHolder.removeItem();                   // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
-
                                     //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
                                     try{
                                         BrainSerialDataIO.deleteOneNextReivewTimeInfo(mActivity, mKeywords.get(getAdapterPosition()).id);
                                     }catch (Exception ex){
                                         ex.printStackTrace();
                                     }
+                                    mKeywordViewHolder.removeItem();                   // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
 
                                 }catch (Exception e){
                                     e.printStackTrace();

@@ -116,7 +116,6 @@ public class ReviewActivity extends AppCompatActivity{
         /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
         if(getIntent().getStringExtra(EXTRAS_MODE) == null){
             listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
-
         }
         else{
             /**알람 배너를 눌렸을 때, 혹은 만기복습을 해야할 때, 표시될 저장된 객체 불러오기 **/
@@ -141,7 +140,7 @@ public class ReviewActivity extends AppCompatActivity{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            mTargetKeywords = new ArrayList<Keyword>();
+            mTargetKeywords = new ArrayList<>();
             for(Keyword key : mAllKeywords){
                 if(listID.contains(key.id))
                     mTargetKeywords.add(key);
@@ -151,6 +150,11 @@ public class ReviewActivity extends AppCompatActivity{
 
             mAllKeySize = mAllKeywords.size();
             mKeywordsSize = mTargetKeywords.size();
+
+            if(mAllKeySize == 0){
+                finish();
+                Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_noKeyword), Toast.LENGTH_LONG).show();
+            }
 
             // 연성된 리스트 정렬
             Collections.sort(mTargetKeywords, (o1, o2) -> {
@@ -836,6 +840,15 @@ public class ReviewActivity extends AppCompatActivity{
         super.onPause();
     }
     @Override
+    public void onDestroy(){
+        if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
+            Intent intent = new Intent(mContext, MainActivity.class);
+            startActivity(intent);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
 
         if(mOpenFlag) {
@@ -882,10 +895,8 @@ public class ReviewActivity extends AppCompatActivity{
                                 else {
                                     Toast.makeText(this, getString(R.string.Global_canceled), Toast.LENGTH_SHORT).show();
                                 }
-                                if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
-                                    super.onBackPressed();
-                                }
-                                else {
+                                super.onBackPressed();
+                                if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
                                     super.onBackPressed();
                                     Intent intent = new Intent(mContext, MainActivity.class);
                                     startActivity(intent);
