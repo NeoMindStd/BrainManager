@@ -397,7 +397,7 @@ public class KeywordActivity extends AppCompatActivity {
                             infoHead = getString(R.string.Global_updated);
                             break;
                     }
-                    Log.d(TAG, "onOptionsItemSelected: " + infoHead + "- " + mKeyword.toStringAbsolutely());
+                    Log.i(TAG, "onOptionsItemSelected: " + infoHead + "- " + mKeyword.toStringAbsolutely());
                     Toast.makeText(this, infoHead, Toast.LENGTH_SHORT).show();
 
                     finish();
