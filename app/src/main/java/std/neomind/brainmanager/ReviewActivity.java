@@ -264,6 +264,7 @@ public class ReviewActivity extends AppCompatActivity{
                 }else{
                     mKeywordLayout.getChildAt(0).setVisibility(View.GONE);
                     mKeywordLayout.getChildAt(1).setVisibility(View.VISIBLE);
+                    mKeywordLayout.getChildAt(1).setClipToOutline(true);
                     ((ImageView) mKeywordLayout.getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                     // descriptionImage 객체 내용지정(이미지파일)
                     mKeywordLayout.getChildAt(1).setOnLongClickListener(longClickListener);
@@ -368,57 +369,59 @@ public class ReviewActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
 
-                boolean fullCk = true;
-                for(int i=0; i<tempRandom.length; i++){
-                    if(tempRandom[i] == -1) {
-                        fullCk = false;
-                        break;
-                    }
-                }
-                if(!fullCk) {
-                    int originCategoryKeywordSize = categoryKeywordList.size();
-                    for (int j = 0, ct = 0; j < tempRandom.length; j++) {
-                        int i = randomGenerator.nextInt(tempRandom.length);
-                        if (ct == originCategoryKeywordSize - 1) break;
-                        if (tempRandom[i] > -1) {
-                            j--;
-                            continue;
-                        }
-                        if (originCategoryKeywordSize - categoryKeywordList.size() > 3) break;
-                        int randIndex = randomGenerator.nextInt(categoryKeywordList.size());
-                        Keyword tKey = categoryKeywordList.get(randIndex);
-                        int index = -1;
-                        for (Keyword tempKey : mAllKeywords) {
-                            if (tempKey.id == tKey.id) {
-                                index = mAllKeywords.indexOf(tempKey);
+
+
+                int originCategoryKeywordSize = categoryKeywordList.size();
+                for (int j = 0, ct = 0; j < tempRandom.length; j++) {
+                    int i = randomGenerator.nextInt(tempRandom.length);
+                    if (ct == originCategoryKeywordSize - 1) break;
+                    if (tempRandom[i] > -1) {
+                        j--;
+                        boolean fullCk = true;
+                        for(int m=0; m<tempRandom.length; m++){
+                            if(tempRandom[m] == -1) {
+                                fullCk = false;
                                 break;
                             }
                         }
-                        if (index == -1) {   //만약 알 수 없는 이유로 전체 리스트에서 찾을 수 없다면
-                            categoryKeywordList.remove(randIndex);  //카테리스트에서 그 값 remove
-                            j--;    //j 1감소
-                            continue;   //다음 반복 실행
+                        if(fullCk) break;
+                        continue;
+                    }
+                    if (originCategoryKeywordSize - categoryKeywordList.size() > 3) break;
+                    int randIndex = randomGenerator.nextInt(categoryKeywordList.size());
+                    Keyword tKey = categoryKeywordList.get(randIndex);
+                    int index = -1;
+                    for (Keyword tempKey : mAllKeywords) {
+                        if (tempKey.id == tKey.id) {
+                            index = mAllKeywords.indexOf(tempKey);
+                            break;
                         }
-                        if (index == keyIndex) {  //만약 정답이랑 같은 인덱스 값이라면
-                            categoryKeywordList.remove(randIndex);
-                            j--;
-                            continue;
-                        }
-                        tempRandom[i] = index;  //대입
+                    }
+                    if (index == -1) {   //만약 알 수 없는 이유로 전체 리스트에서 찾을 수 없다면
+                        categoryKeywordList.remove(randIndex);  //카테리스트에서 그 값 remove
+                        j--;    //j 1감소
+                        continue;   //다음 반복 실행
+                    }
+                    if (index == keyIndex) {  //만약 정답이랑 같은 인덱스 값이라면
                         categoryKeywordList.remove(randIndex);
-                        boolean flag = true;
-                        for (int k = 0; k < tempRandom.length; k++) {
-                            if (k == i) continue;
-                            if (tempRandom[i] == tempRandom[k]) {//만약 같은 값이 있다면
-                                tempRandom[i] = -1;   // -1 대입
-                                j--;    //j 1감소
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (flag) ct++;
+                        j--;
+                        continue;
                     }
+                    tempRandom[i] = index;  //대입
+                    categoryKeywordList.remove(randIndex);
+                    boolean flag = true;
+                    for (int k = 0; k < tempRandom.length; k++) {
+                        if (k == i) continue;
+                        if (tempRandom[i] == tempRandom[k]) {//만약 같은 값이 있다면
+                            tempRandom[i] = -1;   // -1 대입
+                            j--;    //j 1감소
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) ct++;
                 }
+
 
                 for(int i=0; i<tempRandom.length; i++) {
                     while (true) {
@@ -473,6 +476,7 @@ public class ReviewActivity extends AppCompatActivity{
                         } else {
                             mExamLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
                             mExamLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
+                            mExamLayoutArray[i].getChildAt(1).setClipToOutline(true);
                             ((ImageView) mExamLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
                             mExamLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
@@ -495,6 +499,7 @@ public class ReviewActivity extends AppCompatActivity{
                         } else {
                             mExamLayoutArray[i].getChildAt(0).setVisibility(View.GONE);
                             mExamLayoutArray[i].getChildAt(1).setVisibility(View.VISIBLE);
+                            mExamLayoutArray[i].getChildAt(1).setClipToOutline(true);
                             ((ImageView) mExamLayoutArray[i].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(examTemp.imagePath));
                             mExamLayoutArray[i].getChildAt(1).setOnLongClickListener(longClickListener);
                             ExamClickListener examClickEvent = new ExamClickListener(i);
@@ -845,27 +850,27 @@ public class ReviewActivity extends AppCompatActivity{
             //복습하기 화면을 나가려고 할 때 나타나는 AlertDialog
             //showFlag가 true라면 cancelmoe로 알람리시버를 동작시킴.
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.AlertDialog_askReallyCancel))
-                .setPositiveButton(getString(R.string.AlertDialog_button_yes),
-                        (dialog, which) -> {
-                            if(showFlag) {
-                                Intent intent = new Intent(mContext, AlarmReceiver.class);
-                                intent.putExtra(AlarmReceiver.EXTRAS_MODE, AlarmReceiver.MODE_CANCEL_REVIEW);
-                                sendBroadcast(intent);
-                            }
-                            else {
-                                Toast.makeText(this, getString(R.string.Global_canceled), Toast.LENGTH_SHORT).show();
-                            }
-                            if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
-                                super.onBackPressed();
-                            }
-                            else {
-                                super.onBackPressed();
-                                Intent intent = new Intent(mContext, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        })
-                .setNegativeButton(getString(R.string.AlertDialog_button_no), null);
+                    .setTitle(getString(R.string.AlertDialog_askReallyCancel))
+                    .setPositiveButton(getString(R.string.AlertDialog_button_yes),
+                            (dialog, which) -> {
+                                if(showFlag) {
+                                    Intent intent = new Intent(mContext, AlarmReceiver.class);
+                                    intent.putExtra(AlarmReceiver.EXTRAS_MODE, AlarmReceiver.MODE_CANCEL_REVIEW);
+                                    sendBroadcast(intent);
+                                }
+                                else {
+                                    Toast.makeText(this, getString(R.string.Global_canceled), Toast.LENGTH_SHORT).show();
+                                }
+                                if(getIntent().getStringExtra(EXTRAS_MODE) == null) {
+                                    super.onBackPressed();
+                                }
+                                else {
+                                    super.onBackPressed();
+                                    Intent intent = new Intent(mContext, MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                    .setNegativeButton(getString(R.string.AlertDialog_button_no), null);
             if(showFlag) {
                 builder.setMessage((getString(R.string.ReviewActivity_remainReview)));
             }
