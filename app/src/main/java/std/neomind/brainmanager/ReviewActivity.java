@@ -99,30 +99,27 @@ public class ReviewActivity extends AppCompatActivity{
         mExamAllLayout = findViewById(R.id.review_layout_examAll);
         mDescriptionLayout = findViewById(R.id.review_layout_description);
         mTextExamScroll = findViewById(R.id.review_scroll_exam);
-//
+
+        //복습리스트(id, date-long) 초기화
         mReviewList = new ArrayList<>();
         mReviewDateList = new ArrayList<>();
+
+        //복습리스트 불러오기.
+        try {
+            BrainSerialDataIO.getNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
+        } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
+            mReviewList = new ArrayList<>();
+            mReviewDateList = new ArrayList<>();
+            e.printStackTrace();
+        }
         ArrayList<Integer> listID = new ArrayList<>();
         /**복습하기를 눌렸을 때 표시될 객체 불러오기 **/
         if(getIntent().getStringExtra(EXTRAS_MODE) == null){
             listID = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
-            try {
-                BrainSerialDataIO.getNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
-            } catch (BrainSerialDataIO.LoadFailException e) {   // 오류가 생기면 초기화 한다.
-                mReviewList = new ArrayList<>();
-                mReviewDateList = new ArrayList<>();
-                e.printStackTrace();
-            }
+
         }
         else{
             /**알람 배너를 눌렸을 때, 혹은 만기복습을 해야할 때, 표시될 저장된 객체 불러오기 **/
-            try {
-                BrainSerialDataIO.getNextReviewTimeInfo(mContext, mReviewList, mReviewDateList);
-            } catch (BrainSerialDataIO.LoadFailException e) {
-                mReviewList = new ArrayList<>();
-                mReviewDateList = new ArrayList<>();
-                e.printStackTrace();
-            }
             /** 저장된 객체들 중 알림 시간이 넘은 것들을 불러옴 **/
             long now = System.currentTimeMillis();
             for(long date : mReviewDateList) {
@@ -131,8 +128,6 @@ public class ReviewActivity extends AppCompatActivity{
                 }
             }
         }
-
-
 
         if(listID.isEmpty()){
             finish();
@@ -169,28 +164,30 @@ public class ReviewActivity extends AppCompatActivity{
             });
 
             // 관계성 기반으로 정렬
-            ArrayList<Integer> ckList = new ArrayList<>();
             ArrayList<Integer> relationList;
             int pos = 0;
             for(Keyword key : mTargetKeywords){
                 if(pos == mKeywordsSize) break;
-                ckList.add(key.id);
+                listID.add(key.id);
                 relationList = key.getRelationIds();
                 for(int rid : relationList){
-                    if(!ckList.contains(rid)) {
+                    if(!listID.contains(rid)) {
+                        boolean flag = false;
                         for(Keyword tempKey : mTargetKeywords){
                             if(rid == tempKey.id) {
                                 Collections.swap(mTargetKeywords, pos + 1, mTargetKeywords.indexOf(tempKey));
+                                listID.add(mTargetKeywords.get(pos + 1).id);
+                                flag = true;
                                 break;
                             }
                         }
-                        break;
+                        if(flag) break;
                     }
                 }
                 pos++;
             }
             // 임시 리스트 제거
-            ckList.clear();
+            listID.clear();
 
             mNextButton = findViewById(R.id.review_button_nextExam);
             mAnswerButton = findViewById(R.id.review_button_showAnswer);
@@ -507,57 +504,59 @@ public class ReviewActivity extends AppCompatActivity{
                         }
                     }
                 }
-// Constraint 를 활용한 객관식Size를 바꿔버리는 방식의 코드 회색 박스가 아니라 사이즈가 변경된다.
-//                switch (count) {
-//                    //
-//                    case 2:
-//                        r = randomGenerator.nextInt(2);
-//                        if (r == 1) r++;
-//                        for (int j = 0; j < 3; j += 2) {
-//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
-//                            for (int i = 0; i < 2; i++) {
-//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
-//                            }
-//                            if (key.imagePath.isEmpty()) {
-//                                mExamLayoutArray[j].getChildAt(0).setVisibility(View.VISIBLE);
-//                                if(r==j) ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
-//                            } else {
-//                                mExamLayoutArray[j].getChildAt(1).setVisibility(View.VISIBLE);
-//                                if(r==j) ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
-//                            }
-//                        }
-//
-//
-//                        break;
-//                    case 3:
-//                        for (int j = 0; j < 3; j++) {
-//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
-//                            for (int i = 0; i < 2; i++) {
-//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                        r = randomGenerator.nextInt(3);
-//                        if (key.imagePath.isEmpty()) {
-//                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
-//                        } else
-//                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
-//                        break;
-//                    case 4:
-//                        for (int j = 0; j < 4; j++) {
-//                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
-//                            for (int i = 0; i < 2; i++) {
-//                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                        r = randomGenerator.nextInt(4);
-//                        if (key.imagePath.isEmpty()) {
-//                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
-//                        } else
-//                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
-//                        break;
-//                    default:
-//                        break;
-//                }
+                /*
+                Constraint 를 활용한 객관식Size를 바꿔버리는 방식의 코드 회색 박스가 아니라 사이즈가 변경된다.
+                switch (count) {
+                    //
+                    case 2:
+                        r = randomGenerator.nextInt(2);
+                        if (r == 1) r++;
+                        for (int j = 0; j < 3; j += 2) {
+                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
+                            for (int i = 0; i < 2; i++) {
+                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+                            }
+                            if (key.imagePath.isEmpty()) {
+                                mExamLayoutArray[j].getChildAt(0).setVisibility(View.VISIBLE);
+                                if(r==j) ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
+                            } else {
+                                mExamLayoutArray[j].getChildAt(1).setVisibility(View.VISIBLE);
+                                if(r==j) ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+                            }
+                        }
+
+
+                        break;
+                    case 3:
+                        for (int j = 0; j < 3; j++) {
+                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
+                            for (int i = 0; i < 2; i++) {
+                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+                            }
+                        }
+                        r = randomGenerator.nextInt(3);
+                        if (key.imagePath.isEmpty()) {
+                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
+                        } else
+                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+                        break;
+                    case 4:
+                        for (int j = 0; j < 4; j++) {
+                            mExamLayoutArray[j].setVisibility(View.VISIBLE);
+                            for (int i = 0; i < 2; i++) {
+                                mExamLayoutArray[j].getChildAt(i).setVisibility(View.VISIBLE);
+                            }
+                        }
+                        r = randomGenerator.nextInt(4);
+                        if (key.imagePath.isEmpty()) {
+                            ((TextView) mExamLayoutArray[r].getChildAt(0)).setText(key.name);
+                        } else
+                            ((ImageView) mExamLayoutArray[r].getChildAt(1)).setImageBitmap(BitmapFactory.decodeFile(key.imagePath));
+                        break;
+                    default:
+                        break;
+                }
+                **/
                 mExamStartTime = System.currentTimeMillis(); // 문제의 시작시간을 저장
                 return 2;
             }
@@ -814,6 +813,28 @@ public class ReviewActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onPause(){
+        Log.d(TAG, "onPause");
+        boolean tempFlag = false;
+        if(mReviewDateList != null && mReviewDateList.size() > 0 && mReviewDateList.size() == mReviewList.size()) {
+            //현재 복습하고 있는 키워드들 중에서 복습간격이 만기된 알림이 있으면 플래그를 true로 만듬
+            for (Keyword key : mTargetKeywords) {
+                if (mReviewList.contains(key.id)) {
+                    if (mReviewDateList.get(mReviewList.indexOf(key.id)) < mExamStartTime) {
+                        tempFlag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(tempFlag) {
+            Intent intent = new Intent(mContext, AlarmReceiver.class);
+            intent.putExtra(AlarmReceiver.EXTRAS_MODE, AlarmReceiver.MODE_CANCEL_REVIEW);
+            sendBroadcast(intent);
+        }
+        super.onPause();
+    }
     @Override
     public void onBackPressed() {
 
