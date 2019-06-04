@@ -357,6 +357,8 @@ public class KeywordActivity extends AppCompatActivity {
                     switch (currentMode) {
                         case INTENT_MODE_REGISTER:
                             mBrainDBHandler.addKeyword(mKeyword);
+                            try { mKeyword = mBrainDBHandler.findLastKeyword(); }
+                            catch (Exception e) { e.printStackTrace(); }
                             infoHead = getString(R.string.Global_added);
 
                             //복습조건이 갖춰져 있으면 알람을 띄움
