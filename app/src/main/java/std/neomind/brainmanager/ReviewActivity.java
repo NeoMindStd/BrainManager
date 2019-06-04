@@ -234,6 +234,13 @@ public class ReviewActivity extends AppCompatActivity{
         mDescriptionLayout.getChildAt(0).requestFocus();
         mDescriptionLayout.getChildAt(0).invalidate();
         ((EditText) mDescriptionLayout.getChildAt(0)).setText("");
+        for(int j=0; j<EXAM_LAYOUT_COUNT; j++) {
+            for(int i = 0; i< ((ConstraintLayout)mExamAllLayout.getChildAt(j)).getChildCount(); i++) {
+                ((ConstraintLayout)mExamAllLayout.getChildAt(j)).getChildAt(i).setVisibility(View.GONE);
+                ((ConstraintLayout)mExamAllLayout.getChildAt(j)).getChildAt(i).setOnLongClickListener(null);
+                ((ConstraintLayout)mExamAllLayout.getChildAt(j)).getChildAt(i).setOnClickListener(null);
+            }
+        }
 
 
         // keysize = key.name.size()
@@ -452,7 +459,7 @@ public class ReviewActivity extends AppCompatActivity{
 
                 for(int i = 0, j = 0; i< EXAM_LAYOUT_COUNT; i++) {
                     mExamLayoutArray[i] = (ConstraintLayout) mExamAllLayout.getChildAt(i);
-                    mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                    mExamLayoutArray[i].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
                     mExamLayoutArray[i].setVisibility(View.VISIBLE);
                     mExamLayoutArray[i].getChildAt(0).setOnClickListener(null);
                     mExamLayoutArray[i].getChildAt(1).setOnClickListener(null);
@@ -957,7 +964,7 @@ public class ReviewActivity extends AppCompatActivity{
                     mDescriptionLayout.getChildAt(0).setFocusableInTouchMode(false);
                     break;
                 case 2:
-                    mExamLayoutArray[mAnswer].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_green_rounded));
+                    mExamLayoutArray[mAnswer].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_green_rounded));
                     for(int i = 0; i < EXAM_LAYOUT_COUNT; i++){
                         mExamLayoutArray[i].getChildAt(0).setOnClickListener(null);
                         mExamLayoutArray[i].getChildAt(1).setOnClickListener(null);
@@ -967,7 +974,7 @@ public class ReviewActivity extends AppCompatActivity{
                     }
                     else{
                         if(!(mSelectedExam == -1))
-                            mExamLayoutArray[mSelectedExam].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_red_rounded));
+                            mExamLayoutArray[mSelectedExam].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_red_rounded));
                     }
                     break;
                 case 3:
@@ -1086,14 +1093,14 @@ public class ReviewActivity extends AppCompatActivity{
                 if(i==selected) {
                     if (mSelectedExam == selected) {
                         mSelectedExam = -1;
-                        mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                        mExamLayoutArray[i].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
                     } else {
                         mSelectedExam = selected;
-                        mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_blue_rounded));
+                        mExamLayoutArray[i].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_blue_rounded));
                     }
                     continue;
                 }
-                mExamLayoutArray[i].setBackground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
+                mExamLayoutArray[i].setForeground(ContextCompat.getDrawable(mContext, R.drawable.review_relation_rounded));
             }
         }
     }
