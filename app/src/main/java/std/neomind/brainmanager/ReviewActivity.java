@@ -743,6 +743,7 @@ public class ReviewActivity extends AppCompatActivity{
 
         if(key.reviewTimes == 0){
             ef = 2.5;
+            key.currentLevels=1;
         }else {
             ef = key.ef;
             ef = ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
@@ -760,7 +761,7 @@ public class ReviewActivity extends AppCompatActivity{
         //
         // 만약 첫복습이 아닌데 불구하고 reviewList와 reviewDateList의 크기가 0이거나 key.id의 인덱스를 찾을 수 없는 경우 에러값을 반환한다.
         // => 에러값이 아닌 currentLevels를 0으로 바꾸자
-        if(key.currentLevels > 0 && (mReviewList.isEmpty() || mReviewDateList.isEmpty() || mReviewList.indexOf(key.id) == -1)){
+        if(key.reviewTimes > 0 && (mReviewList.isEmpty() || mReviewDateList.isEmpty() || mReviewList.indexOf(key.id) == -1)){
             Toast.makeText(getApplicationContext(), getString(R.string.
                     Global_errorOccurred), Toast.LENGTH_LONG).show();
             key.currentLevels = 0;
@@ -774,8 +775,8 @@ public class ReviewActivity extends AppCompatActivity{
             if(key.reviewTimes > 0 && mReviewList.indexOf(key.id) != -1) {
                 correctReviewDate = mReviewDateList.get(mReviewList.indexOf(key.id));
                 diffInterval = (int) ((correctReviewDate - examEndTime) / 60000);
+                key.currentLevels++;
                 if (diffInterval < 0) {
-                    key.currentLevels++;
                     key.interval = (int) (20 * relation);
                     return examEndTime + (key.interval * 60000);
                 }
