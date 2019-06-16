@@ -2,13 +2,10 @@ package std.neomind.brainmanager.utils;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
 import std.neomind.brainmanager.R;
-
-import androidx.core.app.ActivityCompat;
 
 public final class PermissionManager {
 

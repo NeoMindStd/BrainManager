@@ -130,5 +130,5 @@
     <string name="StatisticsActivity_setTargetTime">Set target time</string>
 
     <string name="TutorialActivity_skip">Skip</string>
-    <string name="TutorialActivity_done">완료</string>
+    <string name="TutorialActivity_done">OK</string>
 </resources>

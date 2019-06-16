@@ -2,19 +2,6 @@ package std.neomind.brainmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import std.neomind.brainmanager.data.Category;
-import std.neomind.brainmanager.data.Description;
-import std.neomind.brainmanager.data.Keyword;
-import std.neomind.brainmanager.utils.AlarmReceiver;
-import std.neomind.brainmanager.utils.BrainDBHandler;
-import std.neomind.brainmanager.utils.BrainSerialDataIO;
-import std.neomind.brainmanager.utils.FileManager;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +13,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.nguyenhoanglam.imagepicker.model.Config;
@@ -36,6 +28,14 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import std.neomind.brainmanager.data.Category;
+import std.neomind.brainmanager.data.Description;
+import std.neomind.brainmanager.data.Keyword;
+import std.neomind.brainmanager.utils.AlarmReceiver;
+import std.neomind.brainmanager.utils.BrainDBHandler;
+import std.neomind.brainmanager.utils.BrainSerialDataIO;
+import std.neomind.brainmanager.utils.FileManager;
 
 public class KeywordActivity extends AppCompatActivity {
     private static final String TAG = "KeywordActivity";
