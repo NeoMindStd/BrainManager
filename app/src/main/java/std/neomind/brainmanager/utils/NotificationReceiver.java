@@ -71,6 +71,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
         //배너 눌렀을 때 전해줄 intent
         Intent newIntent = new Intent(context, ReviewActivity.class);
         newIntent.putExtra(ReviewActivity.EXTRAS_MODE, ReviewActivity.EXPIRED_MODE);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         //만약 알림을 취소하면 넘길 펜딩인텐트
