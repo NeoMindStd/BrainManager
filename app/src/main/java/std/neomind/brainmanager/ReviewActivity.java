@@ -248,6 +248,10 @@ public class ReviewActivity extends AppCompatActivity{
             // TODO 코드 중복 존재함.
             if(++mCurrentKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(mCurrentKeyIndex));
             else{
+                if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
                 Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_lastKeyword), Toast.LENGTH_LONG).show();
             }
@@ -826,7 +830,7 @@ public class ReviewActivity extends AppCompatActivity{
     }
 
     @Override
-    public void onPause(){
+    protected void onPause(){
         Log.d(TAG, "onPause");
         boolean tempFlag = false;
         if(mReviewDateList != null && mReviewDateList.size() > 0 && mReviewDateList.size() == mReviewList.size()) {
@@ -847,15 +851,6 @@ public class ReviewActivity extends AppCompatActivity{
         }
         super.onPause();
     }
-    @Override
-    public void onDestroy(){
-        if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
-            Intent intent = new Intent(mContext, MainActivity.class);
-            startActivity(intent);
-        }
-        super.onDestroy();
-    }
-
     @Override
     public void onBackPressed() {
 
@@ -905,9 +900,9 @@ public class ReviewActivity extends AppCompatActivity{
                                 }
                                 super.onBackPressed();
                                 if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
-                                    super.onBackPressed();
                                     Intent intent = new Intent(mContext, MainActivity.class);
                                     startActivity(intent);
+                                    super.onBackPressed();
                                 }
                             })
                     .setNegativeButton(getString(R.string.AlertDialog_button_no), null);
@@ -1072,6 +1067,10 @@ public class ReviewActivity extends AppCompatActivity{
                 mTextExamLayout.removeAllViews();
             if(++mCurrentKeyIndex < mKeywordsSize) currentExamType = generate_view(mTargetKeywords.get(mCurrentKeyIndex));
             else{
+                if(getIntent().getStringExtra(EXTRAS_MODE) != null) {
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
                 Toast.makeText(getApplicationContext(), getString(R.string.
                         ReviewActivity_lastKeyword), Toast.LENGTH_LONG).show();

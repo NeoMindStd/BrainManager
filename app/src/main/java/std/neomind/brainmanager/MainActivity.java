@@ -1,6 +1,7 @@
 package std.neomind.brainmanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mKeywordAdapter;
 
+    private SharedPreferences mPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initActivity() {
+        mPref = getSharedPreferences(getString(R.string.SharedPreferencesName), MODE_PRIVATE);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -106,9 +110,29 @@ public class MainActivity extends AppCompatActivity
         mBrainDBHandler = new BrainDBHandler(this);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        boolean firstCheck;
+
+        /** 초기화
+        final SharedPreferences.Editor pendingEdits = mPref.edit().putBoolean(getString(R.string.
+                SharedPreferences_firstStart), true);
+        pendingEdits.apply();
+         **/
+
+        firstCheck = mPref.getBoolean(getString(R.string.
+                SharedPreferences_firstStart), true);
+
+        if(firstCheck){
+            Intent intent = new Intent(this, TutorialActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        }
+
         loadDB();
 
         ArrayList<Integer> reviewList = new ArrayList<>();

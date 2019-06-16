@@ -25,6 +25,7 @@
     <string name="SharedPreferences_learningType" translatable="false">Learning Type</string>
     <string name="SharedPreferences_nightMode" translatable="false">Night Mode</string>
     <string name="SharedPreferences_deleteOriginalImage" translatable="false">Delete Original Image</string>
+    <string name="SharedPreferences_firstStart" translatable="false">First Start</string>
 
     <string name="Label_review">Review</string>
     <string name="Label_statistics">Statistics</string>
@@ -128,4 +129,6 @@
     <string name="StatisticsActivity_setTargetCorrectAnswerRate">Set target correct answer rate</string>
     <string name="StatisticsActivity_setTargetTime">Set target time</string>
 
+    <string name="TutorialActivity_skip">Skip</string>
+    <string name="TutorialActivity_done">완료</string>
 </resources>

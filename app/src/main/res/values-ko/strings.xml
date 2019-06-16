@@ -119,4 +119,7 @@
     <string name="StatisticsActivity_problemSolvingSpeed">문제풀이 속도</string>
     <string name="StatisticsActivity_setTargetCorrectAnswerRate">목표 정답률 설정</string>
     <string name="StatisticsActivity_setTargetTime">목표 시간 설정</string>
+
+    <string name="TutorialActivity_skip">스킵</string>
+    <string name="TutorialActivity_done">완료</string>
 </resources>

@@ -42,8 +42,8 @@ public final class AlarmReceiver extends BroadcastReceiver{
             }
             if(idList.isEmpty() && DateList.isEmpty()){
                 Intent localIntent = new Intent(context, NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, localIntent, 0);
                 for(long temp_date : DateList){
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)(temp_date/1000/60/10), localIntent, 0);
                     am.set(AlarmManager.RTC_WAKEUP, temp_date, pendingIntent);
                 }
             }
