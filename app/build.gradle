@@ -6,8 +6,8 @@ android {
         applicationId "std.neomind.brainmanager"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 16
-        versionName "0.5.1"
+        versionCode 17
+        versionName "0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
