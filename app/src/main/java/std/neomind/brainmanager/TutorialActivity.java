@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 
 import com.matthewtamlin.android_utilities_library.helpers.BitmapEfficiencyHelper;
 import com.matthewtamlin.android_utilities_library.helpers.ScreenSizeHelper;
-
 import com.matthewtamlin.sliding_intro_screen_library.background.BackgroundManager;
 import com.matthewtamlin.sliding_intro_screen_library.background.ColorBlender;
 import com.matthewtamlin.sliding_intro_screen_library.buttons.IntroButton;

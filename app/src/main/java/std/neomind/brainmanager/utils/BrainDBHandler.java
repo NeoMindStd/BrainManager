@@ -7,9 +7,9 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 import std.neomind.brainmanager.data.Category;
 import std.neomind.brainmanager.data.Description;

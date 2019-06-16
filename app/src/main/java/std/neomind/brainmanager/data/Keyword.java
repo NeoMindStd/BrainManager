@@ -1,9 +1,9 @@
 package std.neomind.brainmanager.data;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+
+import java.util.ArrayList;
 
 // 구글의 권고사항에 따른 데이터 직접접근 (setter/getter 지양)
 public class Keyword {

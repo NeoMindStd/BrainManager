@@ -5,45 +5,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
-
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.snackbar.Snackbar;
 
-import std.neomind.brainmanager.data.Category;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+
 import std.neomind.brainmanager.data.Description;
+import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.data.Test;
-import std.neomind.brainmanager.utils.BrainSerialDataIO;
 import std.neomind.brainmanager.utils.AlarmReceiver;
 import std.neomind.brainmanager.utils.BrainDBHandler;
-import std.neomind.brainmanager.data.Keyword;
+import std.neomind.brainmanager.utils.BrainSerialDataIO;
 
 public class ReviewActivity extends AppCompatActivity{
     private static final String TAG = "ReviewActivity";
