@@ -2,10 +2,9 @@ package std.neomind.brainmanager.data;
 
 // 구글의 권고사항에 따른 데이터 직접접근 (setter/getter 지양)
 public class Category {
-    private static final String EMPTY_STRINGS = "";
     public static final int NOT_REGISTERED = -1;
     public static final int CATEGORY_ALL = 0;
-
+    private static final String EMPTY_STRINGS = "";
     public int id;
     public String name;
 
@@ -27,7 +26,9 @@ public class Category {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException { return super.clone(); }
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     public static class Builder {
         private int id;

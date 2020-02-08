@@ -15,12 +15,12 @@ public final class BrainSerialDataIO {
     private static final String TAG = "BrainSerialDataIO";
     private static final String FILE_BRAIN_ALARM = "BrainAlarm.data";
 
-    public static void saveNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws SaveFailException, ListNotEqualSizeException{
-        if(idList.size() != dateList.size()) {
+    public static void saveNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws SaveFailException, ListNotEqualSizeException {
+        if (idList.size() != dateList.size()) {
             Log.d(TAG, "시리얼 IO 저장 양 리스트 사이즈가 다름");
             throw new ListNotEqualSizeException();
         }
-        try{
+        try {
             Log.d(TAG, "시리얼 IO 저장 시작");
             FileOutputStream fileStream = new FileOutputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
             try {
@@ -30,18 +30,17 @@ public final class BrainSerialDataIO {
                 os.close();
                 fileStream.close();
                 Log.d(TAG, "시리얼 IO 저장 성공");
-            }
-            catch (Exception ioe){
+            } catch (Exception ioe) {
                 Log.d(TAG, "시리얼 IO 저장파일 Close 실패");
                 throw new SaveFailException();
             }
-        }
-        catch(FileNotFoundException e2){
+        } catch (FileNotFoundException e2) {
             Log.d(TAG, "시리얼 IO 저장 실패");
             throw new SaveFailException();
         }
     }
-    public static void getNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws LoadFailException{
+
+    public static void getNextReviewTimeInfo(Context context, ArrayList<Integer> idList, ArrayList<Long> dateList) throws LoadFailException {
         try {
             Log.d(TAG, "시리얼 IO 불러오기 시작");
             FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
@@ -53,7 +52,7 @@ public final class BrainSerialDataIO {
                 //y
                 os.close();
                 fileStream.close();
-                if(idList.size() != dateList.size()){
+                if (idList.size() != dateList.size()) {
                     Log.d(TAG, "시리얼 IO 불러오기 양 리스트 사이즈가 다름");
                     throw new ListNotEqualSizeException();
                 }
@@ -70,20 +69,20 @@ public final class BrainSerialDataIO {
         }
     }
 
-    public static void deleteOneNextReivewTimeInfo(Context context, int id) throws SaveFailException{
+    public static void deleteOneNextReivewTimeInfo(Context context, int id) throws SaveFailException {
         ArrayList<Integer> idList;
         ArrayList<Long> dateList;
         try {
-            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir() , FILE_BRAIN_ALARM));
+            FileInputStream fileStream = new FileInputStream(new File(context.getFilesDir(), FILE_BRAIN_ALARM));
             try {
                 ObjectInputStream os = new ObjectInputStream(fileStream);
 
-                idList = (ArrayList<Integer>)os.readObject();
+                idList = (ArrayList<Integer>) os.readObject();
                 dateList = (ArrayList<Long>) os.readObject();
                 //y
                 os.close();
                 fileStream.close();
-                if(idList.size() != dateList.size()){
+                if (idList.size() != dateList.size()) {
                     Log.d(TAG, "시리얼 IO 삭제 전 불러오기 양 리스트 사이즈가 다름");
                     throw new ListNotEqualSizeException();
                 }
@@ -105,13 +104,11 @@ public final class BrainSerialDataIO {
                         Log.d(TAG, "시리얼 IO 삭제 후 파일 저장 Close 실패");
                         throw new SaveFailException();
                     }
-                }
-                catch (Exception ioe){
+                } catch (Exception ioe) {
                     Log.d(TAG, "시리얼 IO 삭제 후 파일 저장 실패");
                     throw new SaveFailException();
                 }
-            }
-            catch (Exception ioe){
+            } catch (Exception ioe) {
                 Log.d(TAG, "시리얼 IO 삭제 전 불러온 파일 Close 실패");
                 throw new SaveFailException();
             }
@@ -121,7 +118,12 @@ public final class BrainSerialDataIO {
         }
     }
 
-    public static class SaveFailException extends Exception{}
-    public static class LoadFailException extends Exception{}
-    public static class ListNotEqualSizeException extends Exception{}
+    public static class SaveFailException extends Exception {
+    }
+
+    public static class LoadFailException extends Exception {
+    }
+
+    public static class ListNotEqualSizeException extends Exception {
+    }
 }

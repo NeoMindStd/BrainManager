@@ -12,11 +12,11 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            app:title="@string/Label_review"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/Label_review" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -56,13 +56,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
             app:layout_constraintWidth_percent="0.9">
+
             <LinearLayout
+                android:id="@+id/review_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/review_linear_layout"
-                android:gravity="center"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:gravity="center">
+
                 <TextView
                     android:id="@+id/review_text_view"
                     style="@style/textExamTheme"

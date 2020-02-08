@@ -13,15 +13,16 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/relation_toolbar"
-            app:title="@string/Label_relation"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/Label_relation">
+
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/relation_spinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

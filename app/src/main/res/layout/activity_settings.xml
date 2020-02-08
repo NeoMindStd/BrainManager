@@ -18,42 +18,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginRight="8dp">
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/settings_side_line">
+                android:background="@drawable/settings_side_line"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/SettingsActivity_forgettingCurve"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:text="@string/SettingsActivity_forgettingCurve" />
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/settings_chart"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:layout_margin="15dp"/>
+                    android:layout_margin="15dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/settings_side_line" >
+                android:background="@drawable/settings_side_line"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/SettingsActivity_reviewType"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp" />
+                    android:text="@string/SettingsActivity_reviewType" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,26 +62,26 @@
 
                     <RadioGroup
                         android:id="@+id/settings_radioGroup"
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp">
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/settings_radioButton_banner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/SettingsActivity_push"/>
+                            android:text="@string/SettingsActivity_push" />
 
                         <RadioButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:enabled="false"
-                            android:text="@string/SettingsActivity_lockScreen"/>
+                            android:text="@string/SettingsActivity_lockScreen" />
 
                         <RadioButton
                             android:id="@+id/settings_radioButton_notification"
@@ -89,7 +89,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:enabled="false"
-                            android:text="@string/SettingsActivity_alarm"/>
+                            android:text="@string/SettingsActivity_alarm" />
 
                     </RadioGroup>
 
@@ -100,8 +100,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/settings_side_line"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/settings_side_line"
                 android:orientation="vertical">
 
                 <TextView
@@ -123,9 +123,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/settings_side_line"
-                android:layout_marginTop="10dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -139,22 +139,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="@string/SettingsActivity_deleteOriginalModeDescription"/>
+                    android:text="@string/SettingsActivity_deleteOriginalModeDescription" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:background="@drawable/settings_side_line">
+                android:background="@drawable/settings_side_line"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView"
@@ -177,9 +177,9 @@
                         android:id="@+id/settings_textView_privacyPolicy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="10dp"
                         android:ems="10"
                         android:text="@string/SettingsActivity_privacyPolicy" />
 

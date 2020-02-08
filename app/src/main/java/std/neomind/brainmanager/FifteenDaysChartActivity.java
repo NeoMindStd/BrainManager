@@ -21,13 +21,13 @@ import java.util.ArrayList;
 
 public final class FifteenDaysChartActivity extends AppCompatActivity {
 
-    private LineChart mChart;
-    private LineChart mChart2;
     Spinner goalSpinner;
     Spinner goalSpinner2;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
     ArrayAdapter<String> arrayAdapter2;
+    private LineChart mChart;
+    private LineChart mChart2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
         mChart2.setDragEnabled(true);
         mChart2.setScaleEnabled(false);
 
-        arrayList= new ArrayList<>();
+        arrayList = new ArrayList<>();
         arrayList.add("30");
         arrayList.add("40");
         arrayList.add("50");
@@ -51,20 +51,20 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
         arrayList.add("80");
         arrayList.add("90");
 
-        arrayAdapter= new ArrayAdapter<>(getApplicationContext(),
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 arrayList);
 
         goalSpinner = findViewById(R.id.statistics_spinner_fifteenDaysSelectGoal);
         goalSpinner.setAdapter(arrayAdapter);
-        goalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        goalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 LimitLine upper_limit;
                 YAxis leftAxis = mChart.getAxisLeft();
 
-                switch(arrayList.get(i)) {
-                    case "30" :
+                switch (arrayList.get(i)) {
+                    case "30":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(30f, getString(R.string.StatisticsActivity_label));
@@ -80,7 +80,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "40" :
+                    case "40":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(40f, getString(R.string.StatisticsActivity_label));
@@ -95,7 +95,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.enableAxisLineDashedLine(10f, 10f, 0);
                         leftAxis.setDrawLimitLinesBehindData(true);
                         break;
-                    case "50" :
+                    case "50":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(50f, getString(R.string.StatisticsActivity_label));
@@ -110,7 +110,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.enableAxisLineDashedLine(10f, 10f, 0);
                         leftAxis.setDrawLimitLinesBehindData(true);
                         break;
-                    case "60" :
+                    case "60":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(60f, getString(R.string.StatisticsActivity_label));
@@ -125,7 +125,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.enableAxisLineDashedLine(10f, 10f, 0);
                         leftAxis.setDrawLimitLinesBehindData(true);
                         break;
-                    case "70" :
+                    case "70":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(70f, getString(R.string.StatisticsActivity_label));
@@ -140,7 +140,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.enableAxisLineDashedLine(10f, 10f, 0);
                         leftAxis.setDrawLimitLinesBehindData(true);
                         break;
-                    case "80" :
+                    case "80":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(80f, getString(R.string.StatisticsActivity_label));
@@ -155,7 +155,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.enableAxisLineDashedLine(10f, 10f, 0);
                         leftAxis.setDrawLimitLinesBehindData(true);
                         break;
-                    case "90" :
+                    case "90":
                         mChart.notifyDataSetChanged();
                         mChart.invalidate();
                         upper_limit = new LimitLine(90f, getString(R.string.StatisticsActivity_label));
@@ -171,27 +171,28 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
 
 
-        arrayAdapter2= new ArrayAdapter<>(getApplicationContext(),
+        arrayAdapter2 = new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 arrayList);
 
         goalSpinner2 = findViewById(R.id.statistics_spinner_fifteenDaysSelectTime);
         goalSpinner2.setAdapter(arrayAdapter);
-        goalSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        goalSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 LimitLine up_limit;
                 YAxis leftAxis = mChart2.getAxisLeft();
 
-                switch(arrayList.get(i)) {
-                    case "30" :
+                switch (arrayList.get(i)) {
+                    case "30":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(30f, getString(R.string.StatisticsActivity_label));
@@ -207,7 +208,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "40" :
+                    case "40":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(40f, getString(R.string.StatisticsActivity_label));
@@ -223,7 +224,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "50" :
+                    case "50":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(50f, getString(R.string.StatisticsActivity_label));
@@ -239,7 +240,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "60" :
+                    case "60":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(60f, getString(R.string.StatisticsActivity_label));
@@ -255,7 +256,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "70" :
+                    case "70":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(70f, getString(R.string.StatisticsActivity_label));
@@ -271,7 +272,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "80" :
+                    case "80":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(80f, getString(R.string.StatisticsActivity_label));
@@ -287,7 +288,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         leftAxis.setDrawLimitLinesBehindData(true);
 
                         break;
-                    case "90" :
+                    case "90":
                         mChart2.notifyDataSetChanged();
                         mChart2.invalidate();
                         up_limit = new LimitLine(90f, getString(R.string.StatisticsActivity_label));
@@ -304,6 +305,7 @@ public final class FifteenDaysChartActivity extends AppCompatActivity {
                         break;
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }

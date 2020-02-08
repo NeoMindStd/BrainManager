@@ -10,11 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class WebViewActivity extends AppCompatActivity {
-    private static final String TAG = "WebViewActivity";
-
     public static final String EXTRAS_TITLE = "title";
     public static final String EXTRAS_URL = "url";
-
+    private static final String TAG = "WebViewActivity";
     private Toolbar toolbarPrivacyPolicy;
     private WebView webView;
 

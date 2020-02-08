@@ -10,9 +10,9 @@ public class Test {
     public int cid;             // category id
     public int kid;             // keyword id
     public long testedDate;    // Date that long data type
-    private boolean passed;     // test passing flag
     public int answerTime;      // answering time (s)
     public int type;            // test type (defined by constants. see above)
+    private boolean passed;     // test passing flag
 
     private Test(int id, int cid, int kid, Long testedDate, boolean passed, int answerTime, int type) {
         this.id = id;
@@ -24,8 +24,13 @@ public class Test {
         this.type = type;
     }
 
-    public boolean isPassed() { return passed; }
-    public void setPassed(boolean passed) { this.passed = passed; }
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
+    }
 
     @Override
     public String toString() {
@@ -41,7 +46,9 @@ public class Test {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException { return super.clone(); }
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     public static class Builder {
         private int id;                 // db id

@@ -25,7 +25,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
     //chan
     private static final String TAG = "NotificationReceiver";
     private static final String CHANNEL = "BrainNotificationChannel";
-    private static final String DEFAULT_CHANNEL= "기본 채널";
+    private static final String DEFAULT_CHANNEL = "기본 채널";
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -34,11 +34,10 @@ public final class NotificationReceiver extends BroadcastReceiver {
         boolean soundFlag = true;   //디폴트는 사운드 on(true)
         SharedPreferences pref = context.getSharedPreferences(context.getString(R.string.
                 SharedPreferencesName), Context.MODE_PRIVATE);
-        if (pref.getBoolean(context.getString(R.string.SharedPreferences_nightMode), false))
-        {
+        if (pref.getBoolean(context.getString(R.string.SharedPreferences_nightMode), false)) {
             Calendar cal = Calendar.getInstance();
             int hour = cal.get(Calendar.DAY_OF_MONTH);
-            if(hour > 23 || hour < 8) {
+            if (hour > 23 || hour < 8) {
                 soundFlag = false;
             }
         }
@@ -53,18 +52,18 @@ public final class NotificationReceiver extends BroadcastReceiver {
             Log.d(TAG, "시리얼 저장된 객체 불러오기 실패.");
             return;
         }
-        if(idList.size() == 0){
+        if (idList.size() == 0) {
             Log.d(TAG, "알람 개수가 0개임.");
             return;
         }
         int showNum = 0;
         long now = System.currentTimeMillis();
-        for(long date : dateList){
-            if(date < now){
+        for (long date : dateList) {
+            if (date < now) {
                 showNum++;
             }
         }
-        if(showNum == 0){
+        if (showNum == 0) {
             return;
         }
 
@@ -85,9 +84,9 @@ public final class NotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL);
             NotificationChannel mChannel;
-            if(soundFlag) {
+            if (soundFlag) {
                 mChannel = new NotificationChannel(CHANNEL, DEFAULT_CHANNEL, NotificationManager.IMPORTANCE_DEFAULT);
-            }else{
+            } else {
                 mChannel = new NotificationChannel(CHANNEL, DEFAULT_CHANNEL, NotificationManager.IMPORTANCE_LOW);
             }
 
@@ -107,7 +106,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
                     .setContentIntent(pendingIntent).setAutoCancel(true)
                     .setDeleteIntent(pendingCancelIntent)
                     .setChannelId(CHANNEL);
-            if(!soundFlag) {
+            if (!soundFlag) {
                 builder.setDefaults(0);
             }
 
@@ -115,7 +114,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
             note.flags |= Notification.FLAG_AUTO_CANCEL;
 
             notificationmanager.notify(1, note);
-        }else{
+        } else {
             Notification.Builder builder = new Notification.Builder(context);
             builder.setSmallIcon(R.drawable.ic_main_study).setTicker("Notification.Builder")
                     .setWhen(System.currentTimeMillis())
@@ -128,7 +127,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
                     .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                     .setDeleteIntent(pendingCancelIntent)
                     .setContentIntent(pendingIntent).setAutoCancel(true);
-            if(!soundFlag) {
+            if (!soundFlag) {
                 builder.setDefaults(0);
             }
 

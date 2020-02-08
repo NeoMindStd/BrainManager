@@ -17,10 +17,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Global_menu"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:textSize="32dp"
-        android:textColor="@color/WHITE"/>
+        android:text="@string/Global_menu"
+        android:textColor="@color/WHITE"
+        android:textSize="32dp" />
 
 </RelativeLayout>

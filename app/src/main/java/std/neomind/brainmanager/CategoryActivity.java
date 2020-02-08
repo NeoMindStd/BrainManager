@@ -43,10 +43,8 @@ import std.neomind.brainmanager.data.Keyword;
 import std.neomind.brainmanager.utils.BrainDBHandler;
 
 public class CategoryActivity extends AppCompatActivity {
-    private static final String TAG = "CategoryActivity";
-
     public static final String EXTRAS_CATEGORY = "category";
-
+    private static final String TAG = "CategoryActivity";
     private BrainDBHandler mBrainDBHandler;
 
     private int categoryID;
@@ -59,6 +57,32 @@ public class CategoryActivity extends AppCompatActivity {
     private MaterialEditText mNameEditText;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mKeywordAdapter;
+    private SpeedDialView.OnActionSelectedListener fabItemClickListener = actionItem -> {
+        switch (actionItem.getId()) {
+            case R.id.category_fab_item_uncategorize:
+                for (int i = 0; i < mKeywords.size(); i++) {
+                    Keyword keyword = mKeywords.get(i);
+                    if (keyword.isSelected()) {
+                        keyword.cid = Category.NOT_REGISTERED;
+                        mUpdatedKeywords.add(keyword);
+                        mKeywords.remove(i);
+                        initRecyclerView();
+                    }
+                }
+                break;
+                /*
+            case R.id.category_fab_item_register_Keywords:
+                int i = 0;
+                Keyword keyword = mKeywords.get(i);
+                keyword.cid = categoryID;
+                mKeywords.add(keyword);
+                mUpdatedKeywords.add(keyword);
+                initRecyclerView();
+                break;
+        */
+        }
+        return false;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +122,9 @@ public class CategoryActivity extends AppCompatActivity {
         Category category = null;
         try {
             category = mBrainDBHandler.findCategory(BrainDBHandler.FIELD_CATEGORIES_ID, id);
-        } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
+        } catch (BrainDBHandler.NoMatchingDataException e) {
+            e.printStackTrace();
+        }
         mBrainDBHandler.close();
 
         Log.i(TAG, "onCreate: category - " + category);
@@ -190,7 +216,7 @@ public class CategoryActivity extends AppCompatActivity {
             case R.id.category_action_done:
                 mCategory.name = mNameEditText.getText().toString();
 
-                if(mCategory.name.isEmpty()) {
+                if (mCategory.name.isEmpty()) {
                     Toast.makeText(this, getString(R.string.Global_exceptionESCategory), Toast.LENGTH_SHORT).show();
                 } else {
                     mBrainDBHandler.updateCategory(mCategory);
@@ -204,33 +230,6 @@ public class CategoryActivity extends AppCompatActivity {
 
         return true;
     }
-
-    private SpeedDialView.OnActionSelectedListener fabItemClickListener = actionItem -> {
-        switch (actionItem.getId()) {
-            case R.id.category_fab_item_uncategorize:
-                for(int i = 0; i < mKeywords.size(); i++) {
-                    Keyword keyword = mKeywords.get(i);
-                    if(keyword.isSelected()) {
-                        keyword.cid = Category.NOT_REGISTERED;
-                        mUpdatedKeywords.add(keyword);
-                        mKeywords.remove(i);
-                        initRecyclerView();
-                    }
-                }
-                break;
-                /*
-            case R.id.category_fab_item_register_Keywords:
-                int i = 0;
-                Keyword keyword = mKeywords.get(i);
-                keyword.cid = categoryID;
-                mKeywords.add(keyword);
-                mUpdatedKeywords.add(keyword);
-                initRecyclerView();
-                break;
-        */
-        }
-        return false;
-    };
 
     public static class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.KeywordViewHolder> {
 
@@ -283,7 +282,7 @@ public class CategoryActivity extends AppCompatActivity {
             }
 
             public void build(int i) {
-                mKeywords.get(i).setCardView((CardView)itemView);
+                mKeywords.get(i).setCardView((CardView) itemView);
 
                 itemView.setOnClickListener(new ItemClickListener());
 

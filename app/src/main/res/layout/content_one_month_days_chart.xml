@@ -9,11 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -39,16 +41,18 @@
                     android:layout_height="match_parent" />
 
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/StatisticsActivity_setTargetCorrectAnswerRate" />
+
             <Spinner
                 android:id="@+id/statistics_spinner_oneMonthDaysSelectGoal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.02">
-            </Spinner>
+                android:layout_weight="0.02"></Spinner>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,8 +62,7 @@
                 android:id="@+id/statistics_spinner_oneMonthDaysSelectTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.02">
-            </Spinner>
+                android:layout_weight="0.02"></Spinner>
         </LinearLayout>
 
     </LinearLayout>

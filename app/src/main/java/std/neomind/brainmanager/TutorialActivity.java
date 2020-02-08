@@ -36,7 +36,6 @@ public class TutorialActivity extends IntroActivity {
     }
 
 
-
     @Override
     protected Collection<? extends Fragment> generatePages(Bundle savedInstanceState) {
         final ArrayList<Fragment> pages = new ArrayList<>();
@@ -77,6 +76,7 @@ public class TutorialActivity extends IntroActivity {
 
         return pages;
     }
+
     //
 //    private boolean introductionCompletedPreviously() {
 //        final SharedPreferences sp = getSharedPreferences(getString(R.string.SharedPreferencesName), MODE_PRIVATE);
@@ -91,6 +91,7 @@ public class TutorialActivity extends IntroActivity {
                 SharedPreferences_firstStart), false);
         return new DoFinish(pendingEdits);
     }
+
     @Override
     public void onBackPressed() {
         //Do nothing.
@@ -110,7 +111,7 @@ public class TutorialActivity extends IntroActivity {
     public static final class DoFinish extends IntroButton.BehaviourAdapter {
         private final SharedPreferences.Editor editsToMake;
 
-        public DoFinish(final SharedPreferences.Editor editsToMake){
+        public DoFinish(final SharedPreferences.Editor editsToMake) {
             this.editsToMake = editsToMake;
         }
 

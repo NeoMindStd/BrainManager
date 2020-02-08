@@ -80,8 +80,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         mChart.setData(data);
 
-        mNightModeCheckBox = findViewById(R.id.settings_checkBox_nightMode) ;
-        mDeleteModeCheckBox = findViewById(R.id.settings_checkBox_deleteOriginalImage) ;
+        mNightModeCheckBox = findViewById(R.id.settings_checkBox_nightMode);
+        mDeleteModeCheckBox = findViewById(R.id.settings_checkBox_deleteOriginalImage);
 
         findViewById(R.id.settings_textView_privacyPolicy).setOnClickListener(view -> {
             Intent intent = new Intent(this, WebViewActivity.class);
@@ -114,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences_learningType), 0)).getId());
 
         mNightModeCheckBox.setChecked(mPref.getBoolean(getString(R.string.
-                SharedPreferences_nightMode), true)) ;
+                SharedPreferences_nightMode), true));
         mDeleteModeCheckBox.setChecked(mPref.getBoolean(getString(R.string.
                 SharedPreferences_deleteOriginalImage), false));
     }
@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void applyLearningType(int radioButtonId) {
-        switch(radioButtonId) {
+        switch (radioButtonId) {
             case R.id.settings_radioButton_banner:
                 new SettingsActivity.AlarmHATT().Alarm();
                 break;

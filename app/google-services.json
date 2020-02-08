@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "292330512492",
+    "firebase_url": "https://ngg-79859.firebaseio.com",
+    "project_id": "ngg-79859",
+    "storage_bucket": "ngg-79859.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292330512492:android:bac2dc8718acab8605b849",
+        "android_client_info": {
+          "package_name": "std.neomind.brainmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292330512492-5u9snfudotl28dt1et47l6ikmno57rka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDArNbEdefrWoZlN6WegZzYVjzGNRBb_Ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292330512492-5u9snfudotl28dt1et47l6ikmno57rka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

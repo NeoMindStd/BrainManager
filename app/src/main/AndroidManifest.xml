@@ -65,9 +65,9 @@
             android:name=".WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TutorialActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
         <receiver

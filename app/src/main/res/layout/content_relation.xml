@@ -9,19 +9,19 @@
     tools:showIn="@layout/activity_relation">
 
     <TextView
-        style="@style/keywordTheme"
         android:id="@+id/relation_textView_keyword"
+        style="@style/keywordTheme"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/review_relation_rounded"
         android:gravity="center"
-        app:layout_constraintVertical_weight="0.3"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/relation_layout_empty"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="0.3"
+        app:layout_constraintWidth_percent="0.8" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relation_layout_empty"
@@ -35,7 +35,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/relation_textView_keyword"
         app:layout_constraintVertical_weight="0.7"
-        app:layout_constraintWidth_percent="0.8" >
+        app:layout_constraintWidth_percent="0.8">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -52,6 +52,7 @@
         app:layout_constraintTop_toBottomOf="@id/relation_textView_keyword"
         app:layout_constraintVertical_weight="0.7"
         app:layout_constraintWidth_percent="0.8" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/relation_list_recyclerView_keyword"
         android:layout_width="0dp"

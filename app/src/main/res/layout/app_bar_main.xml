@@ -21,7 +21,7 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/main_spinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -34,7 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        app:sdMainFabClosedIconColor="@color/WHITE"
+        app:sdMainFabOpenedIconColor="@color/WHITE"
         app:sdMainFabClosedSrc="@drawable/ic_main_fab_default"
-        app:sdMainFabOpenedSrc="@drawable/ic_main_fab_close"/>
+        app:sdMainFabOpenedSrc="@drawable/ic_main_fab_close" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

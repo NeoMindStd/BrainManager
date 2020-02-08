@@ -10,19 +10,20 @@ public class Keyword {
     public static final String EMPTY_STRINGS = "";
     public static final int NOT_REGISTERED = -1;
     public static final int ZERO_INIT = 0;
-
-    private CardView cardView;                              // cardView to be set
     public int id;                                          // primary key id
     public int cid;                                         // category id
     public String name;                                     // the name of keyword
-    @NonNull private ArrayList<Description> descriptions;   // contents
     public String imagePath;                                // absolute path of contents image
     public int currentLevels;                               // automatically review levels
     public int reviewTimes;                                 // self review times
     public long registrationDate;                           // Date that long data type
-    @NonNull private ArrayList<Integer> relationIds;        // self-relation id
     public double ef;                                       // 기억 용이성
     public int interval;                                    // 반복주기
+    private CardView cardView;                              // cardView to be set
+    @NonNull
+    private ArrayList<Description> descriptions;   // contents
+    @NonNull
+    private ArrayList<Integer> relationIds;        // self-relation id
     private boolean selected;                               // 다중 삭제 등의 상태시 선택 여부
 
     private Keyword(CardView CardView, int id, int cid, String name, ArrayList<Description> descriptions,
@@ -43,20 +44,42 @@ public class Keyword {
         this.selected = seledted;
     }
 
-    public void setDescriptions(@NonNull ArrayList<Description> descriptions) { this.descriptions = descriptions; }
-    public ArrayList<Description> getDescriptions() { return descriptions; }
+    public ArrayList<Description> getDescriptions() {
+        return descriptions;
+    }
 
-    public void setRelationIds(@NonNull ArrayList<Integer> relationIds) { this.relationIds = relationIds; }
-    public ArrayList<Integer> getRelationIds() { return relationIds; }
+    public void setDescriptions(@NonNull ArrayList<Description> descriptions) {
+        this.descriptions = descriptions;
+    }
 
-    public CardView getCardView() { return cardView; }
-    public void setCardView(CardView CardView) { this.cardView = CardView; }
+    public ArrayList<Integer> getRelationIds() {
+        return relationIds;
+    }
 
-    public boolean isSelected() { return selected; }
-    public void setSelected(boolean selected) { this.selected = selected; }
+    public void setRelationIds(@NonNull ArrayList<Integer> relationIds) {
+        this.relationIds = relationIds;
+    }
+
+    public CardView getCardView() {
+        return cardView;
+    }
+
+    public void setCardView(CardView CardView) {
+        this.cardView = CardView;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     @Override
-    public String toString() { return name; }
+    public String toString() {
+        return name;
+    }
 
     public String toStringAbsolutely() {
         return "Keyword{" +
@@ -77,19 +100,23 @@ public class Keyword {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException { return super.clone(); }
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     public static class Builder {
         private CardView cardView;                              // cardView to be set
         private int id;                                         // primary key id
         private int cid;                                        // category id
         private String name;                                    // the name of keyword
-        @NonNull private ArrayList<Description> descriptions;   // contents
+        @NonNull
+        private ArrayList<Description> descriptions;   // contents
         private String imagePath;                               // absolute path of contents image
         private int currentLevels;                              // automatically review levels
         private int reviewTimes;                                // self review times
         private long registrationDate;                          // Date that long data type
-        @NonNull private ArrayList<Integer> relationIds;        // self-relation id
+        @NonNull
+        private ArrayList<Integer> relationIds;        // self-relation id
         private double ef;                                      // 기억 용이성
         private int interval;                                   // 반복주기
         private boolean selected;                               // 선택 여부

@@ -9,11 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -49,8 +51,8 @@
                 android:id="@+id/statistics_spinner_fifteenDaysSelectGoal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.02">
-            </Spinner>
+                android:layout_weight="0.02"></Spinner>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,8 +62,7 @@
                 android:id="@+id/statistics_spinner_fifteenDaysSelectTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.02">
-            </Spinner>
+                android:layout_weight="0.02"></Spinner>
         </LinearLayout>
 
     </LinearLayout>

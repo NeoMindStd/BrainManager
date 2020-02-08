@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 **
 ** Copyright 2008, The Android Open Source Project
 **
@@ -19,8 +18,8 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     style="?attr/spinnerDropDownItemStyle"
-    android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="?attr/dropdownListPreferredItemHeight"
-    android:textColor="@color/BLACK"
-    android:ellipsize="marquee"/>
+    android:ellipsize="marquee"
+    android:singleLine="true"
+    android:textColor="@color/BLACK" />
