@@ -74,7 +74,48 @@ public class RelationActivity extends AppCompatActivity
     private RecyclerView.Adapter mGridKeywordAdapter;
     private RecyclerView mListRecyclerView;
     private RecyclerView.Adapter mListKeywordAdapter;
+    private Spinner.OnItemSelectedListener spinnerItemListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //loadDB();
+            setTargetKeywords();
+            getKeywordsFromDB();
+            initRecyclerView();
+        }
 
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    };
+    private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String searchString) {
+            setTargetKeywords();
+            mKeywords.clear();
+            mGridRecyclerView.removeAllViewsInLayout();
+            mListRecyclerView.removeAllViewsInLayout();
+
+
+            // Add filtered items
+            String query = "SELECT * FROM " + BrainDBHandler.TABLE_KEYWORDS;
+            query += String.format(" WHERE %s LIKE \"%%%s%%\"", BrainDBHandler.FIELD_KEYWORDS_NAME, searchString);
+            Log.d("Query", query);
+            mKeywords = mBrainDBHandler.getKeywords(query);
+            initRecyclerView();
+
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
+    private SearchView.OnCloseListener onCloseListener = () -> {
+        setTargetKeywords();
+        loadDB();
+        return false;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +135,7 @@ public class RelationActivity extends AppCompatActivity
         mTargetKeywords = new ArrayList<>();
         mTargetIdList = (ArrayList<Integer>) getIntent().getSerializableExtra(EXTRAS_KEYWORD);
 
-        if(mTargetIdList.isEmpty()){
+        if (mTargetIdList.isEmpty()) {
             finish();
             Toast.makeText(getApplicationContext(), getString(R.string.ReviewActivity_noKeyword), Toast.LENGTH_LONG).show();
             return;
@@ -128,7 +169,8 @@ public class RelationActivity extends AppCompatActivity
         mTempKeywords = new ArrayList<>();
         generate_recycler();
     }
-    private void setTargetKeywords(){
+
+    private void setTargetKeywords() {
         ////TODO 받아오고 DB에서 계속해서 다시 받아와야함. 그래야 relationIds 리스트의 삽입 삭제를 제대로 반영 가능. 문제는 메인화면에서 키워드를 넘겨주는 부분 구현이 좀 더 어려워짐.
         ////TODO 그것도 이것처럼 DB에서 받아와서 갱신할 수 있어야한다.
         ArrayList<Keyword> arrayList;
@@ -137,8 +179,8 @@ public class RelationActivity extends AppCompatActivity
             arrayList = brainDBHandler.getAllKeywords();
             brainDBHandler.close();
             mTargetKeywords.clear();
-            for(Keyword key : arrayList){
-                if(mTargetIdList.contains(key.id)){
+            for (Keyword key : arrayList) {
+                if (mTargetIdList.contains(key.id)) {
                     mTargetKeywords.add(key);
                 }
             }
@@ -156,13 +198,13 @@ public class RelationActivity extends AppCompatActivity
 
             return compareResult;
         });
-        if(mCurrentRKeyIndex == mTargetKeywords.size()){
+        if (mCurrentRKeyIndex == mTargetKeywords.size()) {
             finish();
             return;
         }
         mCurrentKeyword = mTargetKeywords.get(mCurrentRKeyIndex);
-        while(mCurrentKeyword.name.equals("")){
-            if(++mCurrentRKeyIndex == mTargetKeywords.size()){
+        while (mCurrentKeyword.name.equals("")) {
+            if (++mCurrentRKeyIndex == mTargetKeywords.size()) {
                 finish();
                 return;
             }
@@ -183,7 +225,7 @@ public class RelationActivity extends AppCompatActivity
             int exCount = 0;
             int relationCount = 0;
 
-            for(Keyword keyword : mTempKeywords){
+            for (Keyword keyword : mTempKeywords) {
                 if (keyword.isSelected()) {
                     relationCount++;
 //                    try {
@@ -198,17 +240,18 @@ public class RelationActivity extends AppCompatActivity
                 }
             }
             dbHandler.close();
-            if(exCount != 0) {
+            if (exCount != 0) {
                 Toast.makeText(this, exCount + getString(R.string.RelationActivity_error), Toast.LENGTH_LONG).show();
             }
             Snackbar.make(view, relationCount + getString(R.string.RelationActivity_relationAdd), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.Global_OK), v -> {}).show();
+                    .setAction(getString(R.string.Global_OK), v -> {
+                    }).show();
             mCurrentRKeyIndex++;
             generate_recycler();
         });
     }
 
-    private void generate_recycler(){
+    private void generate_recycler() {
         setTargetKeywords();
 
         mKeywordText.setText(mCurrentKeyword.name);
@@ -229,7 +272,6 @@ public class RelationActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -247,11 +289,11 @@ public class RelationActivity extends AppCompatActivity
         MenuItem switchItem = menu.findItem(R.id.relation_action_switch);
         Switch switchWiget = switchItem.getActionView().findViewById(R.id.switchForActionBar);
         switchWiget.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
+            if (isChecked) {
                 mGridRecyclerView.setVisibility(View.GONE);
                 mListRecyclerView.setVisibility(View.VISIBLE);
 
-            } else{
+            } else {
                 mGridRecyclerView.setVisibility(View.VISIBLE);
                 mListRecyclerView.setVisibility(View.GONE);
             }
@@ -315,7 +357,8 @@ public class RelationActivity extends AppCompatActivity
 
     private void getKeywordsFromDB() {
         int cid = mCategories.get(mSpinner.getSelectedItemPosition()).id;
-        if(cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED) mKeywords = mBrainDBHandler.getAllKeywords();
+        if (cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED)
+            mKeywords = mBrainDBHandler.getAllKeywords();
         else mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(cid);
         mBrainDBHandler.close();
 
@@ -337,8 +380,8 @@ public class RelationActivity extends AppCompatActivity
     private void initRecyclerView() {
         mTempKeywords.clear();
         mTempKeywords.addAll(mKeywords);
-        for(Keyword key : mTempKeywords){
-            if(key.id == mCurrentKeyword.id){
+        for (Keyword key : mTempKeywords) {
+            if (key.id == mCurrentKeyword.id) {
                 mTempKeywords.remove(key);
                 break;
             }
@@ -361,51 +404,6 @@ public class RelationActivity extends AppCompatActivity
         setTargetKeywords();
         loadDB();
     }
-
-    private Spinner.OnItemSelectedListener spinnerItemListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //loadDB();
-            setTargetKeywords();
-            getKeywordsFromDB();
-            initRecyclerView();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    };
-
-    private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String searchString) {
-            setTargetKeywords();
-            mKeywords.clear();
-            mGridRecyclerView.removeAllViewsInLayout();
-            mListRecyclerView.removeAllViewsInLayout();
-
-
-            // Add filtered items
-            String query = "SELECT * FROM " + BrainDBHandler.TABLE_KEYWORDS;
-            query += String.format(" WHERE %s LIKE \"%%%s%%\"", BrainDBHandler.FIELD_KEYWORDS_NAME, searchString);
-            Log.d("Query", query);
-            mKeywords = mBrainDBHandler.getKeywords(query);
-            initRecyclerView();
-
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            return false;
-        }
-    };
-
-    private SearchView.OnCloseListener onCloseListener = () -> {
-        setTargetKeywords();
-        loadDB();
-        return false;
-    };
 
     public static class RelationGridRecyclerAdapter extends RecyclerView.Adapter<RelationGridRecyclerAdapter.RelationViewHolder> {
         //rContext 액티비티 context 를 저장함.
@@ -445,7 +443,7 @@ public class RelationActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(@NonNull RelationViewHolder viewHolder, int position) {
             Keyword currentItemKey = rKeywords.get(position);
-            if(!currentItemKey.name.equals("")) {
+            if (!currentItemKey.name.equals("")) {
                 viewHolder.textView.setGravity(Gravity.CENTER);
                 viewHolder.textView.setTextAppearance(R.style.textExamTheme);
                 viewHolder.textView.setText(rKeywords.get(position).name);
@@ -453,8 +451,8 @@ public class RelationActivity extends AppCompatActivity
                 viewHolder.textView.setOnClickListener(keyGridClickListener);
                 boolean ck_rel = false;
                 //기존 관계성 체크
-                for(Integer id : rSelectK.getRelationIds()){
-                    if(currentItemKey.id == id) {
+                for (Integer id : rSelectK.getRelationIds()) {
+                    if (currentItemKey.id == id) {
                         ck_rel = true;
                         break;
                     }
@@ -467,14 +465,16 @@ public class RelationActivity extends AppCompatActivity
                     viewHolder.textView.setBackground(ContextCompat.
                             getDrawable(rContext, R.drawable.review_relation_edge));
                 }
-            }
-            else{
+            } else {
                 viewHolder.textView.setBackground(ContextCompat.
                         getDrawable(rContext, R.drawable.review_relation_gray_edge));
             }
         }
+
         @Override
-        public int getItemCount() { return (null != rKeywords) ? rKeywords.size() : 0; }
+        public int getItemCount() {
+            return (null != rKeywords) ? rKeywords.size() : 0;
+        }
 
         ///재사용 되어질지도 모르는 코드는 일단 주석처리
         //    public Object getItem(int index) {
@@ -579,8 +579,7 @@ public class RelationActivity extends AppCompatActivity
                     key.setSelected(true);
                     try {
                         dbHandler.addRelation(rSelectK.id, key.id);
-                    }
-                    catch(BrainDBHandler.DataDuplicationException e){
+                    } catch (BrainDBHandler.DataDuplicationException e) {
                         Toast.makeText(rContext, "오류가 발생했습니다.", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
@@ -645,13 +644,13 @@ public class RelationActivity extends AppCompatActivity
 
             public void build(int i) {
                 Keyword currentItemKey = mKeywords.get(i);
-                currentItemKey.setCardView((CardView)itemView);
+                currentItemKey.setCardView((CardView) itemView);
 
-                if(!currentItemKey.name.equals("")) {
+                if (!currentItemKey.name.equals("")) {
                     boolean ck_rel = false;
                     //기존 관계성 체크
-                    for(Integer id : mSelectK.getRelationIds()){
-                        if(currentItemKey.id == id) ck_rel = true;
+                    for (Integer id : mSelectK.getRelationIds()) {
+                        if (currentItemKey.id == id) ck_rel = true;
                     }
                     if (ck_rel) {
                         currentItemKey.setSelected(true);
@@ -660,8 +659,7 @@ public class RelationActivity extends AppCompatActivity
                         itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_edge));
                     }
                     itemView.setOnClickListener(new ItemClickListener());
-                }
-                else{
+                } else {
                     itemView.setBackground(ContextCompat.getDrawable(mActivity, R.drawable.review_relation_gray_edge));
                 }
 
@@ -716,8 +714,7 @@ public class RelationActivity extends AppCompatActivity
                         mKeywords.get(getAdapterPosition()).setSelected(true);
                         try {
                             dbHandler.addRelation(mSelectK.id, mKeywords.get(getAdapterPosition()).id);
-                        }
-                        catch(BrainDBHandler.DataDuplicationException e){
+                        } catch (BrainDBHandler.DataDuplicationException e) {
                             Toast.makeText(mActivity, mActivity.
                                     getString(R.string.Global_errorOccurred), Toast.LENGTH_LONG).show();
                             e.printStackTrace();

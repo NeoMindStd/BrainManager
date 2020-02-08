@@ -13,13 +13,12 @@ import java.util.Calendar;
 
 import std.neomind.brainmanager.R;
 
-public final class AlarmReceiver extends BroadcastReceiver{
-    private static final String TAG = "AlarmReceiver";
-
+public final class AlarmReceiver extends BroadcastReceiver {
     public static final String EXTRAS_KEY_REVIEW_DATE = "keywordReviewDate";
     public static final String EXTRAS_MODE = "mode";
     public static final String MODE_CANCEL_REVIEW = "cancelreview";
     public static final String MODE_CANCEL_BANNER = "cancelbanner";
+    private static final String TAG = "AlarmReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -28,8 +27,8 @@ public final class AlarmReceiver extends BroadcastReceiver{
         /**
          * 폰 재시작 할때 브로드캐스트 등록
          */
-        if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())){
-            Log.i(TAG , "ACTION_BOOT_COMPLETED");
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            Log.i(TAG, "ACTION_BOOT_COMPLETED");
 
             ArrayList<Integer> idList = new ArrayList<>();
             ArrayList<Long> DateList = new ArrayList<>();
@@ -40,10 +39,10 @@ public final class AlarmReceiver extends BroadcastReceiver{
                 Log.d(TAG, "시리얼 파일 불러오기 실패");
                 return;
             }
-            if(idList.isEmpty() && DateList.isEmpty()){
+            if (idList.isEmpty() && DateList.isEmpty()) {
                 Intent localIntent = new Intent(context, NotificationReceiver.class);
-                for(long temp_date : DateList){
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)(temp_date/1000/60/10), localIntent, 0);
+                for (long temp_date : DateList) {
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) (temp_date / 1000 / 60 / 10), localIntent, 0);
                     am.set(AlarmManager.RTC_WAKEUP, temp_date, pendingIntent);
                 }
             }
@@ -55,12 +54,11 @@ public final class AlarmReceiver extends BroadcastReceiver{
 //            }else{
 //                context.startService(i);
 //            }
-        }
-        else {  /** 폰 재시작할 경우가 아닌경우 **/
+        } else {  /** 폰 재시작할 경우가 아닌경우 **/
             long date;
-            String cancelShow ="";
-            Log.i(TAG , "ACTION_ALARM_RECEIVER_COMPLETED");
-            if(intent.getStringExtra(EXTRAS_MODE) == null){
+            String cancelShow = "";
+            Log.i(TAG, "ACTION_ALARM_RECEIVER_COMPLETED");
+            if (intent.getStringExtra(EXTRAS_MODE) == null) {
                 try {
                     date = intent.getExtras().getLong(EXTRAS_KEY_REVIEW_DATE);
                 } catch (NullPointerException ex) {
@@ -68,7 +66,7 @@ public final class AlarmReceiver extends BroadcastReceiver{
                     Log.d(TAG, "getExtras 에서 오류 발생");
                     return;
                 }
-            } else{
+            } else {
                 //두개의 모드가 있지만 현재는 동작이 동일하기 때문에 합쳐서 함.
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(System.currentTimeMillis());
@@ -76,39 +74,39 @@ public final class AlarmReceiver extends BroadcastReceiver{
                 date = cal.getTimeInMillis();
                 cancelShow = context.getString(R.string.AlarmReceiver_cancel);
             }
-            long diffDate = date - System.currentTimeMillis()+2000;
-            long diffMinute = diffDate % (1000*60*60*24) / (1000*60) % 60;
-            long diffHour = diffDate % (1000*60*60*24) / (1000*60*60) % 24;
-            long diffDay = diffDate / (1000*60*60*24);
+            long diffDate = date - System.currentTimeMillis() + 2000;
+            long diffMinute = diffDate % (1000 * 60 * 60 * 24) / (1000 * 60) % 60;
+            long diffHour = diffDate % (1000 * 60 * 60 * 24) / (1000 * 60 * 60) % 24;
+            long diffDay = diffDate / (1000 * 60 * 60 * 24);
 
             String tempDateText = "";
-            if(diffDay > 0) {
-                if(diffDay > 1)
+            if (diffDay > 0) {
+                if (diffDay > 1)
                     tempDateText += diffDay + context.getString(R.string.Global_Day) + context.getString(R.string.Global_plural) + " ";
                 else
                     tempDateText += diffDay + context.getString(R.string.Global_Day) + " ";
             }
-            if(diffHour > 0) {
-                if(diffHour > 1)
+            if (diffHour > 0) {
+                if (diffHour > 1)
                     tempDateText += diffHour + context.getString(R.string.Global_Hour) + context.getString(R.string.Global_plural) + " ";
                 else
                     tempDateText += diffHour + context.getString(R.string.Global_Hour) + " ";
             }
-            if(diffMinute > 0) {
-                if(diffMinute > 1)
+            if (diffMinute > 0) {
+                if (diffMinute > 1)
                     tempDateText += diffMinute + context.getString(R.string.Global_Minute) + context.getString(R.string.Global_plural) + " ";
                 else
                     tempDateText += diffMinute + context.getString(R.string.Global_Minute) + " ";
             }
 
 
-            Toast.makeText(context.getApplicationContext(), cancelShow+String.format(context.getString(R.string.AlarmReceiver_date_toast), tempDateText), Toast.LENGTH_LONG).show();
+            Toast.makeText(context.getApplicationContext(), cancelShow + String.format(context.getString(R.string.AlarmReceiver_date_toast), tempDateText), Toast.LENGTH_LONG).show();
 
-            if(date != Long.MIN_VALUE) {
+            if (date != Long.MIN_VALUE) {
                 Intent localIntent = new Intent(context, NotificationReceiver.class);
                 //10분단위로 id를 묶어서 중복을 방지한다.
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                        (int)(date/1000/60/10), localIntent, 0);
+                        (int) (date / 1000 / 60 / 10), localIntent, 0);
                 am.set(AlarmManager.RTC_WAKEUP, date, pendingIntent);
             }
         }

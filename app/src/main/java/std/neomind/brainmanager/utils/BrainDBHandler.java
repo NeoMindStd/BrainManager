@@ -113,7 +113,8 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
 
     // TODO 만약 db 구조를 변경한다면, 이전 db 내용을 복사하고 기존 db를 삭제한 후 새로운 스키마대로 만드는 루틴 필요
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
 
     /**
      * DB 데이터 추가 메서드
@@ -144,16 +145,18 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_KEYWORDS, null, values);
         db.close();
 
-        for(Description description : keyword.getDescriptions()) {
+        for (Description description : keyword.getDescriptions()) {
             try {
                 addDescription(description, findLastKeyword().id);
-            } catch (NoMatchingDataException e) {}
+            } catch (NoMatchingDataException e) {
+            }
         }
-        for(int relationId : keyword.getRelationIds()) {
+        for (int relationId : keyword.getRelationIds()) {
             try {
                 addRelation(relationId, findLastKeyword().id);
-            } catch (DataDuplicationException e) {}
-            catch (NoMatchingDataException e) {}
+            } catch (DataDuplicationException e) {
+            } catch (NoMatchingDataException e) {
+            }
         }
     }
 
@@ -289,7 +292,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Keyword> getAllKeywordsOfTheCategory(int cid) {
-        if(cid == Category.CATEGORY_ALL) {
+        if (cid == Category.CATEGORY_ALL) {
             return getAllKeywords();
         } else {
             ArrayList<Keyword> keywords = new ArrayList<>();
@@ -353,7 +356,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         ArrayList<Integer> relationKids = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
-                FIELD_RELATIONS_KID1 + " = " + kid +" OR " +
+                FIELD_RELATIONS_KID1 + " = " + kid + " OR " +
                 FIELD_RELATIONS_KID2 + " = " + kid;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -361,7 +364,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 int relationKid = cursor.getInt(0);
-                if(relationKid == kid) relationKid =  cursor.getInt(1);
+                if (relationKid == kid) relationKid = cursor.getInt(1);
                 relationKids.add(relationKid);
                 cursor.moveToNext();
             }
@@ -372,7 +375,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Test> getAllTests() {
-        ArrayList<Test> tests= new ArrayList<>();
+        ArrayList<Test> tests = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RELATIONS, null);
@@ -412,7 +415,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
                     .setName(cursor.getString(1))
                     .build();
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return category;
     }
@@ -444,7 +449,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
                     .setName(cursor.getString(1))
                     .build();
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return category;
     }
@@ -472,7 +479,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
                     .setInterval(cursor.getInt(8))
                     .build();
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return keyword;
     }
@@ -515,7 +524,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
                     .setInterval(cursor.getInt(8))
                     .build();
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return keyword;
     }
@@ -530,7 +541,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
             description.id = cursor.getInt(0);
             description.description = cursor.getString(1);
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return description;
     }
@@ -564,7 +577,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
                     .setType(cursor.getInt(5))
                     .build();
             cursor.close();
-        } else { throw new NoMatchingDataException(); }
+        } else {
+            throw new NoMatchingDataException();
+        }
         db.close();
         return test;
     }
@@ -643,6 +658,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
 
     /**
      * DB 데이터 삭제 메소드
+     *
      * @param id 삭제할 레코드 id
      * @return result = 성공여부
      */
@@ -708,7 +724,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         boolean result = false;
 
         String query = "SELECT * FROM " + TABLE_RELATIONS + " WHERE " +
-                FIELD_RELATIONS_KID1 + " = " + Math.min(kid1, kid2) +" AND " +
+                FIELD_RELATIONS_KID1 + " = " + Math.min(kid1, kid2) + " AND " +
                 FIELD_RELATIONS_KID2 + " = " + Math.max(kid1, kid2);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -717,7 +733,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             db.delete(TABLE_RELATIONS,
                     FIELD_RELATIONS_KID1 + " = ? AND " + FIELD_RELATIONS_KID2 + " = ?",
-                    new String[]{String.valueOf( Math.min(kid1, kid2)), String.valueOf(Math.max(kid1, kid2))});
+                    new String[]{String.valueOf(Math.min(kid1, kid2)), String.valueOf(Math.max(kid1, kid2))});
             cursor.close();
             result = true;
         }
@@ -729,7 +745,7 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         boolean result = false;
 
         String query = "SELECT * FROM " + TABLE_TESTS + " WHERE " +
-                FIELD_TESTS_ID+ " = " + id;
+                FIELD_TESTS_ID + " = " + id;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -744,6 +760,9 @@ public final class BrainDBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public class NoMatchingDataException extends Exception { }
-    public class DataDuplicationException extends Exception { }
+    public class NoMatchingDataException extends Exception {
+    }
+
+    public class DataDuplicationException extends Exception {
+    }
 }

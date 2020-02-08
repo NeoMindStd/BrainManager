@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:focusableInTouchMode="true"
     android:id="@+id/layoutKeywordContentsFields"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:showIn="@layout/activity_keyword">
 
@@ -14,8 +14,8 @@
         android:id="@+id/keyword_photoView"
         android:layout_width="match_parent"
         android:layout_height="280dp"
-        android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
         android:src="@android:color/darker_gray"
@@ -24,18 +24,18 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/keyword_button_addImage"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        style="@style/Widget.MaterialComponents.Button"
+        android:text="@string/KeywordActivity_addImage"
         android:textColor="@color/WHITE"
-        app:backgroundTint="@color/colorPrimaryLight"
         android:textSize="16dp"
-        android:text="@string/KeywordActivity_addImage"/>
+        app:backgroundTint="@color/colorPrimaryLight" />
 
     <View
         android:id="@+id/keyword_divider_photoView-editText"
-        style="@style/Divider"/>
+        style="@style/Divider" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/keyword_editText_name"
@@ -43,9 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="20dp"
+        android:focusable="true"
         android:hint="@string/KeywordActivity_nameHint"
         android:textSize="16dp"
-        android:focusable="true"
         app:met_clearButton="true"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelAlwaysShown="true"
@@ -53,78 +53,78 @@
         app:met_maxCharacters="20"
         app:met_singleLineEllipsis="true" />
 
-    <View style="@style/Divider"/>
+    <View style="@style/Divider" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textSize="14dp"
         android:text="@string/KeywordActivity_category"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="14dp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/keyword_spinner_categories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-    <View style="@style/Divider"/>
+    <View style="@style/Divider" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textSize="14dp"
         android:text="@string/KeywordActivity_descriptions"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="14dp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/keyword_spinner_descriptions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
+        android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/keyword_button_addDescription"
-            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            style="@style/Widget.MaterialComponents.Button"
+            android:layout_weight="1"
+            android:text="@string/KeywordActivity_addDescription"
             android:textColor="@color/WHITE"
-            app:backgroundTint="@color/colorPrimaryLight"
             android:textSize="16dp"
-            android:text="@string/KeywordActivity_addDescription"/>
+            app:backgroundTint="@color/colorPrimaryLight" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/keyword_button_updateDescription"
-            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            style="@style/Widget.MaterialComponents.Button"
+            android:layout_weight="1"
+            android:text="@string/KeywordActivity_updateDescription"
             android:textColor="@color/WHITE"
-            app:backgroundTint="@color/colorPrimaryLight"
             android:textSize="16dp"
-            android:text="@string/KeywordActivity_updateDescription"/>
+            app:backgroundTint="@color/colorPrimaryLight" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/keyword_button_deleteDescription"
-            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            style="@style/Widget.MaterialComponents.Button"
+            android:layout_weight="1"
+            android:text="@string/KeywordActivity_deleteDescription"
             android:textColor="@color/WHITE"
-            app:backgroundTint="@color/colorPrimaryLight"
             android:textSize="16dp"
-            android:text="@string/KeywordActivity_deleteDescription"/>
+            app:backgroundTint="@color/colorPrimaryLight" />
 
     </LinearLayout>
 

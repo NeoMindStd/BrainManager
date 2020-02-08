@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:showIn="@layout/app_bar_category">
 
@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:focusable="true"
         android:hint="@string/KeywordActivity_nameHint"
         android:textSize="16dp"
-        android:focusable="true"
         app:met_clearButton="true"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelAlwaysShown="true"
@@ -28,9 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:textSize="14dp"
         android:text="@string/CategoryActivity_keywords"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="14dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/category_recyclerView_keyword"

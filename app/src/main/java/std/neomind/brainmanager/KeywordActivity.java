@@ -38,15 +38,12 @@ import std.neomind.brainmanager.utils.BrainSerialDataIO;
 import std.neomind.brainmanager.utils.FileManager;
 
 public class KeywordActivity extends AppCompatActivity {
-    private static final String TAG = "KeywordActivity";
-
-
     public static final int INTENT_MODE_REGISTER = 0;
     public static final int INTENT_MODE_VIEW = 1;
     public static final int INTENT_MODE_UPDATE = 2;
     public static final String EXTRAS_INTENT_MODE = "intentMode";
     public static final String EXTRAS_KEYWORD = "keyword";
-
+    private static final String TAG = "KeywordActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private BrainDBHandler mBrainDBHandler;
@@ -67,6 +64,78 @@ public class KeywordActivity extends AppCompatActivity {
     private Button mDescriptionAddButton;
     private Button mDescriptionUpdateButton;
     private Button mDescriptionDeleteButton;
+    private View.OnClickListener mCategoryButtonClickListener = view -> {
+        final EditText editText = new EditText(this);
+        switch (view.getId()) {
+            case R.id.keyword_button_addDescription:
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.KeywordActivity_addDescription))
+                        .setView(editText)
+                        .setPositiveButton(getString(R.string.Global_confirm),
+                                (dialog, which) -> {
+                                    Description description = new Description();
+                                    description.description = editText.getText().toString();
+                                    if (description.description.isEmpty()) {
+                                        Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        if (keywordID != Keyword.NOT_REGISTERED) {
+                                            mBrainDBHandler.addDescription(description, keywordID);
+                                            mKeyword.setDescriptions(
+                                                    mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                        } else {
+                                            mKeyword.getDescriptions().add(description);
+                                        }
+                                        initDescriptionSpinner();
+                                    }
+                                })
+                        .setNeutralButton(getString(R.string.Global_negative), null)
+                        .show();
+                break;
+            case R.id.keyword_button_updateDescription:
+                if (!mKeyword.getDescriptions().isEmpty()) {
+                    Description description = mKeyword.getDescriptions().
+                            get(mDescriptionSpinner.getSelectedItemPosition());
+                    editText.setText(description.toString());
+                    editText.setSelection(description.toString().length());
+                    new AlertDialog.Builder(this)
+                            .setTitle(getString(R.string.KeywordActivity_updateDescription))
+                            .setView(editText)
+                            .setPositiveButton(getString(R.string.Global_confirm),
+                                    (dialog, which) -> {
+                                        String tmp = editText.getText().toString();
+                                        if (tmp.isEmpty()) {
+                                            Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            description.description = tmp;
+                                            if (keywordID != Keyword.NOT_REGISTERED) {
+                                                mBrainDBHandler.updateDescription(description, keywordID);
+                                                mKeyword.setDescriptions(
+                                                        mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                                            }
+                                            initDescriptionSpinner();
+                                        }
+                                    })
+                            .setNeutralButton(getString(R.string.Global_negative), null)
+                            .show();
+                }
+                break;
+            case R.id.keyword_button_deleteDescription:
+                if (!mKeyword.getDescriptions().isEmpty()) {
+                    if (keywordID != Keyword.NOT_REGISTERED) {
+                        mBrainDBHandler.removeDescription(
+                                mKeyword.getDescriptions().get(
+                                        mDescriptionSpinner.getSelectedItemPosition()).id);
+                        mKeyword.setDescriptions(
+                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
+                    } else {
+                        mKeyword.getDescriptions().remove(
+                                mDescriptionSpinner.getSelectedItemPosition());
+                    }
+                    initDescriptionSpinner();
+                }
+                break;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +175,8 @@ public class KeywordActivity extends AppCompatActivity {
         mDescriptionDeleteButton = findViewById(R.id.keyword_button_deleteDescription);
         mDescriptionDeleteButton.setOnClickListener(mCategoryButtonClickListener);
 
-        switch(currentMode) {
-            case INTENT_MODE_REGISTER :
+        switch (currentMode) {
+            case INTENT_MODE_REGISTER:
                 getSupportActionBar().setTitle(R.string.KeywordActivity_titleRegister);
 
                 mKeyword = new Keyword.Builder().build();
@@ -118,7 +187,7 @@ public class KeywordActivity extends AppCompatActivity {
 
                 Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
 
-                if(!mKeyword.imagePath.isEmpty()) {
+                if (!mKeyword.imagePath.isEmpty()) {
                     Glide.with(this)
                             .load(mKeyword.imagePath)
                             .into(mPhotoView);
@@ -127,20 +196,20 @@ public class KeywordActivity extends AppCompatActivity {
 
                 mNameEditText.setText(mKeyword.name);
 
-                for(int i = 0; i < mCategories.size(); i++) {
-                    if(mCategories.get(i).id == mKeyword.cid) {
+                for (int i = 0; i < mCategories.size(); i++) {
+                    if (mCategories.get(i).id == mKeyword.cid) {
                         mCategorySpinner.setSelection(i);
                     }
                 }
                 break;
 
-            case INTENT_MODE_VIEW :
+            case INTENT_MODE_VIEW:
                 getSupportActionBar().setTitle(R.string.KeywordActivity_titleView);
 
                 Log.i(TAG, "onCreate: mKeyword - " + mKeyword);
 
                 mAddImageButton.setVisibility(View.GONE);
-                if(!mKeyword.imagePath.isEmpty()) {
+                if (!mKeyword.imagePath.isEmpty()) {
                     Glide.with(this)
                             .load(mKeyword.imagePath)
                             .into(mPhotoView);
@@ -160,8 +229,8 @@ public class KeywordActivity extends AppCompatActivity {
                 mNameEditText.setEnabled(true);
                 mNameEditText.setHideUnderline(true);
 
-                for(int i = 0; i < mCategories.size(); i++) {
-                    if(mCategories.get(i).id == mKeyword.cid) {
+                for (int i = 0; i < mCategories.size(); i++) {
+                    if (mCategories.get(i).id == mKeyword.cid) {
                         mCategorySpinner.setSelection(i);
                     }
                 }
@@ -185,7 +254,9 @@ public class KeywordActivity extends AppCompatActivity {
             keyword = mBrainDBHandler.findKeyword(BrainDBHandler.FIELD_KEYWORDS_ID, id);
             beforeImagePath = keyword.imagePath;
             Log.i(TAG, "loadKeywordFromDB: loaded keyword - " + keyword.toStringAbsolutely());
-        } catch (BrainDBHandler.NoMatchingDataException e) { e.printStackTrace(); }
+        } catch (BrainDBHandler.NoMatchingDataException e) {
+            e.printStackTrace();
+        }
         mBrainDBHandler.close();
 
         return keyword;
@@ -214,86 +285,13 @@ public class KeywordActivity extends AppCompatActivity {
     }
 
     private void initDescriptionSpinner() {
-        if(mKeyword != null) mDescriptionSpinner.setAdapter(new ArrayAdapter<>(
+        if (mKeyword != null) mDescriptionSpinner.setAdapter(new ArrayAdapter<>(
                 this, R.layout.global_spinner_item, mKeyword.getDescriptions()));
     }
 
-    private View.OnClickListener mCategoryButtonClickListener = view -> {
-        final EditText editText = new EditText(this);
-        switch (view.getId()) {
-            case R.id.keyword_button_addDescription:
-                new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.KeywordActivity_addDescription))
-                        .setView(editText)
-                        .setPositiveButton(getString(R.string.Global_confirm),
-                                (dialog, which) -> {
-                                    Description description = new Description();
-                                    description.description = editText.getText().toString();
-                                    if(description.description.isEmpty()) {
-                                        Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        if (keywordID != Keyword.NOT_REGISTERED) {
-                                            mBrainDBHandler.addDescription(description, keywordID);
-                                            mKeyword.setDescriptions(
-                                                    mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
-                                        } else {
-                                            mKeyword.getDescriptions().add(description);
-                                        }
-                                        initDescriptionSpinner();
-                                    }
-                                })
-                        .setNeutralButton(getString(R.string.Global_negative), null)
-                        .show();
-                break;
-            case R.id.keyword_button_updateDescription:
-                if (!mKeyword.getDescriptions().isEmpty()) {
-                    Description description = mKeyword.getDescriptions().
-                            get(mDescriptionSpinner.getSelectedItemPosition());
-                    editText.setText(description.toString());
-                    editText.setSelection(description.toString().length());
-                    new AlertDialog.Builder(this)
-                            .setTitle(getString(R.string.KeywordActivity_updateDescription))
-                            .setView(editText)
-                            .setPositiveButton(getString(R.string.Global_confirm),
-                                    (dialog, which) -> {
-                                        String tmp = editText.getText().toString();
-                                        if(tmp.isEmpty()) {
-                                            Toast.makeText(this, getString(R.string.Global_exceptionESDescription), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            description.description = tmp;
-                                            if (keywordID != Keyword.NOT_REGISTERED) {
-                                                mBrainDBHandler.updateDescription(description, keywordID);
-                                                mKeyword.setDescriptions(
-                                                        mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
-                                            }
-                                            initDescriptionSpinner();
-                                        }
-                                    })
-                            .setNeutralButton(getString(R.string.Global_negative), null)
-                            .show();
-                }
-                break;
-            case R.id.keyword_button_deleteDescription:
-                if (!mKeyword.getDescriptions().isEmpty()) {
-                    if (keywordID != Keyword.NOT_REGISTERED) {
-                        mBrainDBHandler.removeDescription(
-                                mKeyword.getDescriptions().get(
-                                        mDescriptionSpinner.getSelectedItemPosition()).id);
-                        mKeyword.setDescriptions(
-                                mBrainDBHandler.getAllDescriptionsOfTheKeyword(keywordID));
-                    } else {
-                        mKeyword.getDescriptions().remove(
-                                mDescriptionSpinner.getSelectedItemPosition());
-                    }
-                    initDescriptionSpinner();
-                }
-                break;
-        }
-    };
-
     @Override
     public void onBackPressed() {
-        if(currentMode == INTENT_MODE_VIEW)  super.onBackPressed();
+        if (currentMode == INTENT_MODE_VIEW) super.onBackPressed();
         else {
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.AlertDialog_askReallyCancel))
@@ -312,7 +310,8 @@ public class KeywordActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.keyword_app_bar, menu);
 
-        if(currentMode == INTENT_MODE_VIEW) menu.findItem(R.id.keyword_action_done).setVisible(false);
+        if (currentMode == INTENT_MODE_VIEW)
+            menu.findItem(R.id.keyword_action_done).setVisible(false);
         else menu.findItem(R.id.keyword_action_done).setVisible(true);
 
         return true;
@@ -327,7 +326,7 @@ public class KeywordActivity extends AppCompatActivity {
 
             case R.id.keyword_action_done:
                 mKeyword.name = mNameEditText.getText().toString();
-                if(mKeyword.name.isEmpty()) {
+                if (mKeyword.name.isEmpty()) {
                     Toast.makeText(this, getString(R.string.Global_exceptionESKeyword), Toast.LENGTH_SHORT).show();
                 } else {
                     mKeyword.cid = mCategories.get(mCategorySpinner.getSelectedItemPosition()).id;
@@ -357,8 +356,11 @@ public class KeywordActivity extends AppCompatActivity {
                     switch (currentMode) {
                         case INTENT_MODE_REGISTER:
                             mBrainDBHandler.addKeyword(mKeyword);
-                            try { mKeyword = mBrainDBHandler.findLastKeyword(); }
-                            catch (Exception e) { e.printStackTrace(); }
+                            try {
+                                mKeyword = mBrainDBHandler.findLastKeyword();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             infoHead = getString(R.string.Global_added);
 
                             //복습조건이 갖춰져 있으면 알람을 띄움

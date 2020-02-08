@@ -73,6 +73,95 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.Adapter mKeywordAdapter;
 
     private SharedPreferences mPref;
+    /***********************************************************
+     *                      Event Listener
+     ***********************************************************/
+
+    private Spinner.OnItemSelectedListener spinnerItemListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //loadDB();
+            getKeywordsFromDB();
+            initRecyclerView();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+    private SpeedDialView.OnActionSelectedListener fabItemClickListener = actionItem -> {
+        final EditText editText = new EditText(this);
+        switch (actionItem.getId()) {
+            case R.id.main_fab_item_register_Categories:
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.MainActivity_addCategory))
+                        .setView(editText)
+                        .setPositiveButton(getString(R.string.Global_confirm),
+                                (dialog, which) -> {
+                                    Category resultCategory = new Category.Builder().
+                                            setName(editText.getText().toString())
+                                            .build();
+                                    if (resultCategory.name.isEmpty()) {
+                                        Toast.makeText(this, getString(R.string.Global_exceptionESCategory), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        mBrainDBHandler.addCategory(resultCategory);
+                                        try {
+                                            resultCategory = mBrainDBHandler.findLastCategory();
+                                            for (int i = 1; i < mCategories.size(); i++) {
+                                                if (i == mCategories.size() - 1) {
+                                                    mCategories.add(resultCategory);
+                                                    break;
+                                                } else if (resultCategory.name.
+                                                        compareToIgnoreCase(mCategories.get(i).name) < 0) {
+                                                    mCategories.add(i, resultCategory);
+                                                    break;
+                                                }
+                                            }
+                                            initSpinner();
+                                        } catch (BrainDBHandler.NoMatchingDataException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                })
+                        .setNeutralButton(getString(R.string.Global_negative), null)
+                        .show();
+                break;
+            case R.id.main_fab_item_register_Keywords:
+                Intent intent = new Intent(this, KeywordActivity.class);
+                intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_REGISTER);
+                intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, Keyword.NOT_REGISTERED);
+                startActivity(intent);
+                break;
+        }
+        return false;
+    };
+    private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String searchString) {
+            mKeywords.clear();
+            mRecyclerView.removeAllViewsInLayout();
+
+            // Add filtered items
+            String query = "SELECT * FROM " + BrainDBHandler.TABLE_KEYWORDS;
+            query += String.format(" WHERE %s LIKE \"%%%s%%\"", BrainDBHandler.FIELD_KEYWORDS_NAME, searchString);
+            Log.d("Query", query);
+            mKeywords = mBrainDBHandler.getKeywords(query);
+            initRecyclerView();
+
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
+    private SearchView.OnCloseListener onCloseListener = () -> {
+        loadDB();
+        initRecyclerView();
+        return false;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,22 +199,21 @@ public class MainActivity extends AppCompatActivity
         mBrainDBHandler = new BrainDBHandler(this);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         boolean firstCheck;
 
         /** 초기화
-        final SharedPreferences.Editor pendingEdits = mPref.edit().putBoolean(getString(R.string.
-                SharedPreferences_firstStart), true);
-        pendingEdits.apply();
+         final SharedPreferences.Editor pendingEdits = mPref.edit().putBoolean(getString(R.string.
+         SharedPreferences_firstStart), true);
+         pendingEdits.apply();
          **/
 
         firstCheck = mPref.getBoolean(getString(R.string.
                 SharedPreferences_firstStart), true);
 
-        if(firstCheck){
+        if (firstCheck) {
             Intent intent = new Intent(this, TutorialActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -145,7 +233,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         boolean tempFlag = false;
-        if(reviewDateList.size() > 0 && reviewDateList.size() == reviewList.size()) {
+        if (reviewDateList.size() > 0 && reviewDateList.size() == reviewList.size()) {
             ArrayList<Keyword> allKeywords;
             try {
                 allKeywords = mBrainDBHandler.getAllKeywords();
@@ -204,19 +292,21 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id) {
-            case R.id.main_action_deleteCategories :
+        switch (id) {
+            case R.id.main_action_deleteCategories:
                 if (mSpinner.getSelectedItemPosition() != Category.CATEGORY_ALL) {
                     mBrainDBHandler.removeCategory(mCategories.get(mSpinner.getSelectedItemPosition()).id);
                     onResume();
-                } else Toast.makeText(this, R.string.MainActivity_unableToDelete, Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(this, R.string.MainActivity_unableToDelete, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.main_action_editCategories :
+            case R.id.main_action_editCategories:
                 if (mSpinner.getSelectedItemPosition() != Category.CATEGORY_ALL) {
                     Intent intent = new Intent(this, CategoryActivity.class);
                     intent.putExtra(CategoryActivity.EXTRAS_CATEGORY, mCategories.get(mSpinner.getSelectedItemPosition()).id);
                     startActivity(intent);
-                } else Toast.makeText(this, R.string.MainActivity_unableToEdit, Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(this, R.string.MainActivity_unableToEdit, Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -229,7 +319,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view textView clicks here.
         Intent intent = null;
         ArrayList<Integer> list = new ArrayList<>();
-        for(Keyword k : mKeywords){
+        for (Keyword k : mKeywords) {
             list.add(k.id);
         }
 
@@ -313,7 +403,8 @@ public class MainActivity extends AppCompatActivity
 
     private void getKeywordsFromDB() {
         int cid = mCategories.get(mSpinner.getSelectedItemPosition()).id;
-        if(cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED) mKeywords = mBrainDBHandler.getAllKeywords();
+        if (cid == Category.CATEGORY_ALL || cid == Category.NOT_REGISTERED)
+            mKeywords = mBrainDBHandler.getAllKeywords();
         else mKeywords = mBrainDBHandler.getAllKeywordsOfTheCategory(cid);
         mBrainDBHandler.close();
 
@@ -363,100 +454,6 @@ public class MainActivity extends AppCompatActivity
         mFab.addAllActionItems(speedDialActionItems);
     }
 
-
-    /***********************************************************
-     *                      Event Listener
-     ***********************************************************/
-
-    private Spinner.OnItemSelectedListener spinnerItemListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //loadDB();
-            getKeywordsFromDB();
-            initRecyclerView();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    };
-
-    private SpeedDialView.OnActionSelectedListener fabItemClickListener = actionItem -> {
-        final EditText editText = new EditText(this);
-        switch (actionItem.getId()) {
-            case R.id.main_fab_item_register_Categories:
-                new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.MainActivity_addCategory))
-                        .setView(editText)
-                        .setPositiveButton(getString(R.string.Global_confirm),
-                                (dialog, which) -> {
-                                    Category resultCategory = new Category.Builder().
-                                            setName(editText.getText().toString())
-                                            .build();
-                                    if(resultCategory.name.isEmpty()) {
-                                        Toast.makeText(this, getString(R.string.Global_exceptionESCategory), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        mBrainDBHandler.addCategory(resultCategory);
-                                        try {
-                                            resultCategory = mBrainDBHandler.findLastCategory();
-                                            for (int i = 1; i < mCategories.size(); i++) {
-                                                if (i == mCategories.size() - 1) {
-                                                    mCategories.add(resultCategory);
-                                                    break;
-                                                } else if (resultCategory.name.
-                                                        compareToIgnoreCase(mCategories.get(i).name) < 0) {
-                                                    mCategories.add(i, resultCategory);
-                                                    break;
-                                                }
-                                            }
-                                            initSpinner();
-                                        } catch (BrainDBHandler.NoMatchingDataException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                })
-                        .setNeutralButton(getString(R.string.Global_negative), null)
-                        .show();
-                break;
-            case R.id.main_fab_item_register_Keywords:
-                Intent intent = new Intent(this, KeywordActivity.class);
-                intent.putExtra(KeywordActivity.EXTRAS_INTENT_MODE, KeywordActivity.INTENT_MODE_REGISTER);
-                intent.putExtra(KeywordActivity.EXTRAS_KEYWORD, Keyword.NOT_REGISTERED);
-                startActivity(intent);
-                break;
-        }
-        return false;
-    };
-
-    private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String searchString) {
-            mKeywords.clear();
-            mRecyclerView.removeAllViewsInLayout();
-
-            // Add filtered items
-            String query = "SELECT * FROM " + BrainDBHandler.TABLE_KEYWORDS;
-            query += String.format(" WHERE %s LIKE \"%%%s%%\"", BrainDBHandler.FIELD_KEYWORDS_NAME, searchString);
-            Log.d("Query", query);
-            mKeywords = mBrainDBHandler.getKeywords(query);
-            initRecyclerView();
-
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            return false;
-        }
-    };
-
-    private SearchView.OnCloseListener onCloseListener = () -> {
-        loadDB();
-        initRecyclerView();
-        return false;
-    };
-
     public static class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.KeywordViewHolder> {
         private MainActivity mActivity;
         private ArrayList<Keyword> mKeywords;
@@ -504,7 +501,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             public void build(int i) {
-                mKeywords.get(i).setCardView((CardView)itemView);
+                mKeywords.get(i).setCardView((CardView) itemView);
 
                 itemView.setOnClickListener(new ItemClickListener());
                 itemView.setOnLongClickListener(new ItemLongClickListener(this));
@@ -596,18 +593,18 @@ public class MainActivity extends AppCompatActivity
                                     dbHandler.removeKeyword(mKeywords.get(getAdapterPosition()).id);       // db 삭제
 
                                     // 만약 변경 전 사진이 내부 저장소에 위치해 있었다면 해당 사진 삭제
-                                    if(FileManager.isInternalStorageFile(mActivity, mKeywords.get(getAdapterPosition()).imagePath))
+                                    if (FileManager.isInternalStorageFile(mActivity, mKeywords.get(getAdapterPosition()).imagePath))
                                         Log.i(TAG, "onLongClick: delete before image result - " +
                                                 FileManager.deleteFile(new File(mKeywords.get(getAdapterPosition()).imagePath)));
                                     //시리얼라이즈 저장된 곳에서 id에 해당하는 것 삭제.
-                                    try{
+                                    try {
                                         BrainSerialDataIO.deleteOneNextReivewTimeInfo(mActivity, mKeywords.get(getAdapterPosition()).id);
-                                    }catch (Exception ex){
+                                    } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }
                                     mKeywordViewHolder.removeItem();                   // 기프티콘 배열에서 삭제 및 뷰홀더 리로드
 
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 break;

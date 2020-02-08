@@ -21,12 +21,12 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        arrayList= new ArrayList<>();
+        arrayList = new ArrayList<>();
         arrayList.add(getString(R.string.StatisticsActivity_chooseOne));
         arrayList.add(getString(R.string.StatisticsActivity_recent30));
         arrayList.add(getString(R.string.StatisticsActivity_recent15));
 
-        arrayAdapter= new ArrayAdapter<>(getApplicationContext(),
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 arrayList);
 
@@ -36,15 +36,15 @@ public class StatisticsActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(arrayList.get(i) == getString(R.string.StatisticsActivity_recent30)) {
+                if (arrayList.get(i) == getString(R.string.StatisticsActivity_recent30)) {
                     Intent intent = new Intent(getApplicationContext(), OneMonthDaysChartActivity.class);
                     startActivity(intent);
-                }
-                else if(arrayList.get(i) == getString(R.string.StatisticsActivity_recent15)){
+                } else if (arrayList.get(i) == getString(R.string.StatisticsActivity_recent15)) {
                     Intent intent = new Intent(getApplicationContext(), FifteenDaysChartActivity.class);
                     startActivity(intent);
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 

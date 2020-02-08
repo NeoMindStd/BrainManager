@@ -5,22 +5,21 @@
         android:id="@+id/relation_action_search"
         android:icon="@drawable/ic_main_search"
         android:title="@string/MainActivity_search"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
     <item
+        android:enabled="false"
         android:icon="@drawable/ic_relation_grid"
         android:title=""
-        android:enabled="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/relation_action_switch"
         android:title=""
-        app:showAsAction="always"
         app:actionLayout="@layout/switch_layout"
-        />
+        app:showAsAction="always" />
     <item
+        android:enabled="false"
         android:icon="@drawable/ic_relation_list"
         android:title=""
-        android:enabled="false"
         app:showAsAction="always" />
 </menu>
