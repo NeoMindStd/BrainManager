@@ -2,6 +2,9 @@ package std.neomind.brainmanager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -218,6 +221,9 @@ public class RelationActivity extends AppCompatActivity
 
         ///플로팅 액션 버튼
         FloatingActionButton fab = findViewById(R.id.relation_fab);
+        Drawable fabDrawable = getDrawable(R.drawable.ic_main_fab_default).getConstantState().newDrawable();
+        fabDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        fab.setImageDrawable(fabDrawable);
         //TODO RelationIds 세터 사용됨.
         fab.setOnClickListener(view -> {
             BrainDBHandler dbHandler = new BrainDBHandler(RelationActivity.this);
